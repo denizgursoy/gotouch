@@ -6,8 +6,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/denizgursoy/gotouch/prompt"
 	"os"
+
+	"github.com/denizgursoy/gotouch/prompt"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +22,8 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("executing the command")
-		createNewProject()
+		//createNewProject()
+		//createNewProject()
 	},
 }
 
@@ -39,7 +41,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	//rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gotouch.yaml)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gotouch.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -47,16 +49,12 @@ func init() {
 }
 
 func createNewProject() {
-
 	httpServerOptions := make([]string, 0)
-	httpServerOptions = append(httpServerOptions, "echo")
-	httpServerOptions = append(httpServerOptions, "mux")
-	httpServerOptions = append(httpServerOptions, "fiber")
+	httpServerOptions = append(httpServerOptions, "echo", "mux", "fiber")
 
-	selection := prompt.AskForSelection(prompt.Definition{
+	_ = prompt.AskForSelection(prompt.Definition{
 		ErrorText: "Please select a HTTP Framework",
-		Direction: "Select one from the available options",
+		Direction: "Select HTTP Library you want to use",
 	}, httpServerOptions)
 
-	fmt.Println("user selected", selection)
 }

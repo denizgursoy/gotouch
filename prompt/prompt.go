@@ -2,8 +2,9 @@ package prompt
 
 import (
 	"fmt"
-	"github.com/manifoldco/promptui"
 	"os"
+
+	"github.com/manifoldco/promptui"
 )
 
 type Definition struct {
@@ -29,6 +30,6 @@ func AskForSelection(definition Definition, options []string) (result string) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Input: %s\n", result)
+	//fmt.Printf("Input: %s\n", result)
 	return
 }
