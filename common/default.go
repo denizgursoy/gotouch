@@ -1,8 +1,17 @@
 package common
 
+import (
+	_ "embed"
+
+	"gopkg.in/yaml.v2"
+)
+
+//go:embed default.yaml
+var defaultFile string
+
 type Config struct {
 	Dependencies      []Dependency       `yaml:"dependencies"`
-	ProjectStructures []ProjectStructure `yaml:"project_structures"`
+	ProjectStructures []ProjectStructure `yaml:"projectStructures"`
 }
 
 type Dependency struct {
@@ -30,7 +39,7 @@ type File struct {
 
 func GetDefaultConfig() *Config {
 	c := &Config{}
-	err := ReadYaml(c, "default.yaml")
+	err := yaml.Unmarshal([]byte(defaultFile), c)
 	if err != nil {
 		return nil
 	}
