@@ -5,6 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/manifoldco/promptui"
@@ -27,16 +28,19 @@ var rootCmd = &cobra.Command{
 		//fmt.Println("executing the command")
 		prompForProjectAddress()
 		promptForDependencies()
+		promptForProjectStructure()
 	},
 }
+
+var projectName = "go-test"
 
 func prompForProjectAddress() {
 	p := promptui.Prompt{
 		Label: "Enter Project address",
 	}
 
-	_, _ = p.Run()
-
+	projectName, _ = p.Run()
+	_ = os.Mkdir(projectName, os.ModePerm)
 }
 
 func promptForDependencies() {
@@ -53,6 +57,28 @@ func promptForDependencies() {
 		}, availableValues)
 
 		//fmt.Println("User selected ->" + selectedValue)
+	}
+}
+
+func promptForProjectStructure() {
+	structures := common.AppConfig.ProjectStructures
+	options := make([]string, 0)
+	for _, structure := range structures {
+		options = append(options, structure.Name)
+	}
+	result := prompt.AskForSelection(prompt.Definition{
+		//ErrorText: "Please select a HTTP Framework",
+		Direction: "Select the project structure",
+	}, options)
+	selectedProjectStrcuture := common.ProjectStructure{}
+	for _, structure := range structures {
+		if structure.Name == result {
+			selectedProjectStrcuture = structure
+		}
+	}
+	fmt.Println(selectedProjectStrcuture)
+	for _, directory := range selectedProjectStrcuture.Directories {
+		_ = os.Mkdir(projectName+"/"+directory, os.ModePerm)
 	}
 }
 
