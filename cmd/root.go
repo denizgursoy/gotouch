@@ -7,6 +7,8 @@ package cmd
 import (
 	"os"
 
+	"github.com/manifoldco/promptui"
+
 	"github.com/denizgursoy/gotouch/common"
 
 	"github.com/denizgursoy/gotouch/prompt"
@@ -23,21 +25,35 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		//fmt.Println("executing the command")
-		for _, dependency := range common.AppConfig.Dependencies {
-			availableValues := make([]string, 0)
-
-			for _, option := range dependency.Options {
-				availableValues = append(availableValues, option.Name)
-			}
-
-			_ = prompt.AskForSelection(prompt.Definition{
-				//ErrorText: "Please select a HTTP Framework",
-				Direction: dependency.Prompt,
-			}, availableValues)
-
-			//fmt.Println("User selected ->" + selectedValue)
-		}
+		prompForProjectAddress()
+		promptForDependencies()
 	},
+}
+
+func prompForProjectAddress() {
+	p := promptui.Prompt{
+		Label: "Enter Project address",
+	}
+
+	_, _ = p.Run()
+
+}
+
+func promptForDependencies() {
+	for _, dependency := range common.AppConfig.Dependencies {
+		availableValues := make([]string, 0)
+
+		for _, option := range dependency.Options {
+			availableValues = append(availableValues, option.Name)
+		}
+
+		_ = prompt.AskForSelection(prompt.Definition{
+			//ErrorText: "Please select a HTTP Framework",
+			Direction: dependency.Prompt,
+		}, availableValues)
+
+		//fmt.Println("User selected ->" + selectedValue)
+	}
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
