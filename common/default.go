@@ -1,8 +1,18 @@
 package common
 
 type Config struct {
-	Hits int64 `yaml:"hits"`
-	Time int64 `yaml:"time"`
+	Dependencies []Dependency `yaml:"dependencies"`
+}
+
+type Dependency struct {
+	Prompt  string    `yaml:"prompt"`
+	Options []Library `yaml:"options"`
+}
+
+type Library struct {
+	Name    string
+	Address string
+	Version string
 }
 
 func GetDefaultConfig() *Config {

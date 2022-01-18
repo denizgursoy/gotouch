@@ -5,8 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"os"
+
+	"github.com/denizgursoy/gotouch/common"
 
 	"github.com/denizgursoy/gotouch/prompt"
 
@@ -21,9 +22,21 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("executing the command")
-		//createNewProject()
-		//createNewProject()
+		//fmt.Println("executing the command")
+		for _, dependency := range common.AppConfig.Dependencies {
+			availableValues := make([]string, 0)
+
+			for _, option := range dependency.Options {
+				availableValues = append(availableValues, option.Name)
+			}
+
+			_ = prompt.AskForSelection(prompt.Definition{
+				//ErrorText: "Please select a HTTP Framework",
+				Direction: dependency.Prompt,
+			}, availableValues)
+
+			//fmt.Println("User selected ->" + selectedValue)
+		}
 	},
 }
 
@@ -46,15 +59,4 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
-
-func createNewProject() {
-	httpServerOptions := make([]string, 0)
-	httpServerOptions = append(httpServerOptions, "echo", "mux", "fiber")
-
-	_ = prompt.AskForSelection(prompt.Definition{
-		ErrorText: "Please select a HTTP Framework",
-		Direction: "Select HTTP Library you want to use",
-	}, httpServerOptions)
-
 }

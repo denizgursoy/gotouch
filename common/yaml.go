@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"io/ioutil"
 
 	"github.com/ghodss/yaml"
@@ -14,6 +13,6 @@ func ReadYaml(myStruct interface{}, fileAddress string) error {
 	}
 	err = yaml.Unmarshal(file, myStruct)
 
-	fmt.Println(string(file))
+	//fmt.Println(string(file))
 	return err
 }

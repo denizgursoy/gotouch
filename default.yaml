@@ -1,2 +1,17 @@
-hits: 5
-time: 5000000
+dependencies:
+  - prompt: Select HTTP Framework you want to use
+    options:
+      - name: gorilla mux
+        address: github.com/gorilla/mux
+        version: 1.8.0
+      - name: fiber
+        address: github.com/gofiber/fiber/v2
+        version: 2.24.0
+      - name: echo
+        address: github.com/labstack/echo/v4
+  - prompt: Select logging library you want to use
+    options:
+      - name: Zap
+        address: go.uber.org/zap
+      - name: logrus
+        address: github.com/Sirupsen/logrus
