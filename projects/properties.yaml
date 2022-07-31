@@ -1,0 +1,4 @@
+- name: Empty Project Layout
+  reference: https://go.dev/
+- name: Default Project Layout
+  reference: https://github.com/golang-standards/project-layout
