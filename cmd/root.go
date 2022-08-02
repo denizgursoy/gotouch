@@ -47,7 +47,7 @@ var projectName = "go-test"
 
 func prompForProjectAddress() string {
 	p := promptui.Prompt{
-		Label: "Enter Project address",
+		Label: "Enter Project name",
 	}
 
 	projectName, _ = p.Run()
@@ -109,6 +109,7 @@ func extractFiles(selectedProject *lister.ProjectData, name string) {
 	println(filePath2)
 	create, err := os.Create(filePath2)
 	_, err = io.Copy(create, response.Body)
+
 	err = UnGzip(filePath2, projectName+string(filepath.Separator))
 	if err != nil {
 		log.Fatal(err)
