@@ -3,6 +3,8 @@ package extractor
 import (
 	"archive/tar"
 	"compress/gzip"
+	"fmt"
+	"github.com/walle/targz"
 	"io"
 	"log"
 	"net/http"
@@ -25,13 +27,61 @@ func (g gzipExtractor) Extract(url, projectName string) {
 		return
 	}
 	filePath2 := filepath.Join(os.TempDir(), filepath.Base(url))
-	println(filePath2)
+
 	create, err := os.Create(filePath2)
 	_, err = io.Copy(create, response.Body)
 
-	err = UnGzip(filePath2, projectName+string(filepath.Separator))
+	err = targz.Extract(filePath2, fmt.Sprintf("./%s/xxx", projectName))
+	log.Fatal(err)
+	//r, err := os.Open(filePath2)
+	//if err != nil {
+	//	fmt.Println("error")
+	//}
+	//ExtractTarGz(r)
+
+}
+
+func ExtractTarGz(gzipStream io.Reader) {
+	uncompressedStream, err := gzip.NewReader(gzipStream)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("ExtractTarGz: NewReader failed")
+	}
+
+	tarReader := tar.NewReader(uncompressedStream)
+
+	for true {
+		header, err := tarReader.Next()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			log.Fatalf("ExtractTarGz: Next() failed: %s", err.Error())
+		}
+
+		switch header.Typeflag {
+		case tar.TypeDir:
+			if err := os.Mkdir(header.Name, 0755); err != nil {
+				log.Fatalf("ExtractTarGz: Mkdir() failed: %s", err.Error())
+			}
+		case tar.TypeReg:
+			outFile, err := os.Create(header.Name)
+			if err != nil {
+				log.Fatalf("ExtractTarGz: Create() failed: %s", err.Error())
+			}
+			if _, err := io.Copy(outFile, tarReader); err != nil {
+				log.Fatalf("ExtractTarGz: Copy() failed: %s", err.Error())
+			}
+			outFile.Close()
+
+		default:
+			log.Fatalf(
+				"ExtractTarGz: uknown type: %s in %s",
+				header.Typeflag,
+				header.Name)
+		}
+
 	}
 }
 
