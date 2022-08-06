@@ -15,7 +15,7 @@ func newGithubLister() Lister {
 
 func (g gitHubLister) GetDefaultProjects() []*ProjectData {
 	client := http.Client{}
-	propertiesUrl := "https://raw.githubusercontent.com/denizgursoy/gotouch/main/projects/properties.yaml"
+	propertiesUrl := "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/properties.yaml"
 	response, err := client.Get(propertiesUrl)
 
 	if err != nil {

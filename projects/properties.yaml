@@ -1,6 +1,0 @@
-- name: Empty Project Layout
-  reference: https://go.dev/
-  url: https://github.com/denizgursoy/gotouch/raw/main/projects/empty.zip
-- name: Default Project Layout
-  reference: https://github.com/golang-standards/project-layout
-  url: https://github.com/denizgursoy/gotouch/raw/main/projects/default.zip
