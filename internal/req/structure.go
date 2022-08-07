@@ -18,7 +18,7 @@ type (
 	}
 )
 
-func (p ProjectStructureRequirement) AskForInput() model.Task {
+func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
 
 	instance := prompts.GetInstance()
 
@@ -35,7 +35,7 @@ func (p ProjectStructureRequirement) AskForInput() model.Task {
 	selected := instance.AskForSelectionFromList("select project type", projectList).(*lister.ProjectStructureData)
 	return projectStructureTask{
 		ProjectStructure: selected,
-	}
+	}, nil
 }
 
 func (p projectStructureTask) Complete(previousResponse interface{}) interface{} {

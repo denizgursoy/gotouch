@@ -1,5 +1,5 @@
 package model
 
 type Requirement interface {
-	AskForInput() Task
+	AskForInput() (Task, error)
 }
