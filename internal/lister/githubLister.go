@@ -13,7 +13,7 @@ func newGithubLister() Lister {
 	return gitHubLister{}
 }
 
-func (g gitHubLister) GetDefaultProjects() []*ProjectData {
+func (g gitHubLister) GetDefaultProjects() []*ProjectStructureData {
 	client := http.Client{}
 	propertiesUrl := "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/properties.yaml"
 	response, err := client.Get(propertiesUrl)
@@ -22,7 +22,7 @@ func (g gitHubLister) GetDefaultProjects() []*ProjectData {
 		return nil
 	}
 
-	data := make([]*ProjectData, 0)
+	data := make([]*ProjectStructureData, 0)
 
 	allBytes, err := ioutil.ReadAll(response.Body)
 	err = yaml.Unmarshal(allBytes, &data)

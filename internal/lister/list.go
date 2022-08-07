@@ -2,14 +2,14 @@ package lister
 
 import "sync"
 
-type ProjectData struct {
+type ProjectStructureData struct {
 	Name      string `yaml:"name"`
 	Reference string `yaml:"reference"`
 	URL       string `yaml:"url"`
 }
 
 type Lister interface {
-	GetDefaultProjects() []*ProjectData
+	GetDefaultProjects() []*ProjectStructureData
 }
 
 var (
