@@ -2,19 +2,19 @@ package req
 
 import (
 	"fmt"
-	extractor2 "github.com/denizgursoy/gotouch/internal/extractor"
-	lister2 "github.com/denizgursoy/gotouch/internal/lister"
+	"github.com/denizgursoy/gotouch/internal/extractor"
+	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 )
 
 type (
 	ProjectStructureRequirement struct {
-		ProjectsData []*lister2.ProjectStructureData
+		ProjectsData []*lister.ProjectStructureData
 	}
 
 	projectStructureTask struct {
-		ProjectStructure *lister2.ProjectStructureData
+		ProjectStructure *lister.ProjectStructureData
 	}
 )
 
@@ -32,7 +32,7 @@ func (p ProjectStructureRequirement) AskForInput() model.Task {
 		})
 	}
 
-	selected := instance.AskForSelectionFromList("select project type", projectList).(*lister2.ProjectStructureData)
+	selected := instance.AskForSelectionFromList("select project type", projectList).(*lister.ProjectStructureData)
 	return projectStructureTask{
 		ProjectStructure: selected,
 	}
@@ -40,7 +40,7 @@ func (p ProjectStructureRequirement) AskForInput() model.Task {
 
 func (p projectStructureTask) Complete(previousResponse interface{}) interface{} {
 	projectName := previousResponse.(string)
-	ex := extractor2.GetInstance()
+	ex := extractor.GetInstance()
 	ex.Extract(p.ProjectStructure.URL, projectName)
 	return nil
 }
