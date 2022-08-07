@@ -16,7 +16,7 @@ func newZipUncompressor() Uncompressor {
 	return zipUncompressor{}
 }
 
-func (z zipUncompressor) Uncompress(url, projectName string) {
+func (z zipUncompressor) UncompressFromUrl(url, projectName string) {
 	client := http.Client{}
 	response, err := client.Get(url)
 	if err != nil {

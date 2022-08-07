@@ -41,6 +41,6 @@ func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
 func (p projectStructureTask) Complete(previousResponse interface{}) interface{} {
 	projectName := previousResponse.(string)
 	ex := uncompressor.GetInstance()
-	ex.Uncompress(p.ProjectStructure.URL, projectName)
+	ex.UncompressFromUrl(p.ProjectStructure.URL, projectName)
 	return nil
 }

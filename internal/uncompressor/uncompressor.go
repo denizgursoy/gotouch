@@ -3,7 +3,7 @@ package uncompressor
 import "sync"
 
 type Uncompressor interface {
-	Uncompress(url, directoryName string)
+	UncompressFromUrl(url, directoryName string)
 }
 
 var (
