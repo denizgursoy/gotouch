@@ -5,17 +5,12 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package root
 
 import (
-	extractor2 "github.com/denizgursoy/gotouch/internal/extractor"
-	lister2 "github.com/denizgursoy/gotouch/internal/lister"
+	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/queue"
 	"github.com/denizgursoy/gotouch/internal/req"
 	"os"
 
 	"github.com/spf13/cobra"
-)
-
-var (
-	ex = extractor2.GetInstance()
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -30,7 +25,7 @@ var rootCmd = &cobra.Command{
 
 		requirements = append(requirements, req.ProjectNameRequirement{})
 
-		lister := lister2.GetInstance()
+		lister := lister.GetInstance()
 		projects := lister.GetDefaultProjects()
 
 		requirements = append(requirements, req.ProjectStructureRequirement{

@@ -2,10 +2,10 @@ package req
 
 import (
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/extractor"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/uncompressor"
 )
 
 type (
@@ -40,7 +40,7 @@ func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
 
 func (p projectStructureTask) Complete(previousResponse interface{}) interface{} {
 	projectName := previousResponse.(string)
-	ex := extractor.GetInstance()
-	ex.Extract(p.ProjectStructure.URL, projectName)
+	ex := uncompressor.GetInstance()
+	ex.Uncompress(p.ProjectStructure.URL, projectName)
 	return nil
 }

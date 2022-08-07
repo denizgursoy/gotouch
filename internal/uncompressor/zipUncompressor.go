@@ -1,4 +1,4 @@
-package extractor
+package uncompressor
 
 import (
 	"fmt"
@@ -9,14 +9,14 @@ import (
 	"path/filepath"
 )
 
-type gzipExtractor struct {
+type zipUncompressor struct {
 }
 
-func newGzipExtractor() Extractor {
-	return gzipExtractor{}
+func newZipUncompressor() Uncompressor {
+	return zipUncompressor{}
 }
 
-func (g gzipExtractor) Extract(url, projectName string) {
+func (z zipUncompressor) Uncompress(url, projectName string) {
 	client := http.Client{}
 	response, err := client.Get(url)
 	if err != nil {
