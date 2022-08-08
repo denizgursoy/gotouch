@@ -27,5 +27,7 @@ func (g gitHubLister) GetDefaultProjects() []*ProjectStructureData {
 	allBytes, err := ioutil.ReadAll(response.Body)
 	err = yaml.Unmarshal(allBytes, &data)
 
+	//TODO: data == nil durumunu handle et
+
 	return data
 }
