@@ -6,6 +6,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"github.com/denizgursoy/gotouch/internal/uncompressor"
+	"github.com/denizgursoy/gotouch/internal/util"
 	"io/ioutil"
 	"log"
 	"os"
@@ -44,15 +45,18 @@ func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
 
 func (p projectStructureTask) Complete(previousResponse interface{}) interface{} {
 	projectName := previousResponse.(string)
+	path, err := util.GetBaseName(projectName)
+	if err != nil {
+		log.Printf("%v", err)
+	}
 	ex := uncompressor.GetInstance()
-	ex.UncompressFromUrl(p.ProjectStructure.URL, projectName)
-	modAvailable := checkGoModule(projectName)
-	editGoModule(modAvailable, projectName)
+	ex.UncompressFromUrl(p.ProjectStructure.URL, path)
+	editGoModule(projectName, path)
 	return nil
 }
 
-func checkGoModule(projectName string) bool {
-	path := fmt.Sprintf("./%s/", projectName)
+func hasGoModule(path string) bool {
+	path = fmt.Sprintf("./%s/", path)
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		log.Fatal(err)
@@ -66,9 +70,10 @@ func checkGoModule(projectName string) bool {
 	return false
 }
 
-func editGoModule(modAvailable bool, projectName string) {
-	dir := fmt.Sprintf("./%s", projectName)
+func editGoModule(projectName, path string) {
+	modAvailable := hasGoModule(path)
 
+	dir := fmt.Sprintf("./%s", path)
 	err := os.Chdir(dir)
 	if err != nil {
 		log.Printf("Changed Directory error: %v", err)
@@ -77,13 +82,14 @@ func editGoModule(modAvailable bool, projectName string) {
 	command := "init"
 
 	if modAvailable {
-		command = "edit"
+		command = "edit -module"
 	}
 	command = fmt.Sprintf("go mod %s %s", command, projectName)
 	runCommand(command)
 }
 
 func runCommand(command string) error {
+	//TODO: windows testini yap
 	cmd := exec.Command("bash", "-c", command)
 	err := cmd.Run()
 	if err != nil {

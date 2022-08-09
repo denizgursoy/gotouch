@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/util"
 	"os"
 	"strings"
 )
@@ -30,7 +31,8 @@ type projectNameTask struct {
 }
 
 func (p projectNameTask) Complete(interface{}) interface{} {
-	directoryPath := fmt.Sprintf("./%s", p.ProjectName)
+	path, _ := util.GetBaseName(p.ProjectName)
+	directoryPath := fmt.Sprintf("./%s", path)
 	_ = os.Mkdir(directoryPath, os.ModePerm)
 	return p.ProjectName
 }
