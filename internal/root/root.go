@@ -26,7 +26,11 @@ var rootCmd = &cobra.Command{
 		requirements = append(requirements, req.ProjectNameRequirement{})
 
 		lister := lister.GetInstance()
-		projects := lister.GetDefaultProjects()
+		projects, err := lister.GetDefaultProjects()
+
+		if err != nil {
+			// TODO: Handle error
+		}
 
 		requirements = append(requirements, req.ProjectStructureRequirement{
 			ProjectsData: projects,

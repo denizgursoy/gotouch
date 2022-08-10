@@ -1,6 +1,7 @@
 package lister
 
 import (
+	"errors"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
@@ -13,13 +14,13 @@ func newGithubLister() Lister {
 	return gitHubLister{}
 }
 
-func (g gitHubLister) GetDefaultProjects() []*ProjectStructureData {
+func (g gitHubLister) GetDefaultProjects() ([]*ProjectStructureData, error) {
 	client := http.Client{}
 	propertiesUrl := "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/properties.yaml"
 	response, err := client.Get(propertiesUrl)
 
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	data := make([]*ProjectStructureData, 0)
@@ -29,5 +30,9 @@ func (g gitHubLister) GetDefaultProjects() []*ProjectStructureData {
 
 	//TODO: data == nil durumunu handle et
 
-	return data
+	if data == nil {
+		return data, errors.New("data cannot be empty")
+	}
+
+	return data, nil
 }

@@ -9,7 +9,7 @@ type ProjectStructureData struct {
 }
 
 type Lister interface {
-	GetDefaultProjects() []*ProjectStructureData
+	GetDefaultProjects() ([]*ProjectStructureData, error)
 }
 
 var (
