@@ -5,7 +5,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompts"
-	"github.com/denizgursoy/gotouch/internal/uncompressor"
+	"github.com/denizgursoy/gotouch/internal/queue"
 	"github.com/denizgursoy/gotouch/internal/util"
 	"io/ioutil"
 	"log"
@@ -49,8 +49,8 @@ func (p projectStructureTask) Complete(previousResponse interface{}) interface{}
 	if err != nil {
 		log.Printf("%v", err)
 	}
-	ex := uncompressor.GetInstance()
-	ex.UncompressFromUrl(p.ProjectStructure.URL, path)
+
+	queue.Extractor.UncompressFromUrl(p.ProjectStructure.URL, path)
 	editGoModule(projectName, path)
 	return nil
 }

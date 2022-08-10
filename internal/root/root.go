@@ -5,7 +5,6 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package root
 
 import (
-	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/queue"
 	"github.com/denizgursoy/gotouch/internal/req"
 	"os"
@@ -25,8 +24,7 @@ var rootCmd = &cobra.Command{
 
 		requirements = append(requirements, req.ProjectNameRequirement{})
 
-		lister := lister.GetInstance()
-		projects, err := lister.GetDefaultProjects()
+		projects, err := queue.Lister.GetDefaultProjects()
 
 		if err != nil {
 			// TODO: Handle error

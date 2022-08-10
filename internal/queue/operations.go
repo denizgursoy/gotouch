@@ -2,12 +2,23 @@ package queue
 
 import (
 	"errors"
+	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/model"
+	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/uncompressor"
 )
 
-type Tasks []model.Task
+type (
+	Tasks []model.Task
 
-type Requirements []model.Requirement
+	Requirements []model.Requirement
+)
+
+var (
+	Prompter  = prompts.GetInstance()
+	Extractor = uncompressor.GetInstance()
+	Lister    = lister.GetInstance()
+)
 
 func Execute(requirements Requirements) error {
 
@@ -18,11 +29,7 @@ func Execute(requirements Requirements) error {
 	tasks := make(Tasks, 0)
 
 	for _, requirement := range requirements {
-
-		var task model.Task
-
-		task, _ = requirement.AskForInput()
-
+		task, _ := requirement.AskForInput()
 		tasks = append(tasks, task)
 	}
 
