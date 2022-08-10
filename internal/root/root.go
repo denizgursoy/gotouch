@@ -5,7 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package root
 
 import (
-	"github.com/denizgursoy/gotouch/internal/queue"
+	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/req"
 	"os"
 
@@ -20,11 +20,11 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		requirements := make(queue.Requirements, 0)
+		requirements := make(operation.Requirements, 0)
 
 		requirements = append(requirements, req.ProjectNameRequirement{})
 
-		projects, err := queue.Lister.GetDefaultProjects()
+		projects, err := operation.Lister.GetDefaultProjects()
 
 		if err != nil {
 			// TODO: Handle error
@@ -34,7 +34,7 @@ var rootCmd = &cobra.Command{
 			ProjectsData: projects,
 		})
 
-		_ = queue.Execute(requirements)
+		_ = operation.Execute(requirements)
 	},
 }
 

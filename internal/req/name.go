@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/denizgursoy/gotouch/internal/queue"
+	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/util"
 	"log"
 	"os"
@@ -16,7 +16,7 @@ type ProjectNameRequirement struct {
 
 func (p ProjectNameRequirement) AskForInput() (model.Task, error) {
 
-	projectName := queue.Prompter.AskForString("Enter Project Name", validateProjectName)
+	projectName := operation.Prompter.AskForString("Enter Project Name", validateProjectName)
 
 	return projectNameTask{
 		ProjectName: projectName,
