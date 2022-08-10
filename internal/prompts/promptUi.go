@@ -23,9 +23,10 @@ func (p promptUi) AskForSelectionFromList(direction string, listOptions []*ListO
 	return listOptions[index].ReturnVal
 }
 
-func (p promptUi) AskForString(direction string) string {
+func (p promptUi) AskForString(direction string, validator StringValidator) string {
 	prompt := promptui.Prompt{
-		Label: direction,
+		Label:    direction,
+		Validate: promptui.ValidateFunc(validator),
 	}
 	run, _ := prompt.Run()
 	return run

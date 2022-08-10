@@ -11,7 +11,7 @@ var (
 
 type (
 	Prompter interface {
-		AskForString(direction string) string
+		AskForString(direction string, validator StringValidator) string
 		AskForSelectionFromList(direction string, listOptions []*ListOption) interface{}
 	}
 
@@ -19,6 +19,8 @@ type (
 		DisplayText string
 		ReturnVal   interface{}
 	}
+
+	StringValidator func(string) error
 )
 
 func GetInstance() Prompter {
