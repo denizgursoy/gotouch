@@ -19,15 +19,10 @@ func Execute(requirements Requirements) error {
 
 	for _, requirement := range requirements {
 
-		ok := true
 		var task model.Task
-		err := errors.New("")
-		for ok {
-			task, err = requirement.AskForInput()
-			if err == nil {
-				ok = false
-			}
-		}
+
+		task, _ = requirement.AskForInput()
+
 		tasks = append(tasks, task)
 	}
 
