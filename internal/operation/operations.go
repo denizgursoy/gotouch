@@ -1,43 +1,34 @@
 package operation
 
 import (
-	"errors"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"github.com/denizgursoy/gotouch/internal/uncompressor"
+	"sync"
 )
 
 type (
 	Tasks []model.Task
 
 	Requirements []model.Requirement
+
+	Executor interface {
+		Execute(requirements Requirements) error
+	}
 )
 
 var (
-	Prompter  = prompts.GetInstance()
-	Extractor = uncompressor.GetInstance()
-	Lister    = lister.GetInstance()
+	Prompter     = prompts.GetInstance()
+	Extractor    = uncompressor.GetInstance()
+	Lister       = lister.GetInstance()
+	MainExecutor = GetInstance()
+	once         sync.Once
 )
 
-func Execute(requirements Requirements) error {
-
-	if requirements == nil {
-		return errors.New("req cannot be empty")
-	}
-
-	tasks := make(Tasks, 0)
-
-	for _, requirement := range requirements {
-		task, _ := requirement.AskForInput()
-		tasks = append(tasks, task)
-	}
-
-	var previousResponse interface{}
-
-	for _, task := range tasks {
-		previousResponse = task.Complete(previousResponse)
-	}
-
-	return nil
+func GetInstance() Executor {
+	once.Do(func() {
+		MainExecutor = newExecutor()
+	})
+	return MainExecutor
 }
