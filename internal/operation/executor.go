@@ -7,6 +7,10 @@ type (
 	}
 )
 
+var (
+	EmptyRequirementError = errors.New("requirements cannot be empty")
+)
+
 func newExecutor() Executor {
 	return executor{}
 }
@@ -14,7 +18,7 @@ func newExecutor() Executor {
 func (e executor) Execute(requirements Requirements) error {
 
 	if requirements == nil {
-		return errors.New("req cannot be empty")
+		return EmptyRequirementError
 	}
 
 	tasks := make(Tasks, 0)

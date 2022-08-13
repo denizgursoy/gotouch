@@ -22,9 +22,13 @@ var (
 	Prompter     = prompts.GetInstance()
 	Extractor    = uncompressor.GetInstance()
 	Lister       = lister.GetInstance()
-	MainExecutor = GetInstance()
+	MainExecutor Executor
 	once         sync.Once
 )
+
+func init() {
+	MainExecutor = GetInstance()
+}
 
 func GetInstance() Executor {
 	once.Do(func() {
