@@ -4,23 +4,34 @@ import (
 	"errors"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
-type gitHubLister struct {
+var (
+	ConnectionError = errors.New("could not fetch project from remote server")
+	PropertiesUrl   = "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/properties.yaml"
+)
+
+type httpLister struct {
+	client *http.Client
+	URL    *string
 }
 
-func newGithubLister() Lister {
-	return gitHubLister{}
+func newHttpLister(client *http.Client, url *string) Lister {
+	return httpLister{
+		client: client,
+		URL:    url,
+	}
 }
 
-func (g gitHubLister) GetDefaultProjects() ([]*ProjectStructureData, error) {
-	client := http.Client{}
-	propertiesUrl := "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/properties.yaml"
-	response, err := client.Get(propertiesUrl)
+func (h httpLister) GetDefaultProjects() ([]*ProjectStructureData, error) {
+
+	response, err := h.client.Get(*h.URL)
 
 	if err != nil {
-		return nil, err
+		log.Println(err.Error())
+		return nil, ConnectionError
 	}
 
 	data := make([]*ProjectStructureData, 0)

@@ -1,6 +1,9 @@
 package lister
 
-import "sync"
+import (
+	"net/http"
+	"sync"
+)
 
 type ProjectStructureData struct {
 	Name      string `yaml:"name"`
@@ -19,7 +22,7 @@ var (
 
 func GetInstance() Lister {
 	once.Do(func() {
-		lister = newGithubLister()
+		lister = newHttpLister(&http.Client{}, &PropertiesUrl)
 	})
 	return lister
 }
