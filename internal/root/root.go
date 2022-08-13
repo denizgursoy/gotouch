@@ -34,7 +34,7 @@ var rootCmd = &cobra.Command{
 			ProjectsData: projects,
 		})
 
-		_ = operation.Execute(requirements)
+		_ = operation.MainExecutor.Execute(requirements)
 	},
 }
 
