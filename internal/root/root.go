@@ -5,8 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package root
 
 import (
-	"github.com/denizgursoy/gotouch/internal/operation"
-	"github.com/denizgursoy/gotouch/internal/req"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -20,21 +19,9 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		requirements := make(operation.Requirements, 0)
-
-		requirements = append(requirements, req.ProjectNameRequirement{})
-
-		projects, err := operation.Lister.GetDefaultProjects()
-
-		if err != nil {
-			// TODO: Handle error
-		}
-
-		requirements = append(requirements, req.ProjectStructureRequirement{
-			ProjectsData: projects,
-		})
-
-		_ = operation.MainExecutor.Execute(requirements)
+		options := CreateNewProjectOptions{}
+		err := CreateNewProject(&options)
+		log.Fatalln(err)
 	},
 }
 
