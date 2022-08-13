@@ -2,8 +2,6 @@ package lister
 
 import (
 	"errors"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -36,18 +34,5 @@ func (h httpLister) GetDefaultProjects() ([]*ProjectStructureData, error) {
 		return nil, ConnectionError
 	}
 
-	data := make([]*ProjectStructureData, 0)
-
-	allBytes, err := ioutil.ReadAll(response.Body)
-	err = yaml.Unmarshal(allBytes, &data)
-
-	if err != nil {
-		return nil, ProjectDataParseError
-	}
-
-	if data == nil {
-		return data, NoProjectError
-	}
-
-	return data, nil
+	return ParseToProjectStructureData(response.Body)
 }

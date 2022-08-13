@@ -1,6 +1,10 @@
 package lister
 
 import (
+	"gopkg.in/yaml.v2"
+	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"sync"
 )
@@ -25,4 +29,22 @@ func GetInstance() Lister {
 		lister = newHttpLister(&http.Client{}, &PropertiesUrl)
 	})
 	return lister
+}
+
+func ParseToProjectStructureData(reader io.ReadCloser) ([]*ProjectStructureData, error) {
+	data := make([]*ProjectStructureData, 0)
+
+	allBytes, err := ioutil.ReadAll(reader)
+	err = yaml.Unmarshal(allBytes, &data)
+
+	if err != nil {
+		log.Println(err.Error())
+		return nil, ProjectDataParseError
+	}
+
+	if data == nil {
+		return nil, NoProjectError
+	}
+
+	return data, nil
 }
