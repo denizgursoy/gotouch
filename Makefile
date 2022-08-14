@@ -1,3 +1,6 @@
-exec:
-	 rm -rf gotouch && go build && ./gotouch
+unit-test:
+	go test  --tags=unit ./...
 
+
+integration-test:
+	go test  --tags=integration ./...
