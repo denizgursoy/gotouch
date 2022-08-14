@@ -1,4 +1,4 @@
-name: Go
+name: GO- Build and Test
 
 on: push
 
@@ -7,21 +7,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.16
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.16
 
-    - name: Build
-      run: go build -v ./cmd/gotouch/
+      - name: Build
+        run: make
 
-    - name: test-make
-      run: make unit-test
+      - name: Unit Test
+        run: make unit-test
 
-    - name: Unit Test
-      run: go test -v  --tags=unit ./...
-      
-    - name: Integraton Test
-      run: go test -v  --tags=integration ./...
+      - name: Integraton Test
+        run: make integration-test
