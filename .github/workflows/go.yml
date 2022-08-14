@@ -17,6 +17,9 @@ jobs:
     - name: Build
       run: go build -v ./cmd/gotouch/
 
+    - name: test-make
+      run: make unit-test
+
     - name: Unit Test
       run: go test -v  --tags=unit ./...
       
