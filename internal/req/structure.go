@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 )
 
 type (
@@ -71,7 +70,6 @@ func hasGoModule(path string) bool {
 }
 
 func editGoModule(projectName, path string) {
-	modAvailable := hasGoModule(path)
 
 	dir := fmt.Sprintf("./%s", path)
 	err := os.Chdir(dir)
@@ -79,22 +77,18 @@ func editGoModule(projectName, path string) {
 		log.Printf("Changed Directory error: %v", err)
 	}
 
-	command := "init"
+	args := make([]string, 0)
 
-	if modAvailable {
-		command = "edit -module"
+	if hasGoModule(path) {
+		args = append(args, "mod", "edit", "-module", projectName)
+	} else {
+		args = append(args, "mod", "init", projectName)
 	}
-	command = fmt.Sprintf("go mod %s %s", command, projectName)
-	runCommand(command)
-}
 
-func runCommand(command string) error {
-	//TODO: windows testini yap
-	cmd := exec.Command("bash", "-c", command)
-	err := cmd.Run()
-	if err != nil {
-		log.Printf("Command finished with error: %v", err)
-		return err
+	data := &operation.CommandData{
+		Command: "go",
+		Args:    args,
 	}
-	return nil
+
+	err = operation.MainExecutor.RunCommand(data)
 }

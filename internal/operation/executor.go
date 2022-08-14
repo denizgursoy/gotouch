@@ -1,6 +1,10 @@
 package operation
 
-import "errors"
+import (
+	"errors"
+	"log"
+	"os/exec"
+)
 
 type (
 	executor struct {
@@ -34,5 +38,15 @@ func (e executor) Execute(requirements Requirements) error {
 		previousResponse = task.Complete(previousResponse)
 	}
 
+	return nil
+}
+
+func (e executor) RunCommand(data *CommandData) error {
+	cmd := exec.Command(data.Command, data.Args...)
+	err := cmd.Run()
+	if err != nil {
+		log.Printf("Command finished with error: %v", err)
+		return err
+	}
 	return nil
 }
