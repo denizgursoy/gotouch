@@ -1,16 +1,15 @@
 package req
 
 import (
+	"errors"
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"github.com/denizgursoy/gotouch/internal/util"
-	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 )
 
 type (
@@ -43,7 +42,7 @@ func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
 	}, nil
 }
 
-func (p projectStructureTask) Complete(previousResponse interface{}) interface{} {
+func (p projectStructureTask) Complete(previousResponse interface{}) (interface{}, error) {
 	projectName := previousResponse.(string)
 	path, err := util.GetBaseName(projectName)
 	if err != nil {
@@ -51,50 +50,47 @@ func (p projectStructureTask) Complete(previousResponse interface{}) interface{}
 	}
 
 	operation.Extractor.UncompressFromUrl(p.ProjectStructure.URL, path)
-	editGoModule(projectName, path)
-	return nil
+	return nil, editGoModule(projectName)
 }
 
-func hasGoModule(path string) bool {
-	path = fmt.Sprintf("./%s/", path)
-	files, err := ioutil.ReadDir(path)
+func editGoModule(projectName string) error {
+	workingDirectory, err := os.Getwd()
+
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	for _, file := range files {
-		if file.Name() == "go.mod" {
-			return true
-		}
-	}
-	return false
-}
-
-func editGoModule(projectName, path string) {
-	modAvailable := hasGoModule(path)
-
-	dir := fmt.Sprintf("./%s", path)
-	err := os.Chdir(dir)
-	if err != nil {
-		log.Printf("Changed Directory error: %v", err)
-	}
-
-	command := "init"
-
-	if modAvailable {
-		command = "edit -module"
-	}
-	command = fmt.Sprintf("go mod %s %s", command, projectName)
-	runCommand(command)
-}
-
-func runCommand(command string) error {
-	//TODO: windows testini yap
-	cmd := exec.Command("bash", "-c", command)
-	err := cmd.Run()
-	if err != nil {
-		log.Printf("Command finished with error: %v", err)
+		log.Println(err)
 		return err
 	}
-	return nil
+
+	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, projectName)
+
+	err = os.Chdir(projectDirectory)
+
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	args := make([]string, 0)
+
+	if hasGoModule(projectDirectory) {
+		args = append(args, "mod", "edit", "-module", projectName)
+	} else {
+		args = append(args, "mod", "init", projectName)
+	}
+
+	data := &operation.CommandData{
+		Command: "go",
+		Args:    args,
+	}
+
+	return operation.MainExecutor.RunCommand(data)
+}
+
+func hasGoModule(projectDirectory string) bool {
+	path := fmt.Sprintf("%s/go.mod", projectDirectory)
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		return false
+	}
+
+	return true
 }

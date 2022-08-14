@@ -1,3 +1,5 @@
+// +build unit
+
 package operation
 
 import (
@@ -20,10 +22,10 @@ type (
 	}
 )
 
-func (t *testTask) Complete(i interface{}) interface{} {
+func (t *testTask) Complete(i interface{}) (interface{}, error) {
 	t.isAskCalled = true
 	t.arg = i
-	return t.returnValue
+	return t.returnValue, nil
 }
 
 func (t *testRequirement) AskForInput() (model.Task, error) {
