@@ -1,13 +1,13 @@
 package req
 
 import (
+	"errors"
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"github.com/denizgursoy/gotouch/internal/util"
-	"io/ioutil"
 	"log"
 	"os"
 )
@@ -50,36 +50,28 @@ func (p projectStructureTask) Complete(previousResponse interface{}) interface{}
 	}
 
 	operation.Extractor.UncompressFromUrl(p.ProjectStructure.URL, path)
-	editGoModule(projectName, path)
+	editGoModule(projectName)
 	return nil
 }
 
-func hasGoModule(path string) bool {
-	path = fmt.Sprintf("./%s/", path)
-	files, err := ioutil.ReadDir(path)
+func editGoModule(projectName string) {
+	workingDirectory, err := os.Getwd()
+
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
-	for _, file := range files {
-		if file.Name() == "go.mod" {
-			return true
-		}
-	}
-	return false
-}
+	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, projectName)
 
-func editGoModule(projectName, path string) {
+	err = os.Chdir(projectDirectory)
 
-	dir := fmt.Sprintf("./%s", path)
-	err := os.Chdir(dir)
 	if err != nil {
-		log.Printf("Changed Directory error: %v", err)
+		log.Println(err)
 	}
 
 	args := make([]string, 0)
 
-	if hasGoModule(path) {
+	if hasGoModule(projectDirectory) {
 		args = append(args, "mod", "edit", "-module", projectName)
 	} else {
 		args = append(args, "mod", "init", projectName)
@@ -91,4 +83,13 @@ func editGoModule(projectName, path string) {
 	}
 
 	err = operation.MainExecutor.RunCommand(data)
+}
+
+func hasGoModule(projectDirectory string) bool {
+	path := fmt.Sprintf("%s/go.mod", projectDirectory)
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		return false
+	}
+
+	return true
 }
