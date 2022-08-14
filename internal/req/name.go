@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/operation"
-	"github.com/denizgursoy/gotouch/internal/util"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 )
 
@@ -28,14 +28,14 @@ type projectNameTask struct {
 }
 
 func (p projectNameTask) Complete(interface{}) (interface{}, error) {
-	path, _ := util.GetBaseName(p.ProjectName)
-	directoryPath := fmt.Sprintf("./%s", path)
+	folderName := filepath.Base(p.ProjectName)
+	directoryPath := fmt.Sprintf("./%s", folderName)
 	err := os.Mkdir(directoryPath, os.ModePerm)
 	return p.ProjectName, err
 }
 
 func validateProjectName(projectName string) error {
-	compile, err := regexp.Compile("^[a-zA-Z](\\w|\\.|_|-)*((\\/)?[a-zA-Z](\\w|\\.|_|-)*)*$")
+	compile, err := regexp.Compile("^([a-zA-Z]+(((\\w|(\\.[a-z]+))*)\\/)+[a-zA-Z]+(\\w)*)$|^([a-zA-Z]+\\w*)$")
 	if err != nil {
 		log.Fatalln("regex error")
 	}

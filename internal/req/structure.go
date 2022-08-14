@@ -7,9 +7,9 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/prompts"
-	"github.com/denizgursoy/gotouch/internal/util"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 type (
@@ -44,16 +44,13 @@ func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
 
 func (p projectStructureTask) Complete(previousResponse interface{}) (interface{}, error) {
 	projectName := previousResponse.(string)
-	path, err := util.GetBaseName(projectName)
-	if err != nil {
-		log.Printf("%v", err)
-	}
+	folderName := filepath.Base(projectName)
 
-	operation.Extractor.UncompressFromUrl(p.ProjectStructure.URL, path)
-	return nil, editGoModule(projectName)
+	operation.Extractor.UncompressFromUrl(p.ProjectStructure.URL, folderName)
+	return nil, editGoModule(projectName, folderName)
 }
 
-func editGoModule(projectName string) error {
+func editGoModule(projectName, folderName string) error {
 	workingDirectory, err := os.Getwd()
 
 	if err != nil {
@@ -61,10 +58,9 @@ func editGoModule(projectName string) error {
 		return err
 	}
 
-	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, projectName)
+	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, folderName)
 
 	err = os.Chdir(projectDirectory)
-
 	if err != nil {
 		log.Println(err)
 		return err
