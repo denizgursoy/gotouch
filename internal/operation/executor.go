@@ -35,7 +35,12 @@ func (e executor) Execute(requirements Requirements) error {
 	var previousResponse interface{}
 
 	for _, task := range tasks {
-		previousResponse = task.Complete(previousResponse)
+		data, err := task.Complete(previousResponse)
+
+		if err != nil {
+			return err
+		}
+		previousResponse = data
 	}
 
 	return nil

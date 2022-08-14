@@ -42,7 +42,7 @@ func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
 	}, nil
 }
 
-func (p projectStructureTask) Complete(previousResponse interface{}) interface{} {
+func (p projectStructureTask) Complete(previousResponse interface{}) (interface{}, error) {
 	projectName := previousResponse.(string)
 	path, err := util.GetBaseName(projectName)
 	if err != nil {
@@ -50,15 +50,15 @@ func (p projectStructureTask) Complete(previousResponse interface{}) interface{}
 	}
 
 	operation.Extractor.UncompressFromUrl(p.ProjectStructure.URL, path)
-	editGoModule(projectName)
-	return nil
+	return nil, editGoModule(projectName)
 }
 
-func editGoModule(projectName string) {
+func editGoModule(projectName string) error {
 	workingDirectory, err := os.Getwd()
 
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 
 	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, projectName)
@@ -67,6 +67,7 @@ func editGoModule(projectName string) {
 
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 
 	args := make([]string, 0)
@@ -82,7 +83,7 @@ func editGoModule(projectName string) {
 		Args:    args,
 	}
 
-	err = operation.MainExecutor.RunCommand(data)
+	return operation.MainExecutor.RunCommand(data)
 }
 
 func hasGoModule(projectDirectory string) bool {

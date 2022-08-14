@@ -27,11 +27,11 @@ type projectNameTask struct {
 	ProjectName string
 }
 
-func (p projectNameTask) Complete(interface{}) interface{} {
+func (p projectNameTask) Complete(interface{}) (interface{}, error) {
 	path, _ := util.GetBaseName(p.ProjectName)
 	directoryPath := fmt.Sprintf("./%s", path)
-	_ = os.Mkdir(directoryPath, os.ModePerm)
-	return p.ProjectName
+	err := os.Mkdir(directoryPath, os.ModePerm)
+	return p.ProjectName, err
 }
 
 func validateProjectName(projectName string) error {
