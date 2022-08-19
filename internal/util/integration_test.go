@@ -1,6 +1,6 @@
 //+build integration
 
-package uncompressor
+package util
 
 import (
 	"context"
@@ -11,6 +11,7 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"io"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -86,11 +87,60 @@ func (z *ZippingTestSuite) SetupTest() {
 func (z *ZippingTestSuite) TestUnzipping() {
 	z.moveToDirectory("unzip-test.txt")
 	z.executeCommand()
+
+	folderName := "unzip"
+
+	z.checkDefaultProjectStructure(folderName)
+
+	z.checkModuleName("module unzip", folderName)
 }
 
 func (z *ZippingTestSuite) TestGithub() {
 	z.moveToDirectory("github-full-name.txt")
 	z.executeCommand()
+
+	folderName := "call"
+
+	z.checkDefaultProjectStructure(folderName)
+	z.checkModuleName("module g.c/dg/call", folderName)
+}
+
+func (z *ZippingTestSuite) checkDefaultProjectStructure(folderName string) {
+	directories := make([]string, 0)
+	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
+	directories = append(directories, "init", "internal", "pkg", "configs", "test", "vendor")
+	z.checkDirectoriesExist(directories, folderName)
+
+	files := make([]string, 0)
+	files = append(files, "cmd/main.go", "go.mod")
+	z.checkFilesExist(files, folderName)
+}
+
+func (z *ZippingTestSuite) checkModuleName(expectedModuleName, folderName string) {
+	open, err := os.ReadFile(fmt.Sprintf("%s/%s/go.mod", z.mountPath, folderName))
+	if err != nil {
+		z.T().Fatal("go module file not found")
+	}
+	split := strings.Split(string(open), "\n")
+	if split[0] != expectedModuleName {
+		z.T().Fatal("Module name did not change")
+	}
+}
+
+func (z *ZippingTestSuite) checkDirectoriesExist(directories []string, folderName string) {
+	for _, directory := range directories {
+		if stat, err := os.Stat(fmt.Sprintf("%s/%s/%s", z.mountPath, folderName, directory)); err != nil || !stat.IsDir() {
+			z.T().Fatalf("%s does not exists", directory)
+		}
+	}
+}
+
+func (z *ZippingTestSuite) checkFilesExist(files []string, folderName string) {
+	for _, file := range files {
+		if stat, err := os.Stat(fmt.Sprintf("%s/%s/%s", z.mountPath, folderName, file)); err != nil || stat.IsDir() {
+			z.T().Fatalf("%s does not exists", file)
+		}
+	}
 }
 
 func (z *ZippingTestSuite) executeCommand() {
