@@ -4,6 +4,8 @@ go 1.16
 
 require (
 	github.com/artdarek/go-unzip v1.0.0 // indirect
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/hashicorp/go-uuid v1.0.1 // indirect
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.8.0 // indirect
