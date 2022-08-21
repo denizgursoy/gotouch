@@ -43,6 +43,7 @@ func (z *ZippingTestSuite) SetupTest() {
 	if uuidErr != nil {
 		z.T().Fatal("could not generate uuid", uuidErr)
 	}
+	z.T().Log("temp dir ->", os.TempDir())
 	z.mountPath = fmt.Sprintf("%s%s", os.TempDir(), generateUUID)
 	z.T().Log("mount:", z.mountPath)
 	mkdirErr := os.Mkdir(z.mountPath, os.ModePerm)
