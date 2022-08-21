@@ -6,8 +6,13 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    container:
+      image: aschmelyun/cleaver:latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: print
+        run: docker --version
 
       - name: Set up Go
         uses: actions/setup-go@v3
