@@ -51,16 +51,13 @@ func (p projectStructureTask) Complete(previousResponse interface{}) (interface{
 }
 
 func editGoModule(projectName, folderName string) error {
-	workingDirectory, err := os.Getwd()
-
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
+	workingDirectory := prompts.GetExtractLocation()
 	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, folderName)
+	fmt.Println(projectDirectory, "projectDirectory")
+	fmt.Println(hasGoModule(projectDirectory), "hasGoModule(projectDirectory)")
+	fmt.Println(prompts.IsTest(), "IsTest")
 
-	err = os.Chdir(projectDirectory)
+	err := os.Chdir(projectDirectory)
 	if err != nil {
 		log.Println(err)
 		return err

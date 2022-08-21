@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/operation"
+	"github.com/denizgursoy/gotouch/internal/prompts"
 	"log"
 	"os"
 	"path/filepath"
@@ -29,7 +30,7 @@ type projectNameTask struct {
 
 func (p projectNameTask) Complete(interface{}) (interface{}, error) {
 	folderName := filepath.Base(p.ProjectName)
-	directoryPath := fmt.Sprintf("./%s", folderName)
+	directoryPath := fmt.Sprintf("%s/%s", prompts.GetExtractLocation(), folderName)
 	err := os.Mkdir(directoryPath, os.ModePerm)
 	return p.ProjectName, err
 }
