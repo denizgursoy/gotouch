@@ -13,8 +13,8 @@ import (
 
 type (
 	ProjectNameRequirement struct {
-		P prompts.Prompter
-		M manager.Manager
+		Prompter prompts.Prompter
+		Manager  manager.Manager
 	}
 
 	projectNameTask struct {
@@ -24,11 +24,11 @@ type (
 )
 
 func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
-	projectName := p.P.AskForString("Enter Project Name", validateProjectName)
+	projectName := p.Prompter.AskForString("Enter Project Name", validateProjectName)
 
 	return &projectNameTask{
 		ProjectName: projectName,
-		m:           p.M,
+		m:           p.Manager,
 	}, nil
 }
 

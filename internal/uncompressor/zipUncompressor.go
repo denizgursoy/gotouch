@@ -5,38 +5,42 @@ import (
 	"github.com/artdarek/go-unzip"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 )
 
 type zipUncompressor struct {
+	manager manager.Manager
 }
 
-func newZipUncompressor() Uncompressor {
-	return zipUncompressor{}
+func newZipUncompressor(manager manager.Manager) Uncompressor {
+	return &zipUncompressor{
+		manager: manager,
+	}
 }
 
-func (z zipUncompressor) UncompressFromUrl(url, projectName string) {
+func (z *zipUncompressor) UncompressFromUrl(url, projectName string) {
 	client := http.Client{}
-	response, err := client.Get(url)
-	if err != nil {
-		println(err)
-		return
+	response, httpErr := client.Get(url)
+	if httpErr != nil {
+		log.Fatalln("could connect to url", httpErr)
 	}
-	filePath2 := filepath.Join(os.TempDir(), filepath.Base(url))
+	filePath := filepath.Join(os.TempDir(), filepath.Base(url))
 
-	create, err := os.Create(filePath2)
-	_, err = io.Copy(create, response.Body)
-
-	if err != nil {
-		fmt.Println("error")
+	create, createFileErr := os.Create(filePath)
+	if createFileErr != nil {
+		log.Fatalln("could create file", httpErr)
 	}
-	target := fmt.Sprintf("%s/%s", manager.GetInstance().GetExtractLocation(), projectName)
-	uz := unzip.New(filePath2, target)
 
-	err = uz.Extract()
-	if err != nil {
-		fmt.Println(err)
+	if _, copyErr := io.Copy(create, response.Body); copyErr != nil {
+		log.Fatalln("could not copy zip", copyErr)
+	}
+	target := fmt.Sprintf("%s/%s", z.manager.GetExtractLocation(), projectName)
+	uz := unzip.New(filePath, target)
+
+	if extractErr := uz.Extract(); extractErr != nil {
+		log.Fatalln("could unzip the file", extractErr)
 	}
 }

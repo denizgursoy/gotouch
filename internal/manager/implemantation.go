@@ -42,7 +42,7 @@ func (f *fManager) GetExtractLocation() string {
 	if f.IsTest() {
 		ex, err := os.Executable()
 		if err != nil {
-			panic(err)
+			log.Fatal("could not fetch executable information", err)
 		}
 		return filepath.Dir(ex)
 	} else {
@@ -51,12 +51,12 @@ func (f *fManager) GetExtractLocation() string {
 }
 
 func (f *fManager) GetWd() string {
-	getwd, err := os.Getwd()
+	wd, err := os.Getwd()
 	if err != nil {
-		panic(err)
+		log.Fatal("could not get working directory", err)
 	}
 
-	return getwd
+	return wd
 }
 
 func init() {
@@ -77,7 +77,6 @@ func init() {
 				ints = append(ints, byte(atoi))
 			}
 			urls = append(urls, string(ints))
-
 		}
 	}
 }

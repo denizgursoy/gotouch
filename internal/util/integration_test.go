@@ -157,7 +157,7 @@ func (z *ZippingTestSuite) executeCommand() {
 	command := []string{sprintf}
 	i, err := z.c.Exec(context.Background(), command)
 	if err != nil {
-		z.T().Fatal("could not create cont", err, i)
+		z.T().Fatal("could not execute command", err, i)
 	}
 }
 

@@ -11,22 +11,23 @@ import (
 
 type (
 	CreateNewProjectOptions struct {
-		l lister.Lister
-		p prompts.Prompter
-		m manager.Manager
-		u uncompressor.Uncompressor
+		lister       lister.Lister
+		prompter     prompts.Prompter
+		manager      manager.Manager
+		uncompressor uncompressor.Uncompressor
+		executor     operation.Executor
 	}
 )
 
-func CreateNewProject(options *CreateNewProjectOptions) error {
+func CreateNewProject(opts *CreateNewProjectOptions) error {
 	requirements := make(operation.Requirements, 0)
 
 	requirements = append(requirements, &req.ProjectNameRequirement{
-		P: options.p,
-		M: options.m,
+		Prompter: opts.prompter,
+		Manager:  opts.manager,
 	})
 
-	projects, err := options.l.GetDefaultProjects()
+	projects, err := opts.lister.GetDefaultProjects()
 
 	if err != nil {
 		return err
@@ -34,9 +35,9 @@ func CreateNewProject(options *CreateNewProjectOptions) error {
 
 	requirements = append(requirements, &req.ProjectStructureRequirement{
 		ProjectsData: projects,
-		P:            options.p,
-		U:            options.u,
+		Prompter:     opts.prompter,
+		Uncompressor: opts.uncompressor,
 	})
 
-	return operation.GetInstance().Execute(requirements)
+	return opts.executor.Execute(requirements)
 }

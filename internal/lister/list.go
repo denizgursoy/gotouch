@@ -7,7 +7,6 @@ import (
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"sync"
 )
@@ -37,7 +36,6 @@ func ParseToProjectStructureData(reader io.ReadCloser) ([]*model.ProjectStructur
 	err = yaml.Unmarshal(allBytes, &data)
 
 	if err != nil {
-		log.Println(err.Error())
 		return nil, ProjectDataParseError
 	}
 

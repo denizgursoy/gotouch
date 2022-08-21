@@ -44,8 +44,8 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		p := &ProjectStructureRequirement{
 			ProjectsData: testProjectData,
-			P:            mockPrompter,
-			U:            mockUncompressor,
+			Prompter:     mockPrompter,
+			Uncompressor: mockUncompressor,
 		}
 
 		input, err := p.AskForInput()
@@ -66,7 +66,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		mockPrompter := prompts.NewMockPrompter(controller)
 
 		p := &ProjectStructureRequirement{
-			P: mockPrompter,
+			Prompter: mockPrompter,
 		}
 
 		mockPrompter.

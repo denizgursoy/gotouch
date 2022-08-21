@@ -5,6 +5,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/lister"
+	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/operation"
+	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/uncompressor"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -18,7 +23,13 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		options := CreateNewProjectOptions{}
+		options := CreateNewProjectOptions{
+			lister:       lister.GetInstance(),
+			prompter:     prompts.GetInstance(),
+			manager:      manager.GetInstance(),
+			uncompressor: uncompressor.GetInstance(),
+			executor:     operation.GetInstance(),
+		}
 		err := CreateNewProject(&options)
 		log.Fatalln(err)
 	},

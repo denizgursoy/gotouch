@@ -16,8 +16,8 @@ import (
 type (
 	ProjectStructureRequirement struct {
 		ProjectsData []*model.ProjectStructureData
-		P            prompts.Prompter
-		U            uncompressor.Uncompressor
+		Prompter     prompts.Prompter
+		Uncompressor uncompressor.Uncompressor
 	}
 
 	projectStructureTask struct {
@@ -37,7 +37,7 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 		options = append(options, datum)
 	}
 
-	selected, err := p.P.AskForSelectionFromList(SelectProjectTypeDirection, options)
+	selected, err := p.Prompter.AskForSelectionFromList(SelectProjectTypeDirection, options)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 
 	return &projectStructureTask{
 		ProjectStructure: selected.(*model.ProjectStructureData),
-		U:                p.U,
+		U:                p.Uncompressor,
 	}, nil
 }
 

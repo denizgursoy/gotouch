@@ -2,7 +2,10 @@
 
 package uncompressor
 
-import "sync"
+import (
+	"github.com/denizgursoy/gotouch/internal/manager"
+	"sync"
+)
 
 type (
 	Uncompressor interface {
@@ -17,7 +20,7 @@ var (
 
 func GetInstance() Uncompressor {
 	once.Do(func() {
-		extractor = newZipUncompressor()
+		extractor = newZipUncompressor(manager.GetInstance())
 	})
 	return extractor
 }
