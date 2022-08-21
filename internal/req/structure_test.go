@@ -33,21 +33,15 @@ func TestStructure_AskForInput(t *testing.T) {
 		mockPrompter := prompts.NewMockPrompter(controller)
 		mockUncompressor := uncompressor.NewMockUncompressor(controller)
 
-		expectedValue := []*prompts.ListOption{
-			{
-				DisplayText: testProjectData[0].String(),
-				ReturnVal:   testProjectData[0],
-			},
-			{
-				DisplayText: testProjectData[1].String(),
-				ReturnVal:   testProjectData[1],
-			},
+		options := make([]prompts.Option, 0)
+		for _, datum := range testProjectData {
+			options = append(options, datum)
 		}
 
 		mockPrompter.
 			EXPECT().
-			AskForSelectionFromList(gomock.Eq(SelectProjectTypeDirection), gomock.Eq(expectedValue)).
-			Return(testProjectData[0]).
+			AskForSelectionFromList(gomock.Eq(SelectProjectTypeDirection), gomock.Eq(options)).
+			Return(testProjectData[0], nil).
 			Times(1)
 
 		p := &ProjectStructureRequirement{
@@ -67,32 +61,30 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NotNil(t, task.U)
 	})
 
-	t.Run("should return error if the project data structure list is empty", func(t *testing.T) {
+	t.Run("should return error from the prompt", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		defer controller.Finish()
+
+		mockPrompter := prompts.NewMockPrompter(controller)
+
 		p := &ProjectStructureRequirement{
-			ProjectsData: nil,
+			P: mockPrompter,
 		}
+
+		mockPrompter.
+			EXPECT().
+			AskForSelectionFromList(gomock.Any(), gomock.Any()).
+			Return(nil, prompts.ErrProductStructureListIsEmpty).
+			Times(1)
 
 		input, err := p.AskForInput()
 
 		require.NotNil(t, err)
-		require.ErrorIs(t, err, ErrProductStructureListIsEmpty)
+		require.ErrorIs(t, err, prompts.ErrProductStructureListIsEmpty)
 
 		require.Nil(t, input)
 	})
 
-	t.Run("should return first item if there is only one project structure", func(t *testing.T) {
-		p := &ProjectStructureRequirement{
-			ProjectsData: testDataWithOneStructure,
-		}
-
-		input, err := p.AskForInput()
-
-		require.Nil(t, err)
-		require.NotNil(t, input)
-
-		task := input.(*projectStructureTask)
-		require.EqualValues(t, task.ProjectStructure, testDataWithOneStructure[0])
-	})
 }
 
 func TestStructure_Complete(t *testing.T) {

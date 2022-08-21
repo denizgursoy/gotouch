@@ -3,6 +3,7 @@
 package prompts
 
 import (
+	"errors"
 	"sync"
 )
 
@@ -11,10 +12,14 @@ var (
 	prompter Prompter
 )
 
+var (
+	ErrProductStructureListIsEmpty = errors.New("options can not be empty")
+)
+
 type (
 	Prompter interface {
 		AskForString(direction string, validator StringValidator) string
-		AskForSelectionFromList(direction string, listOptions []*ListOption) interface{}
+		AskForSelectionFromList(direction string, list []Option) (interface{}, error)
 	}
 
 	ListOption struct {
@@ -23,11 +28,15 @@ type (
 	}
 
 	StringValidator func(string) error
+
+	Option interface {
+		String() string
+	}
 )
 
 func GetInstance() Prompter {
 	once.Do(func() {
-		prompter = promptUi{}
+		prompter = &promptUi{}
 	})
 	return prompter
 }

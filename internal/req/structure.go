@@ -31,34 +31,21 @@ const (
 	SelectProjectTypeDirection = "Select Project Type"
 )
 
-var (
-	ErrProductStructureListIsEmpty = errors.New("project strcutre can not be empty")
-)
-
 func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
-	projectCount := len(p.ProjectsData)
 
-	if projectCount == 0 {
-		return nil, ErrProductStructureListIsEmpty
-	} else if projectCount == 1 {
-		return &projectStructureTask{
-			ProjectStructure: p.ProjectsData[0],
-			U:                p.U,
-		}, nil
+	options := make([]prompts.Option, 0)
+	for _, datum := range p.ProjectsData {
+		options = append(options, datum)
 	}
 
-	projectList := make([]*prompts.ListOption, 0)
+	selected, err := p.P.AskForSelectionFromList(SelectProjectTypeDirection, options)
 
-	for _, project := range p.ProjectsData {
-		projectList = append(projectList, &prompts.ListOption{
-			DisplayText: project.String(),
-			ReturnVal:   project,
-		})
+	if err != nil {
+		return nil, err
 	}
 
-	selected := p.P.AskForSelectionFromList(SelectProjectTypeDirection, projectList).(*lister.ProjectStructureData)
 	return &projectStructureTask{
-		ProjectStructure: selected,
+		ProjectStructure: selected.(*lister.ProjectStructureData),
 		U:                p.U,
 	}, nil
 }

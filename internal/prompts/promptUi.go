@@ -9,10 +9,19 @@ import (
 type promptUi struct {
 }
 
-func (p promptUi) AskForSelectionFromList(direction string, listOptions []*ListOption) interface{} {
+func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (interface{}, error) {
+
+	count := len(list)
+
+	if count == 0 {
+		return nil, ErrProductStructureListIsEmpty
+	} else if count == 1 {
+		return list[0], nil
+	}
+
 	options := make([]string, 0)
-	for _, option := range listOptions {
-		options = append(options, option.DisplayText)
+	for _, item := range list {
+		options = append(options, item.String())
 	}
 
 	prompt := promptui.Select{
@@ -23,13 +32,13 @@ func (p promptUi) AskForSelectionFromList(direction string, listOptions []*ListO
 
 	index, _, err := prompt.Run()
 	if err != nil {
-		log.Println(err)
+		return nil, err
 	}
 
-	return listOptions[index].ReturnVal
+	return list[index], nil
 }
 
-func (p promptUi) AskForString(direction string, validator StringValidator) string {
+func (p *promptUi) AskForString(direction string, validator StringValidator) string {
 	prompt := promptui.Prompt{
 		Label:    direction,
 		Validate: promptui.ValidateFunc(validator),
