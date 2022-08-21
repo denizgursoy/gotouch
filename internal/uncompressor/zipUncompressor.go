@@ -3,7 +3,7 @@ package uncompressor
 import (
 	"fmt"
 	"github.com/artdarek/go-unzip"
-	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/manager"
 	"io"
 	"net/http"
 	"os"
@@ -32,7 +32,7 @@ func (z zipUncompressor) UncompressFromUrl(url, projectName string) {
 	if err != nil {
 		fmt.Println("error")
 	}
-	target := fmt.Sprintf("%s/%s", prompts.GetExtractLocation(), projectName)
+	target := fmt.Sprintf("%s/%s", manager.GetInstance().GetExtractLocation(), projectName)
 	uz := unzip.New(filePath2, target)
 
 	err = uz.Extract()

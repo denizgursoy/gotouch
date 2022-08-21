@@ -1,3 +1,5 @@
+//go:generate mockgen -source=./list.go -destination=mock-list.go -package=lister
+
 package lister
 
 import (

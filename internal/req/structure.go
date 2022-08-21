@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/lister"
+	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/uncompressor"
 	"log"
 	"os"
 	"path/filepath"
@@ -46,16 +48,16 @@ func (p projectStructureTask) Complete(previousResponse interface{}) (interface{
 	projectName := previousResponse.(string)
 	folderName := filepath.Base(projectName)
 
-	operation.Extractor.UncompressFromUrl(p.ProjectStructure.URL, folderName)
+	uncompressor.GetInstance().UncompressFromUrl(p.ProjectStructure.URL, folderName)
 	return nil, editGoModule(projectName, folderName)
 }
 
 func editGoModule(projectName, folderName string) error {
-	workingDirectory := prompts.GetExtractLocation()
+	workingDirectory := manager.GetInstance().GetExtractLocation()
 	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, folderName)
 	fmt.Println(projectDirectory, "projectDirectory")
 	fmt.Println(hasGoModule(projectDirectory), "hasGoModule(projectDirectory)")
-	fmt.Println(prompts.IsTest(), "IsTest")
+	fmt.Println(manager.GetInstance().IsTest(), "IsTest")
 
 	err := os.Chdir(projectDirectory)
 	if err != nil {
@@ -76,7 +78,7 @@ func editGoModule(projectName, folderName string) error {
 		Args:    args,
 	}
 
-	return operation.MainExecutor.RunCommand(data)
+	return operation.GetInstance().RunCommand(data)
 }
 
 func hasGoModule(projectDirectory string) bool {

@@ -1,3 +1,5 @@
+//go:generate mockgen -source=./prompt.go -destination=mock-prompt.go -package=prompts
+
 package prompts
 
 import (

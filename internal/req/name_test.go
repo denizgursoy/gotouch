@@ -3,60 +3,18 @@
 package req
 
 import (
-	"github.com/denizgursoy/gotouch/internal/model"
-	"reflect"
+	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
-func TestProjectNameRequirement_AskForInput(t *testing.T) {
-	tests := []struct {
-		name    string
-		want    model.Task
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := ProjectNameRequirement{}
-			got, err := p.AskForInput()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("AskForInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("AskForInput() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_projectNameTask_Complete(t *testing.T) {
-	type fields struct {
-		ProjectName string
-	}
-	type args struct {
-		in0 interface{}
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   interface{}
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := projectNameTask{
-				ProjectName: tt.fields.ProjectName,
-			}
-			if got, _ := p.Complete(tt.args.in0); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Complete() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+var (
+	testProjectName = "test-project"
+	testUrlName     = "github.com/user/test-project"
+	extractLocation = "/tmp/var"
+)
 
 func Test_validateProjectName(t *testing.T) {
 	type args struct {
@@ -170,4 +128,80 @@ func Test_validateProjectName(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestProjectNameRequirement_AskForInput(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	mockPrompter := prompts.NewMockPrompter(controller)
+	mockManager := manager.NewMockManager(controller)
+
+	mockPrompter.
+		EXPECT().
+		AskForString(gomock.Any(), gomock.Any()).
+		Return(testProjectName).
+		Times(1)
+
+	requirement := ProjectNameRequirement{
+		mockPrompter,
+		mockManager,
+	}
+
+	input, err := requirement.AskForInput()
+	if err != nil {
+		return
+	}
+
+	require.NoError(t, err)
+	require.NotNil(t, input)
+
+	task := input.(*projectNameTask)
+	require.NotNil(t, task.m)
+	require.EqualValues(t, testProjectName, task.ProjectName)
+
+}
+
+func Test_projectNameTask_Complete(t *testing.T) {
+
+	type args struct {
+		projectName      string
+		projectDirectory string
+	}
+	testCases := []args{
+		{projectName: testProjectName, projectDirectory: extractLocation + "/" + testProjectName},
+		{projectName: testUrlName, projectDirectory: extractLocation + "/" + testProjectName},
+	}
+
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	for _, testCase := range testCases {
+
+		mockManager := manager.NewMockManager(controller)
+
+		mockManager.
+			EXPECT().
+			GetExtractLocation().
+			Return(extractLocation).
+			Times(1)
+
+		mockManager.
+			EXPECT().
+			CreateDirectoryIfNotExists(gomock.Eq(testCase.projectDirectory))
+
+		task := projectNameTask{
+			ProjectName: testCase.projectName,
+			m:           mockManager,
+		}
+
+		complete, err := task.Complete(nil)
+		require.NoError(t, err)
+		require.NotNil(t, complete)
+
+		actualOutput := complete.(string)
+
+		require.EqualValues(t, testCase.projectName, actualOutput)
+	}
+
 }

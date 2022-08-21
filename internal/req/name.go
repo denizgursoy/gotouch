@@ -3,36 +3,40 @@ package req
 import (
 	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"log"
-	"os"
 	"path/filepath"
 	"regexp"
 )
 
-type ProjectNameRequirement struct {
-}
+type (
+	ProjectNameRequirement struct {
+		P prompts.Prompter
+		M manager.Manager
+	}
 
-func (p ProjectNameRequirement) AskForInput() (model.Task, error) {
+	projectNameTask struct {
+		ProjectName string
+		m           manager.Manager
+	}
+)
 
-	projectName := operation.Prompter.AskForString("Enter Project Name", validateProjectName)
+func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
+	projectName := p.P.AskForString("Enter Project Name", validateProjectName)
 
-	return projectNameTask{
+	return &projectNameTask{
 		ProjectName: projectName,
+		m:           p.M,
 	}, nil
 }
 
-type projectNameTask struct {
-	ProjectName string
-}
-
-func (p projectNameTask) Complete(interface{}) (interface{}, error) {
+func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
 	folderName := filepath.Base(p.ProjectName)
-	directoryPath := fmt.Sprintf("%s/%s", prompts.GetExtractLocation(), folderName)
-	err := os.Mkdir(directoryPath, os.ModePerm)
-	return p.ProjectName, err
+	directoryPath := fmt.Sprintf("%s/%s", p.m.GetExtractLocation(), folderName)
+	dirCreationErr := p.m.CreateDirectoryIfNotExists(directoryPath)
+	return p.ProjectName, dirCreationErr
 }
 
 func validateProjectName(projectName string) error {

@@ -5,7 +5,7 @@ package util
 import (
 	"context"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/hashicorp/go-uuid"
 	"github.com/stretchr/testify/suite"
 	"github.com/testcontainers/testcontainers-go"
@@ -37,7 +37,7 @@ func (z *ZippingTestSuite) SetupSuite() {
 func (z *ZippingTestSuite) SetupTest() {
 
 	z.containerWorkingDir = "/go/test"
-	z.execPath = prompts.GetWd()
+	z.execPath = manager.GetInstance().GetWd()
 
 	generateUUID, uuidErr := uuid.GenerateUUID()
 	if uuidErr != nil {
