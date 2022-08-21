@@ -28,32 +28,34 @@ func TestUnzipping(t *testing.T) {
 }
 
 func (z *ZippingTestSuite) SetupSuite() {
-
+	err := os.Chdir("../../")
+	if err != nil {
+		z.T().Fatal("could not change directory", err)
+	}
 }
 
 func (z *ZippingTestSuite) SetupTest() {
-	err := os.Chdir("../../")
 
 	z.containerWorkingDir = "/go/test"
 	z.execPath = prompts.GetWd()
 
-	generateUUID, err2 := uuid.GenerateUUID()
-	if err2 != nil {
-		z.T().Fatal("could not create cnt", err)
+	generateUUID, uuidErr := uuid.GenerateUUID()
+	if uuidErr != nil {
+		z.T().Fatal("could not generate uuid", uuidErr)
 	}
 	z.mountPath = fmt.Sprintf("%s%s", os.TempDir(), generateUUID)
 	z.T().Log("mount:", z.mountPath)
-	err = os.Mkdir(z.mountPath, os.ModePerm)
-	if err != nil {
-		z.T().Fatal("could not create cnt", err)
+	mkdirErr := os.Mkdir(z.mountPath, os.ModePerm)
+	if mkdirErr != nil {
+		z.T().Fatal("could not create directory", mkdirErr)
 	}
 	binaryName := "gotouch-linux-test"
 	sourcePath := fmt.Sprintf("%s/%s", z.execPath, binaryName)
 	targetPath := fmt.Sprintf("%s/gotouch", z.mountPath)
 
-	i, err := z.copy(sourcePath, targetPath)
-	if err != nil {
-		z.T().Fatal("could not create cnt", err, i)
+	i, uuidErr := z.copy(sourcePath, targetPath)
+	if uuidErr != nil {
+		z.T().Fatal("could not copy the binary", uuidErr, i)
 	}
 
 	request := testcontainers.ContainerRequest{
@@ -70,7 +72,7 @@ func (z *ZippingTestSuite) SetupTest() {
 		},
 	}
 
-	cnt, err := testcontainers.GenericContainer(context.Background(), testcontainers.GenericContainerRequest{
+	cnt, uuidErr := testcontainers.GenericContainer(context.Background(), testcontainers.GenericContainerRequest{
 		ContainerRequest: request,
 		Started:          true,
 	})
@@ -78,10 +80,11 @@ func (z *ZippingTestSuite) SetupTest() {
 	z.T().Log("command:", fmt.Sprintf("docker exec -it %s /bin/bash", cnt.GetContainerID()))
 
 	if cnt == nil {
-		z.T().Fatal("could not create cnt", err)
+		z.T().Fatal("could not create cnt", uuidErr)
 	}
 
 	z.c = cnt
+
 }
 
 func (z *ZippingTestSuite) TestUnzipping() {
