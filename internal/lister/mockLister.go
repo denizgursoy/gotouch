@@ -34,17 +34,17 @@ func (m *MockLister) EXPECT() *MockListerMockRecorder {
 	return m.recorder
 }
 
-// GetDefaultProjects mocks base method.
-func (m *MockLister) GetDefaultProjects() ([]*model.ProjectStructureData, error) {
+// GetProjectList mocks base method.
+func (m *MockLister) GetProjectList() ([]*model.ProjectStructureData, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDefaultProjects")
+	ret := m.ctrl.Call(m, "GetProjectList")
 	ret0, _ := ret[0].([]*model.ProjectStructureData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetDefaultProjects indicates an expected call of GetDefaultProjects.
-func (mr *MockListerMockRecorder) GetDefaultProjects() *gomock.Call {
+// GetProjectList indicates an expected call of GetProjectList.
+func (mr *MockListerMockRecorder) GetProjectList() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultProjects", reflect.TypeOf((*MockLister)(nil).GetDefaultProjects))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProjectList", reflect.TypeOf((*MockLister)(nil).GetProjectList))
 }

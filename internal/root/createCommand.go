@@ -27,7 +27,7 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 		Manager:  opts.manager,
 	})
 
-	projects, err := opts.lister.GetDefaultProjects()
+	projects, err := opts.lister.GetProjectList()
 
 	if err != nil {
 		return err

@@ -31,7 +31,7 @@ func TestCreateNewProject(t *testing.T) {
 		expectedProjectData := []*model.ProjectStructureData{&project1}
 		mockLister.
 			EXPECT().
-			GetDefaultProjects().
+			GetProjectList().
 			Return(expectedProjectData, nil).
 			Times(1)
 
@@ -46,7 +46,7 @@ func TestCreateNewProject(t *testing.T) {
 
 				require.IsType(t, (*req.ProjectNameRequirement)(nil), name)
 				require.IsType(t, (*req.ProjectStructureRequirement)(nil), structure)
-				require.IsType(t, expectedProjectData, structure.ProjectsData)
+				require.EqualValues(t, expectedProjectData, structure.ProjectsData)
 			})
 
 		opts := &CreateCommandOptions{

@@ -25,7 +25,7 @@ func newHttpLister(client *http.Client, url *string) Lister {
 	}
 }
 
-func (h httpLister) GetDefaultProjects() ([]*model.ProjectStructureData, error) {
+func (h httpLister) GetProjectList() ([]*model.ProjectStructureData, error) {
 	response, err := h.client.Get(*h.URL)
 
 	if err != nil {

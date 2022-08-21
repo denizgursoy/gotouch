@@ -13,7 +13,7 @@ import (
 
 type (
 	Lister interface {
-		GetDefaultProjects() ([]*model.ProjectStructureData, error)
+		GetProjectList() ([]*model.ProjectStructureData, error)
 	}
 )
 

@@ -59,7 +59,7 @@ func Test_gitHubLister_GetDefaultProjects(t *testing.T) {
 
 		githubLister := newHttpLister(client, &PropertiesUrl)
 
-		projects, err := githubLister.GetDefaultProjects()
+		projects, err := githubLister.GetProjectList()
 
 		require.NoError(t, err)
 		require.NotNil(t, projects)
@@ -74,7 +74,7 @@ func Test_gitHubLister_GetDefaultProjects(t *testing.T) {
 		})
 		githubLister := newHttpLister(client, &PropertiesUrl)
 
-		projects, err := githubLister.GetDefaultProjects()
+		projects, err := githubLister.GetProjectList()
 
 		require.Nil(t, projects)
 		require.NotNil(t, err)
@@ -91,7 +91,7 @@ func Test_gitHubLister_GetDefaultProjects(t *testing.T) {
 		})
 		githubLister := newHttpLister(client, &PropertiesUrl)
 
-		projects, err := githubLister.GetDefaultProjects()
+		projects, err := githubLister.GetProjectList()
 
 		require.Nil(t, projects)
 		require.NotNil(t, err)
@@ -110,7 +110,7 @@ func Test_gitHubLister_GetDefaultProjects(t *testing.T) {
 
 		githubLister := newHttpLister(client, &PropertiesUrl)
 
-		projects, err := githubLister.GetDefaultProjects()
+		projects, err := githubLister.GetProjectList()
 
 		require.Nil(t, projects)
 		require.NotNil(t, err)
