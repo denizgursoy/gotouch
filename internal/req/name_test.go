@@ -3,6 +3,7 @@
 package req
 
 import (
+	"errors"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"github.com/golang/mock/gomock"
@@ -163,20 +164,50 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 }
 
 func Test_projectNameTask_Complete(t *testing.T) {
+	t.Run("should create directories successfully", func(t *testing.T) {
+		type args struct {
+			projectName      string
+			projectDirectory string
+		}
+		testCases := []args{
+			{projectName: testProjectName, projectDirectory: extractLocation + "/" + testProjectName},
+			{projectName: testUrlName, projectDirectory: extractLocation + "/" + testProjectName},
+		}
 
-	type args struct {
-		projectName      string
-		projectDirectory string
-	}
-	testCases := []args{
-		{projectName: testProjectName, projectDirectory: extractLocation + "/" + testProjectName},
-		{projectName: testUrlName, projectDirectory: extractLocation + "/" + testProjectName},
-	}
+		controller := gomock.NewController(t)
+		defer controller.Finish()
 
-	controller := gomock.NewController(t)
-	defer controller.Finish()
+		for _, testCase := range testCases {
 
-	for _, testCase := range testCases {
+			mockManager := manager.NewMockManager(controller)
+
+			mockManager.
+				EXPECT().
+				GetExtractLocation().
+				Return(extractLocation).
+				Times(1)
+
+			mockManager.
+				EXPECT().
+				CreateDirectoryIfNotExists(gomock.Eq(testCase.projectDirectory))
+
+			task := projectNameTask{
+				ProjectName: testCase.projectName,
+				m:           mockManager,
+			}
+
+			complete, err := task.Complete(nil)
+			require.NoError(t, err)
+			require.NotNil(t, complete)
+
+			actualOutput := complete.(string)
+
+			require.EqualValues(t, testCase.projectName, actualOutput)
+		}
+	})
+	t.Run("should return error if directory exists", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		defer controller.Finish()
 
 		mockManager := manager.NewMockManager(controller)
 
@@ -188,20 +219,18 @@ func Test_projectNameTask_Complete(t *testing.T) {
 
 		mockManager.
 			EXPECT().
-			CreateDirectoryIfNotExists(gomock.Eq(testCase.projectDirectory))
+			CreateDirectoryIfNotExists(gomock.Any()).
+			Return(errors.New("could not create folder")).
+			Times(1)
 
 		task := projectNameTask{
-			ProjectName: testCase.projectName,
+			ProjectName: testProjectName,
 			m:           mockManager,
 		}
 
 		complete, err := task.Complete(nil)
-		require.NoError(t, err)
-		require.NotNil(t, complete)
 
-		actualOutput := complete.(string)
-
-		require.EqualValues(t, testCase.projectName, actualOutput)
-	}
-
+		require.NotNil(t, err)
+		require.Nil(t, complete)
+	})
 }

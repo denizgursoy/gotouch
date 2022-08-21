@@ -36,7 +36,11 @@ func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
 	folderName := filepath.Base(p.ProjectName)
 	directoryPath := fmt.Sprintf("%s/%s", p.m.GetExtractLocation(), folderName)
 	dirCreationErr := p.m.CreateDirectoryIfNotExists(directoryPath)
-	return p.ProjectName, dirCreationErr
+
+	if dirCreationErr != nil {
+		return nil, dirCreationErr
+	}
+	return p.ProjectName, nil
 }
 
 func validateProjectName(projectName string) error {
