@@ -80,7 +80,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.Nil(t, input)
 	})
 
-	t.Run("should return first item if three is only one project structure", func(t *testing.T) {
+	t.Run("should return first item if there is only one project structure", func(t *testing.T) {
 		p := &ProjectStructureRequirement{
 			ProjectsData: testDataWithOneStructure,
 		}
@@ -93,4 +93,8 @@ func TestStructure_AskForInput(t *testing.T) {
 		task := input.(*projectStructureTask)
 		require.EqualValues(t, task.ProjectStructure, testDataWithOneStructure[0])
 	})
+}
+
+func TestStructure_Complete(t *testing.T) {
+	//TODO write test
 }

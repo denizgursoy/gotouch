@@ -36,11 +36,11 @@ var (
 )
 
 func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
+	projectCount := len(p.ProjectsData)
 
-	projectLength := len(p.ProjectsData)
-	if projectLength == 0 {
+	if projectCount == 0 {
 		return nil, ErrProductStructureListIsEmpty
-	} else if projectLength == 1 {
+	} else if projectCount == 1 {
 		return &projectStructureTask{
 			ProjectStructure: p.ProjectsData[0],
 			U:                p.U,
