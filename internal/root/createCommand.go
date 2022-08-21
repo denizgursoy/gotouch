@@ -10,7 +10,7 @@ import (
 )
 
 type (
-	CreateNewProjectOptions struct {
+	CreateCommandOptions struct {
 		lister       lister.Lister
 		prompter     prompter.Prompter
 		manager      manager.Manager
@@ -19,7 +19,7 @@ type (
 	}
 )
 
-func CreateNewProject(opts *CreateNewProjectOptions) error {
+func CreateNewProject(opts *CreateCommandOptions) error {
 	requirements := make(executor.Requirements, 0)
 
 	requirements = append(requirements, &req.ProjectNameRequirement{
