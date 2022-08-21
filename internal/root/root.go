@@ -24,11 +24,11 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		options := CreateCommandOptions{
-			lister:       lister.GetInstance(),
-			prompter:     prompter.GetInstance(),
-			manager:      manager.GetInstance(),
-			uncompressor: compressor.GetInstance(),
-			executor:     executor.GetInstance(),
+			lister:     lister.GetInstance(),
+			prompter:   prompter.GetInstance(),
+			manager:    manager.GetInstance(),
+			compressor: compressor.GetInstance(),
+			executor:   executor.GetInstance(),
 		}
 		err := CreateNewProject(&options)
 		log.Fatalln(err)

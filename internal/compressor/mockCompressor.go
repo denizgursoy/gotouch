@@ -10,37 +10,37 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockUncompressor is a mock of Uncompressor interface.
-type MockUncompressor struct {
+// MockCompressor is a mock of Compressor interface.
+type MockCompressor struct {
 	ctrl     *gomock.Controller
-	recorder *MockUncompressorMockRecorder
+	recorder *MockCompressorMockRecorder
 }
 
-// MockUncompressorMockRecorder is the mock recorder for MockUncompressor.
-type MockUncompressorMockRecorder struct {
-	mock *MockUncompressor
+// MockCompressorMockRecorder is the mock recorder for MockCompressor.
+type MockCompressorMockRecorder struct {
+	mock *MockCompressor
 }
 
-// NewMockUncompressor creates a new mock instance.
-func NewMockUncompressor(ctrl *gomock.Controller) *MockUncompressor {
-	mock := &MockUncompressor{ctrl: ctrl}
-	mock.recorder = &MockUncompressorMockRecorder{mock}
+// NewMockCompressor creates a new mock instance.
+func NewMockCompressor(ctrl *gomock.Controller) *MockCompressor {
+	mock := &MockCompressor{ctrl: ctrl}
+	mock.recorder = &MockCompressorMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockUncompressor) EXPECT() *MockUncompressorMockRecorder {
+func (m *MockCompressor) EXPECT() *MockCompressorMockRecorder {
 	return m.recorder
 }
 
 // UncompressFromUrl mocks base method.
-func (m *MockUncompressor) UncompressFromUrl(url, directoryName string) {
+func (m *MockCompressor) UncompressFromUrl(url, directoryName string) {
 	m.ctrl.T.Helper()
 	m.ctrl.Call(m, "UncompressFromUrl", url, directoryName)
 }
 
 // UncompressFromUrl indicates an expected call of UncompressFromUrl.
-func (mr *MockUncompressorMockRecorder) UncompressFromUrl(url, directoryName interface{}) *gomock.Call {
+func (mr *MockCompressorMockRecorder) UncompressFromUrl(url, directoryName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromUrl", reflect.TypeOf((*MockUncompressor)(nil).UncompressFromUrl), url, directoryName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromUrl", reflect.TypeOf((*MockCompressor)(nil).UncompressFromUrl), url, directoryName)
 }

@@ -15,7 +15,7 @@ type zipUncompressor struct {
 	manager manager.Manager
 }
 
-func newZipUncompressor(manager manager.Manager) Uncompressor {
+func newZipUncompressor(manager manager.Manager) Compressor {
 	return &zipUncompressor{
 		manager: manager,
 	}

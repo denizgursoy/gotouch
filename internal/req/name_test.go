@@ -159,7 +159,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		require.NotNil(t, input)
 
 		task := input.(*projectNameTask)
-		require.NotNil(t, task.m)
+		require.NotNil(t, task.Manager)
 		require.EqualValues(t, testProjectName, task.ProjectName)
 	})
 
@@ -221,7 +221,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 
 			task := projectNameTask{
 				ProjectName: testCase.projectName,
-				m:           mockManager,
+				Manager:     mockManager,
 			}
 
 			complete, err := task.Complete(nil)
@@ -253,7 +253,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 
 		task := projectNameTask{
 			ProjectName: testProjectName,
-			m:           mockManager,
+			Manager:     mockManager,
 		}
 
 		complete, err := task.Complete(nil)

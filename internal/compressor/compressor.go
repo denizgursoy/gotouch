@@ -8,17 +8,17 @@ import (
 )
 
 type (
-	Uncompressor interface {
+	Compressor interface {
 		UncompressFromUrl(url, directoryName string)
 	}
 )
 
 var (
-	extractor Uncompressor
+	extractor Compressor
 	once      sync.Once
 )
 
-func GetInstance() Uncompressor {
+func GetInstance() Compressor {
 	once.Do(func() {
 		extractor = newZipUncompressor(manager.GetInstance())
 	})

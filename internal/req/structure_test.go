@@ -32,7 +32,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		defer controller.Finish()
 
 		mockPrompter := prompter.NewMockPrompter(controller)
-		mockUncompressor := compressor.NewMockUncompressor(controller)
+		mockUncompressor := compressor.NewMockCompressor(controller)
 
 		options := make([]prompter.Option, 0)
 		for _, datum := range testProjectData {
@@ -48,7 +48,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		p := &ProjectStructureRequirement{
 			ProjectsData: testProjectData,
 			Prompter:     mockPrompter,
-			Uncompressor: mockUncompressor,
+			Compressor:   mockUncompressor,
 		}
 
 		input, err := p.AskForInput()
@@ -104,7 +104,7 @@ func TestStructure_Complete(t *testing.T) {
 			{ProjectName: testUrlName, DirectoryName: testProjectName},
 		}
 		for _, testCase := range testCases {
-			mockUncompressor := compressor.NewMockUncompressor(controller)
+			mockUncompressor := compressor.NewMockCompressor(controller)
 			mockManager := manager.NewMockManager(controller)
 
 			mockUncompressor.

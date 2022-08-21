@@ -1,6 +1,7 @@
 package root
 
 import (
+	"errors"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -11,15 +12,24 @@ import (
 
 type (
 	CreateCommandOptions struct {
-		lister       lister.Lister
-		prompter     prompter.Prompter
-		manager      manager.Manager
-		uncompressor compressor.Uncompressor
-		executor     executor.Executor
+		lister     lister.Lister
+		prompter   prompter.Prompter
+		manager    manager.Manager
+		compressor compressor.Compressor
+		executor   executor.Executor
 	}
 )
 
+var (
+	ErrMissingField = errors.New("all fields should be provided")
+)
+
 func CreateNewProject(opts *CreateCommandOptions) error {
+
+	if !isValid(opts) {
+		return ErrMissingField
+	}
+
 	requirements := make(executor.Requirements, 0)
 
 	requirements = append(requirements, &req.ProjectNameRequirement{
@@ -36,9 +46,17 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 	requirements = append(requirements, &req.ProjectStructureRequirement{
 		ProjectsData: projects,
 		Prompter:     opts.prompter,
-		Uncompressor: opts.uncompressor,
+		Compressor:   opts.compressor,
 		Manager:      opts.manager,
 	})
 
 	return opts.executor.Execute(requirements)
+}
+
+func isValid(opts *CreateCommandOptions) bool {
+	return opts.compressor != nil &&
+		opts.executor != nil &&
+		opts.lister != nil &&
+		opts.prompter != nil &&
+		opts.manager != nil
 }

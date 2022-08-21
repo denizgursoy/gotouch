@@ -19,12 +19,16 @@ type (
 
 	projectNameTask struct {
 		ProjectName string
-		m           manager.Manager
+		Manager     manager.Manager
 	}
 )
 
+const (
+	ProjectNameDirection = "Enter Project Name"
+)
+
 func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
-	projectName, err := p.Prompter.AskForString("Enter Project Name", validateProjectName)
+	projectName, err := p.Prompter.AskForString(ProjectNameDirection, validateProjectName)
 
 	if err != nil {
 		return nil, err
@@ -32,14 +36,14 @@ func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
 
 	return &projectNameTask{
 		ProjectName: projectName,
-		m:           p.Manager,
+		Manager:     p.Manager,
 	}, nil
 }
 
 func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
 	folderName := filepath.Base(p.ProjectName)
-	directoryPath := fmt.Sprintf("%s/%s", p.m.GetExtractLocation(), folderName)
-	dirCreationErr := p.m.CreateDirectoryIfNotExists(directoryPath)
+	directoryPath := fmt.Sprintf("%s/%s", p.Manager.GetExtractLocation(), folderName)
+	dirCreationErr := p.Manager.CreateDirectoryIfNotExists(directoryPath)
 
 	if dirCreationErr != nil {
 		return nil, dirCreationErr
