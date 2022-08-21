@@ -17,38 +17,51 @@ import (
 type (
 	ProjectStructureRequirement struct {
 		ProjectsData []*lister.ProjectStructureData
+		P            prompts.Prompter
+		U            uncompressor.Uncompressor
 	}
 
 	projectStructureTask struct {
 		ProjectStructure *lister.ProjectStructureData
+		U                uncompressor.Uncompressor
 	}
 )
 
-func (p ProjectStructureRequirement) AskForInput() (model.Task, error) {
+const (
+	SelectProjectTypeDirection = "Select Project Type"
+)
 
-	instance := prompts.GetInstance()
+var (
+	ErrProductStructureListIsEmpty = errors.New("project strcutre can not be empty")
+)
+
+func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
+
+	if len(p.ProjectsData) == 0 {
+		return nil, ErrProductStructureListIsEmpty
+	}
 
 	projectList := make([]*prompts.ListOption, 0)
 
 	for _, project := range p.ProjectsData {
-		displayText := fmt.Sprintf("%s (%s)", project.Name, project.Reference)
 		projectList = append(projectList, &prompts.ListOption{
-			DisplayText: displayText,
+			DisplayText: project.String(),
 			ReturnVal:   project,
 		})
 	}
 
-	selected := instance.AskForSelectionFromList("select project type", projectList).(*lister.ProjectStructureData)
-	return projectStructureTask{
+	selected := p.P.AskForSelectionFromList(SelectProjectTypeDirection, projectList).(*lister.ProjectStructureData)
+	return &projectStructureTask{
 		ProjectStructure: selected,
+		U:                p.U,
 	}, nil
 }
 
-func (p projectStructureTask) Complete(previousResponse interface{}) (interface{}, error) {
+func (p *projectStructureTask) Complete(previousResponse interface{}) (interface{}, error) {
 	projectName := previousResponse.(string)
 	folderName := filepath.Base(projectName)
 
-	uncompressor.GetInstance().UncompressFromUrl(p.ProjectStructure.URL, folderName)
+	p.U.UncompressFromUrl(p.ProjectStructure.URL, folderName)
 	return nil, editGoModule(projectName, folderName)
 }
 

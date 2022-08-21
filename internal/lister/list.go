@@ -3,6 +3,7 @@
 package lister
 
 import (
+	"fmt"
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
@@ -11,15 +12,17 @@ import (
 	"sync"
 )
 
-type ProjectStructureData struct {
-	Name      string `yaml:"name"`
-	Reference string `yaml:"reference"`
-	URL       string `yaml:"url"`
-}
+type (
+	ProjectStructureData struct {
+		Name      string `yaml:"name"`
+		Reference string `yaml:"reference"`
+		URL       string `yaml:"url"`
+	}
 
-type Lister interface {
-	GetDefaultProjects() ([]*ProjectStructureData, error)
-}
+	Lister interface {
+		GetDefaultProjects() ([]*ProjectStructureData, error)
+	}
+)
 
 var (
 	lister Lister
@@ -49,4 +52,8 @@ func ParseToProjectStructureData(reader io.ReadCloser) ([]*ProjectStructureData,
 	}
 
 	return data, nil
+}
+
+func (p *ProjectStructureData) String() string {
+	return fmt.Sprintf("%s (%s)", p.Name, p.Reference)
 }
