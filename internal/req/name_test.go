@@ -132,34 +132,62 @@ func Test_validateProjectName(t *testing.T) {
 }
 
 func TestProjectNameRequirement_AskForInput(t *testing.T) {
-	controller := gomock.NewController(t)
-	defer controller.Finish()
+	t.Run("should operate successfully", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		defer controller.Finish()
 
-	mockPrompter := prompter.NewMockPrompter(controller)
-	mockManager := manager.NewMockManager(controller)
+		mockPrompter := prompter.NewMockPrompter(controller)
+		mockManager := manager.NewMockManager(controller)
 
-	mockPrompter.
-		EXPECT().
-		AskForString(gomock.Any(), gomock.Any()).
-		Return(testProjectName, nil).
-		Times(1)
+		mockPrompter.
+			EXPECT().
+			AskForString(gomock.Any(), gomock.Any()).
+			Return(testProjectName, nil).
+			Times(1)
 
-	requirement := ProjectNameRequirement{
-		mockPrompter,
-		mockManager,
-	}
+		requirement := ProjectNameRequirement{
+			mockPrompter,
+			mockManager,
+		}
 
-	input, err := requirement.AskForInput()
-	if err != nil {
-		return
-	}
+		input, err := requirement.AskForInput()
+		if err != nil {
+			return
+		}
 
-	require.NoError(t, err)
-	require.NotNil(t, input)
+		require.NoError(t, err)
+		require.NotNil(t, input)
 
-	task := input.(*projectNameTask)
-	require.NotNil(t, task.m)
-	require.EqualValues(t, testProjectName, task.ProjectName)
+		task := input.(*projectNameTask)
+		require.NotNil(t, task.m)
+		require.EqualValues(t, testProjectName, task.ProjectName)
+	})
+
+	t.Run("should return error", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		defer controller.Finish()
+
+		mockPrompter := prompter.NewMockPrompter(controller)
+		mockManager := manager.NewMockManager(controller)
+
+		inputErr := errors.New("input error")
+		mockPrompter.
+			EXPECT().
+			AskForString(gomock.Any(), gomock.Any()).
+			Return("", inputErr).
+			Times(1)
+
+		requirement := ProjectNameRequirement{
+			mockPrompter,
+			mockManager,
+		}
+
+		input, err := requirement.AskForInput()
+
+		require.NotNil(t, err)
+		require.Nil(t, input)
+		require.ErrorIs(t, inputErr, err)
+	})
 
 }
 
