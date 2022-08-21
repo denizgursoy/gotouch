@@ -7,6 +7,7 @@ import (
 )
 
 type promptUi struct {
+	m manager.Manager
 }
 
 func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (interface{}, error) {
@@ -27,7 +28,7 @@ func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (int
 	prompt := promptui.Select{
 		Label: direction,
 		Items: options,
-		Stdin: manager.GetInstance().GetStream(),
+		Stdin: p.m.GetStream(),
 	}
 
 	index, _, err := prompt.Run()
@@ -42,7 +43,7 @@ func (p *promptUi) AskForString(direction string, validator StringValidator) str
 	prompt := promptui.Prompt{
 		Label:    direction,
 		Validate: promptui.ValidateFunc(validator),
-		Stdin:    manager.GetInstance().GetStream(),
+		Stdin:    p.m.GetStream(),
 	}
 	run, err := prompt.Run()
 	if err != nil {

@@ -1,7 +1,7 @@
 package req
 
 import (
-	"github.com/denizgursoy/gotouch/internal/lister"
+	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"github.com/denizgursoy/gotouch/internal/uncompressor"
 	"github.com/golang/mock/gomock"
@@ -10,19 +10,17 @@ import (
 )
 
 var (
-	projectStructure1 = lister.ProjectStructureData{
+	projectStructure1 = model.ProjectStructureData{
 		Name:      "Project -1",
 		Reference: "go.dev",
 		URL:       "https://project1.com",
 	}
-	projectStructure2 = lister.ProjectStructureData{
+	projectStructure2 = model.ProjectStructureData{
 		Name:      "Project -2",
 		Reference: "go2.dev",
 		URL:       "https://project2.com",
 	}
-	testProjectData = []*lister.ProjectStructureData{&projectStructure1, &projectStructure2}
-
-	testDataWithOneStructure = []*lister.ProjectStructureData{&projectStructure1}
+	testProjectData = []*model.ProjectStructureData{&projectStructure1, &projectStructure2}
 )
 
 func TestStructure_AskForInput(t *testing.T) {

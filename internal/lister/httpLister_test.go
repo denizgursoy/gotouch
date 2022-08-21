@@ -4,6 +4,7 @@ package lister
 
 import (
 	"bytes"
+	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -27,15 +28,15 @@ func NewTestClient(fn RoundTripFunc) *http.Client {
 }
 
 var (
-	testProjectStructures = make([]*ProjectStructureData, 0)
+	testProjectStructures = make([]*model.ProjectStructureData, 0)
 
-	project1 = ProjectStructureData{
+	project1 = model.ProjectStructureData{
 		Name:      "sds",
 		Reference: "sds",
 		URL:       "sds",
 	}
 
-	project2 = ProjectStructureData{
+	project2 = model.ProjectStructureData{
 		Name:      "Project-1",
 		Reference: "sds",
 		URL:       "sds",

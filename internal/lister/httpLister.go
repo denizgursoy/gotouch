@@ -2,6 +2,7 @@ package lister
 
 import (
 	"errors"
+	"github.com/denizgursoy/gotouch/internal/model"
 	"log"
 	"net/http"
 )
@@ -25,7 +26,7 @@ func newHttpLister(client *http.Client, url *string) Lister {
 	}
 }
 
-func (h httpLister) GetDefaultProjects() ([]*ProjectStructureData, error) {
+func (h httpLister) GetDefaultProjects() ([]*model.ProjectStructureData, error) {
 
 	response, err := h.client.Get(*h.URL)
 

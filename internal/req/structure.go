@@ -3,7 +3,6 @@ package req
 import (
 	"errors"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/operation"
@@ -16,13 +15,13 @@ import (
 
 type (
 	ProjectStructureRequirement struct {
-		ProjectsData []*lister.ProjectStructureData
+		ProjectsData []*model.ProjectStructureData
 		P            prompts.Prompter
 		U            uncompressor.Uncompressor
 	}
 
 	projectStructureTask struct {
-		ProjectStructure *lister.ProjectStructureData
+		ProjectStructure *model.ProjectStructureData
 		U                uncompressor.Uncompressor
 	}
 )
@@ -45,7 +44,7 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 	}
 
 	return &projectStructureTask{
-		ProjectStructure: selected.(*lister.ProjectStructureData),
+		ProjectStructure: selected.(*model.ProjectStructureData),
 		U:                p.U,
 	}, nil
 }

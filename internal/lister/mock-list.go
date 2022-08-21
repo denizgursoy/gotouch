@@ -7,6 +7,7 @@ package lister
 import (
 	reflect "reflect"
 
+	model "github.com/denizgursoy/gotouch/internal/model"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -34,10 +35,10 @@ func (m *MockLister) EXPECT() *MockListerMockRecorder {
 }
 
 // GetDefaultProjects mocks base method.
-func (m *MockLister) GetDefaultProjects() ([]*ProjectStructureData, error) {
+func (m *MockLister) GetDefaultProjects() ([]*model.ProjectStructureData, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDefaultProjects")
-	ret0, _ := ret[0].([]*ProjectStructureData)
+	ret0, _ := ret[0].([]*model.ProjectStructureData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

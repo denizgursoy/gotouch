@@ -3,7 +3,7 @@
 package lister
 
 import (
-	"fmt"
+	"github.com/denizgursoy/gotouch/internal/model"
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
@@ -13,14 +13,8 @@ import (
 )
 
 type (
-	ProjectStructureData struct {
-		Name      string `yaml:"name"`
-		Reference string `yaml:"reference"`
-		URL       string `yaml:"url"`
-	}
-
 	Lister interface {
-		GetDefaultProjects() ([]*ProjectStructureData, error)
+		GetDefaultProjects() ([]*model.ProjectStructureData, error)
 	}
 )
 
@@ -36,8 +30,8 @@ func GetInstance() Lister {
 	return lister
 }
 
-func ParseToProjectStructureData(reader io.ReadCloser) ([]*ProjectStructureData, error) {
-	data := make([]*ProjectStructureData, 0)
+func ParseToProjectStructureData(reader io.ReadCloser) ([]*model.ProjectStructureData, error) {
+	data := make([]*model.ProjectStructureData, 0)
 
 	allBytes, err := ioutil.ReadAll(reader)
 	err = yaml.Unmarshal(allBytes, &data)
@@ -52,8 +46,4 @@ func ParseToProjectStructureData(reader io.ReadCloser) ([]*ProjectStructureData,
 	}
 
 	return data, nil
-}
-
-func (p *ProjectStructureData) String() string {
-	return fmt.Sprintf("%s (%s)", p.Name, p.Reference)
 }

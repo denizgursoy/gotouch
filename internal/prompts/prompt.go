@@ -4,6 +4,7 @@ package prompts
 
 import (
 	"errors"
+	"github.com/denizgursoy/gotouch/internal/manager"
 	"sync"
 )
 
@@ -36,7 +37,9 @@ type (
 
 func GetInstance() Prompter {
 	once.Do(func() {
-		prompter = &promptUi{}
+		prompter = &promptUi{
+			m: manager.GetInstance(),
+		}
 	})
 	return prompter
 }
