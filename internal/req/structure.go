@@ -14,6 +14,7 @@ type (
 		ProjectsData []*model.ProjectStructureData
 		Prompter     prompter.Prompter
 		Uncompressor compressor.Uncompressor
+		Manager      manager.Manager
 	}
 
 	projectStructureTask struct {
@@ -43,6 +44,7 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 	return &projectStructureTask{
 		ProjectStructure: selected.(*model.ProjectStructureData),
 		Uncompressor:     p.Uncompressor,
+		Manager:          p.Manager,
 	}, nil
 }
 

@@ -5,6 +5,7 @@
 package lister
 
 import (
+	io "io"
 	reflect "reflect"
 
 	model "github.com/denizgursoy/gotouch/internal/model"
@@ -35,16 +36,54 @@ func (m *MockLister) EXPECT() *MockListerMockRecorder {
 }
 
 // GetProjectList mocks base method.
-func (m *MockLister) GetProjectList() ([]*model.ProjectStructureData, error) {
+func (m *MockLister) GetProjectList(path *string) ([]*model.ProjectStructureData, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetProjectList")
+	ret := m.ctrl.Call(m, "GetProjectList", path)
 	ret0, _ := ret[0].([]*model.ProjectStructureData)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetProjectList indicates an expected call of GetProjectList.
-func (mr *MockListerMockRecorder) GetProjectList() *gomock.Call {
+func (mr *MockListerMockRecorder) GetProjectList(path interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProjectList", reflect.TypeOf((*MockLister)(nil).GetProjectList))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetProjectList", reflect.TypeOf((*MockLister)(nil).GetProjectList), path)
+}
+
+// MockReadStrategy is a mock of ReadStrategy interface.
+type MockReadStrategy struct {
+	ctrl     *gomock.Controller
+	recorder *MockReadStrategyMockRecorder
+}
+
+// MockReadStrategyMockRecorder is the mock recorder for MockReadStrategy.
+type MockReadStrategyMockRecorder struct {
+	mock *MockReadStrategy
+}
+
+// NewMockReadStrategy creates a new mock instance.
+func NewMockReadStrategy(ctrl *gomock.Controller) *MockReadStrategy {
+	mock := &MockReadStrategy{ctrl: ctrl}
+	mock.recorder = &MockReadStrategyMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockReadStrategy) EXPECT() *MockReadStrategyMockRecorder {
+	return m.recorder
+}
+
+// ReadProjectStructures mocks base method.
+func (m *MockReadStrategy) ReadProjectStructures() (io.ReadCloser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadProjectStructures")
+	ret0, _ := ret[0].(io.ReadCloser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadProjectStructures indicates an expected call of ReadProjectStructures.
+func (mr *MockReadStrategyMockRecorder) ReadProjectStructures() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadProjectStructures", reflect.TypeOf((*MockReadStrategy)(nil).ReadProjectStructures))
 }

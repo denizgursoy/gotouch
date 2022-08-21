@@ -25,7 +25,9 @@ type (
 )
 
 func newFileManager() Manager {
-	return &fManager{}
+	return &fManager{
+		Executor: executor.GetInstance(),
+	}
 }
 
 func (f *fManager) CreateDirectoryIfNotExists(directoryName string) error {

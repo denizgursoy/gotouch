@@ -27,7 +27,7 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 		Manager:  opts.manager,
 	})
 
-	projects, err := opts.lister.GetProjectList()
+	projects, err := opts.lister.GetProjectList(nil)
 
 	if err != nil {
 		return err
@@ -37,6 +37,7 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 		ProjectsData: projects,
 		Prompter:     opts.prompter,
 		Uncompressor: opts.uncompressor,
+		Manager:      opts.manager,
 	})
 
 	return opts.executor.Execute(requirements)

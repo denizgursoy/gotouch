@@ -31,7 +31,7 @@ func TestCreateNewProject(t *testing.T) {
 		expectedProjectData := []*model.ProjectStructureData{&project1}
 		mockLister.
 			EXPECT().
-			GetProjectList().
+			GetProjectList(nil).
 			Return(expectedProjectData, nil).
 			Times(1)
 
