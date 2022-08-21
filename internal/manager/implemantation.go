@@ -1,7 +1,9 @@
 package manager
 
 import (
+	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/executor"
 	"io"
 	"log"
 	"os"
@@ -14,6 +16,12 @@ var (
 	urls        []string
 	index       = 0
 	Environment = "prod"
+)
+
+type (
+	fManager struct {
+		Executor executor.Executor
+	}
 )
 
 func newFileManager() Manager {
@@ -79,4 +87,37 @@ func init() {
 			urls = append(urls, string(ints))
 		}
 	}
+}
+
+func (f *fManager) EditGoModule(projectName, folderName string) error {
+	workingDirectory := f.GetExtractLocation()
+	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, folderName)
+
+	if err := os.Chdir(projectDirectory); err != nil {
+		return err
+	}
+
+	args := make([]string, 0)
+
+	if f.hasGoModule(projectDirectory) {
+		args = append(args, "mod", "edit", "-module", projectName)
+	} else {
+		args = append(args, "mod", "init", projectName)
+	}
+
+	data := &executor.CommandData{
+		Command: "go",
+		Args:    args,
+	}
+
+	return f.Executor.RunCommand(data)
+}
+
+func (f *fManager) hasGoModule(projectDirectory string) bool {
+	path := fmt.Sprintf("%s/go.mod", projectDirectory)
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		return false
+	}
+
+	return true
 }

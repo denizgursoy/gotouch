@@ -5,7 +5,7 @@ package req
 import (
 	"errors"
 	"github.com/denizgursoy/gotouch/internal/manager"
-	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -135,13 +135,13 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
-	mockPrompter := prompts.NewMockPrompter(controller)
+	mockPrompter := prompter.NewMockPrompter(controller)
 	mockManager := manager.NewMockManager(controller)
 
 	mockPrompter.
 		EXPECT().
 		AskForString(gomock.Any(), gomock.Any()).
-		Return(testProjectName).
+		Return(testProjectName, nil).
 		Times(1)
 
 	requirement := ProjectNameRequirement{

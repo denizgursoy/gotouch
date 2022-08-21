@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/prompter"
 	"log"
 	"path/filepath"
 	"regexp"
@@ -13,7 +13,7 @@ import (
 
 type (
 	ProjectNameRequirement struct {
-		Prompter prompts.Prompter
+		Prompter prompter.Prompter
 		Manager  manager.Manager
 	}
 
@@ -24,7 +24,11 @@ type (
 )
 
 func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
-	projectName := p.Prompter.AskForString("Enter Project Name", validateProjectName)
+	projectName, err := p.Prompter.AskForString("Enter Project Name", validateProjectName)
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &projectNameTask{
 		ProjectName: projectName,

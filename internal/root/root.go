@@ -5,11 +5,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/compressor"
+	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/manager"
-	"github.com/denizgursoy/gotouch/internal/operation"
-	"github.com/denizgursoy/gotouch/internal/prompts"
-	"github.com/denizgursoy/gotouch/internal/uncompressor"
+	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -25,10 +25,10 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		options := CreateNewProjectOptions{
 			lister:       lister.GetInstance(),
-			prompter:     prompts.GetInstance(),
+			prompter:     prompter.GetInstance(),
 			manager:      manager.GetInstance(),
-			uncompressor: uncompressor.GetInstance(),
-			executor:     operation.GetInstance(),
+			uncompressor: compressor.GetInstance(),
+			executor:     executor.GetInstance(),
 		}
 		err := CreateNewProject(&options)
 		log.Fatalln(err)

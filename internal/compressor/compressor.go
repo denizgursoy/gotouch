@@ -1,6 +1,6 @@
-//go:generate mockgen -source=./uncompressor.go -destination=mock-uncompressor.go -package=uncompressor
+//go:generate mockgen -source=./compressor.go -destination=mockCompressor.go -package=compressor
 
-package uncompressor
+package compressor
 
 import (
 	"github.com/denizgursoy/gotouch/internal/manager"

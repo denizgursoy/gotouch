@@ -1,26 +1,26 @@
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/compressor"
+	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/manager"
-	"github.com/denizgursoy/gotouch/internal/operation"
-	"github.com/denizgursoy/gotouch/internal/prompts"
+	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/req"
-	"github.com/denizgursoy/gotouch/internal/uncompressor"
 )
 
 type (
 	CreateNewProjectOptions struct {
 		lister       lister.Lister
-		prompter     prompts.Prompter
+		prompter     prompter.Prompter
 		manager      manager.Manager
-		uncompressor uncompressor.Uncompressor
-		executor     operation.Executor
+		uncompressor compressor.Uncompressor
+		executor     executor.Executor
 	}
 )
 
 func CreateNewProject(opts *CreateNewProjectOptions) error {
-	requirements := make(operation.Requirements, 0)
+	requirements := make(executor.Requirements, 0)
 
 	requirements = append(requirements, &req.ProjectNameRequirement{
 		Prompter: opts.prompter,

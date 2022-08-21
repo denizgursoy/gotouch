@@ -1,4 +1,4 @@
-package uncompressor
+package compressor
 
 import (
 	"fmt"

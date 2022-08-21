@@ -1,4 +1,6 @@
-package operation
+//go:generate mockgen -source=./executor.go -destination=mockExecutor.go -package=executor
+
+package executor
 
 import (
 	"github.com/denizgursoy/gotouch/internal/model"

@@ -1,13 +1,12 @@
-package prompts
+package prompter
 
 import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/manifoldco/promptui"
-	"log"
 )
 
 type promptUi struct {
-	m manager.Manager
+	Manager manager.Manager
 }
 
 func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (interface{}, error) {
@@ -28,7 +27,7 @@ func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (int
 	prompt := promptui.Select{
 		Label: direction,
 		Items: options,
-		Stdin: p.m.GetStream(),
+		Stdin: p.Manager.GetStream(),
 	}
 
 	index, _, err := prompt.Run()
@@ -39,16 +38,15 @@ func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (int
 	return list[index], nil
 }
 
-func (p *promptUi) AskForString(direction string, validator StringValidator) string {
+func (p *promptUi) AskForString(direction string, validator StringValidator) (string, error) {
 	prompt := promptui.Prompt{
 		Label:    direction,
 		Validate: promptui.ValidateFunc(validator),
-		Stdin:    p.m.GetStream(),
+		Stdin:    p.Manager.GetStream(),
 	}
-	run, err := prompt.Run()
+	input, err := prompt.Run()
 	if err != nil {
-		log.Println(err)
+		return "", err
 	}
-	return run
-
+	return input, nil
 }

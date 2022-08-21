@@ -48,6 +48,20 @@ func (mr *MockManagerMockRecorder) CreateDirectoryIfNotExists(directoryName inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDirectoryIfNotExists", reflect.TypeOf((*MockManager)(nil).CreateDirectoryIfNotExists), directoryName)
 }
 
+// EditGoModule mocks base method.
+func (m *MockManager) EditGoModule(projectName, folderName string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EditGoModule", projectName, folderName)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// EditGoModule indicates an expected call of EditGoModule.
+func (mr *MockManagerMockRecorder) EditGoModule(projectName, folderName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditGoModule", reflect.TypeOf((*MockManager)(nil).EditGoModule), projectName, folderName)
+}
+
 // GetExtractLocation mocks base method.
 func (m *MockManager) GetExtractLocation() string {
 	m.ctrl.T.Helper()

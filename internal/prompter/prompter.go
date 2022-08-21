@@ -1,6 +1,6 @@
-//go:generate mockgen -source=./prompt.go -destination=mock-prompt.go -package=prompts
+//go:generate mockgen -source=./prompter.go -destination=mockPrompter.go -package=prompter
 
-package prompts
+package prompter
 
 import (
 	"errors"
@@ -19,7 +19,7 @@ var (
 
 type (
 	Prompter interface {
-		AskForString(direction string, validator StringValidator) string
+		AskForString(direction string, validator StringValidator) (string, error)
 		AskForSelectionFromList(direction string, list []Option) (interface{}, error)
 	}
 
@@ -38,7 +38,7 @@ type (
 func GetInstance() Prompter {
 	once.Do(func() {
 		prompter = &promptUi{
-			m: manager.GetInstance(),
+			Manager: manager.GetInstance(),
 		}
 	})
 	return prompter

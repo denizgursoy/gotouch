@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./manager.go -destination=mock-manager.go -package=manager
+//go:generate mockgen -source=./manager.go -destination=mockManager.go -package=manager
 
 package manager
 
@@ -21,8 +21,6 @@ type (
 		IsTest() bool
 		GetExtractLocation() string
 		GetWd() string
-	}
-
-	fManager struct {
+		EditGoModule(projectName, folderName string) error
 	}
 )

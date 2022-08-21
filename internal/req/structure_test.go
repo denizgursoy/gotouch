@@ -1,9 +1,12 @@
+// +build unit
+
 package req
 
 import (
+	"github.com/denizgursoy/gotouch/internal/compressor"
+	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/denizgursoy/gotouch/internal/prompts"
-	"github.com/denizgursoy/gotouch/internal/uncompressor"
+	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -28,10 +31,10 @@ func TestStructure_AskForInput(t *testing.T) {
 		controller := gomock.NewController(t)
 		defer controller.Finish()
 
-		mockPrompter := prompts.NewMockPrompter(controller)
-		mockUncompressor := uncompressor.NewMockUncompressor(controller)
+		mockPrompter := prompter.NewMockPrompter(controller)
+		mockUncompressor := compressor.NewMockUncompressor(controller)
 
-		options := make([]prompts.Option, 0)
+		options := make([]prompter.Option, 0)
 		for _, datum := range testProjectData {
 			options = append(options, datum)
 		}
@@ -56,14 +59,14 @@ func TestStructure_AskForInput(t *testing.T) {
 		task := input.(*projectStructureTask)
 
 		require.EqualValues(t, task.ProjectStructure, testProjectData[0])
-		require.NotNil(t, task.U)
+		require.NotNil(t, task.Uncompressor)
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {
 		controller := gomock.NewController(t)
 		defer controller.Finish()
 
-		mockPrompter := prompts.NewMockPrompter(controller)
+		mockPrompter := prompter.NewMockPrompter(controller)
 
 		p := &ProjectStructureRequirement{
 			Prompter: mockPrompter,
@@ -72,13 +75,13 @@ func TestStructure_AskForInput(t *testing.T) {
 		mockPrompter.
 			EXPECT().
 			AskForSelectionFromList(gomock.Any(), gomock.Any()).
-			Return(nil, prompts.ErrProductStructureListIsEmpty).
+			Return(nil, prompter.ErrProductStructureListIsEmpty).
 			Times(1)
 
 		input, err := p.AskForInput()
 
 		require.NotNil(t, err)
-		require.ErrorIs(t, err, prompts.ErrProductStructureListIsEmpty)
+		require.ErrorIs(t, err, prompter.ErrProductStructureListIsEmpty)
 
 		require.Nil(t, input)
 	})
@@ -86,5 +89,41 @@ func TestStructure_AskForInput(t *testing.T) {
 }
 
 func TestStructure_Complete(t *testing.T) {
-	//TODO write test
+	t.Run("should call uncompress with the URL", func(t *testing.T) {
+
+		type testCase struct {
+			ProjectName   string
+			DirectoryName string
+		}
+
+		controller := gomock.NewController(t)
+		defer controller.Finish()
+
+		testCases := []testCase{
+			{ProjectName: testProjectName, DirectoryName: testProjectName},
+			{ProjectName: testUrlName, DirectoryName: testProjectName},
+		}
+		for _, testCase := range testCases {
+			mockUncompressor := compressor.NewMockUncompressor(controller)
+			mockManager := manager.NewMockManager(controller)
+
+			mockUncompressor.
+				EXPECT().
+				UncompressFromUrl(gomock.Eq(projectStructure1.URL), gomock.Eq(testCase.DirectoryName))
+
+			mockManager.
+				EXPECT().
+				EditGoModule(gomock.Eq(testCase.ProjectName), gomock.Eq(testCase.DirectoryName))
+
+			p := &projectStructureTask{
+				ProjectStructure: &projectStructure1,
+				Uncompressor:     mockUncompressor,
+				Manager:          mockManager,
+			}
+			actualData, err := p.Complete(testCase.ProjectName)
+			require.Nil(t, err)
+			require.Nil(t, actualData)
+		}
+
+	})
 }
