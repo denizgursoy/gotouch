@@ -161,6 +161,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		task := input.(*projectNameTask)
 		require.NotNil(t, task.Manager)
 		require.EqualValues(t, testProjectName, task.ProjectName)
+		require.NotNil(t, task.Manager)
 	})
 
 	t.Run("should return error", func(t *testing.T) {

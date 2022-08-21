@@ -6,7 +6,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
-	"log"
 	"path/filepath"
 	"regexp"
 )
@@ -54,7 +53,7 @@ func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
 func validateProjectName(projectName string) error {
 	compile, err := regexp.Compile("^([a-zA-Z]+(((\\w|(\\.[a-z]+))*)\\/)+[a-zA-Z]+(\\w)*)$|^([a-zA-Z]+\\w*)$")
 	if err != nil {
-		log.Fatalln("regex error")
+		return errors.New("regex error")
 	}
 	if compile.MatchString(projectName) {
 		return nil
