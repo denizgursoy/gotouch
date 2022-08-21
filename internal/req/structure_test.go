@@ -10,18 +10,19 @@ import (
 )
 
 var (
-	testProjectData = []*lister.ProjectStructureData{
-		{
-			Name:      "Project -1",
-			Reference: "go.dev",
-			URL:       "https://project1.com",
-		},
-		{
-			Name:      "Project -2",
-			Reference: "go2.dev",
-			URL:       "https://project2.com",
-		},
+	projectStructure1 = lister.ProjectStructureData{
+		Name:      "Project -1",
+		Reference: "go.dev",
+		URL:       "https://project1.com",
 	}
+	projectStructure2 = lister.ProjectStructureData{
+		Name:      "Project -2",
+		Reference: "go2.dev",
+		URL:       "https://project2.com",
+	}
+	testProjectData = []*lister.ProjectStructureData{&projectStructure1, &projectStructure2}
+
+	testDataWithOneStructure = []*lister.ProjectStructureData{&projectStructure1}
 )
 
 func TestStructure_AskForInput(t *testing.T) {
@@ -65,6 +66,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.EqualValues(t, task.ProjectStructure, testProjectData[0])
 		require.NotNil(t, task.U)
 	})
+
 	t.Run("should return error if the project data structure list is empty", func(t *testing.T) {
 		p := &ProjectStructureRequirement{
 			ProjectsData: nil,
@@ -76,6 +78,19 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.ErrorIs(t, err, ErrProductStructureListIsEmpty)
 
 		require.Nil(t, input)
+	})
 
+	t.Run("should return first item if three is only one project structure", func(t *testing.T) {
+		p := &ProjectStructureRequirement{
+			ProjectsData: testDataWithOneStructure,
+		}
+
+		input, err := p.AskForInput()
+
+		require.Nil(t, err)
+		require.NotNil(t, input)
+
+		task := input.(*projectStructureTask)
+		require.EqualValues(t, task.ProjectStructure, testDataWithOneStructure[0])
 	})
 }

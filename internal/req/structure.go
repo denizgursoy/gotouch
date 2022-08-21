@@ -37,8 +37,14 @@ var (
 
 func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 
-	if len(p.ProjectsData) == 0 {
+	projectLength := len(p.ProjectsData)
+	if projectLength == 0 {
 		return nil, ErrProductStructureListIsEmpty
+	} else if projectLength == 1 {
+		return &projectStructureTask{
+			ProjectStructure: p.ProjectsData[0],
+			U:                p.U,
+		}, nil
 	}
 
 	projectList := make([]*prompts.ListOption, 0)

@@ -6,6 +6,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/operation"
 	"github.com/denizgursoy/gotouch/internal/prompts"
 	"github.com/denizgursoy/gotouch/internal/req"
+	"github.com/denizgursoy/gotouch/internal/uncompressor"
 )
 
 type (
@@ -13,6 +14,7 @@ type (
 		l lister.Lister
 		p prompts.Prompter
 		m manager.Manager
+		u uncompressor.Uncompressor
 	}
 )
 
@@ -30,8 +32,10 @@ func CreateNewProject(options *CreateNewProjectOptions) error {
 		return err
 	}
 
-	requirements = append(requirements, req.ProjectStructureRequirement{
+	requirements = append(requirements, &req.ProjectStructureRequirement{
 		ProjectsData: projects,
+		P:            options.p,
+		U:            options.u,
 	})
 
 	return operation.GetInstance().Execute(requirements)
