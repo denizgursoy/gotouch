@@ -59,7 +59,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		task := input.(*projectStructureTask)
 
 		require.EqualValues(t, task.ProjectStructure, testProjectData[0])
-		require.NotNil(t, task.Uncompressor)
+		require.NotNil(t, task.Compressor)
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {
@@ -117,7 +117,7 @@ func TestStructure_Complete(t *testing.T) {
 
 			p := &projectStructureTask{
 				ProjectStructure: &projectStructure1,
-				Uncompressor:     mockUncompressor,
+				Compressor:       mockUncompressor,
 				Manager:          mockManager,
 			}
 			actualData, err := p.Complete(testCase.ProjectName)

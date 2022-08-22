@@ -2,6 +2,7 @@ package prompter
 
 import (
 	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/manifoldco/promptui"
 )
 
@@ -10,6 +11,9 @@ type promptUi struct {
 }
 
 func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (interface{}, error) {
+	if !isValid(p) {
+		return "", model.ErrMissingField
+	}
 
 	count := len(list)
 
@@ -39,6 +43,10 @@ func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (int
 }
 
 func (p *promptUi) AskForString(direction string, validator StringValidator) (string, error) {
+	if !isValid(p) {
+		return "", model.ErrMissingField
+	}
+
 	prompt := promptui.Prompt{
 		Label:    direction,
 		Validate: promptui.ValidateFunc(validator),
@@ -49,4 +57,8 @@ func (p *promptUi) AskForString(direction string, validator StringValidator) (st
 		return "", err
 	}
 	return input, nil
+}
+
+func isValid(p *promptUi) bool {
+	return p.Manager != nil
 }

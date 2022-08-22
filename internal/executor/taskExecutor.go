@@ -20,7 +20,6 @@ func newExecutor() Executor {
 }
 
 func (e executor) Execute(requirements Requirements) error {
-
 	if requirements == nil {
 		return EmptyRequirementError
 	}

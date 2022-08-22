@@ -34,9 +34,11 @@ func (m *MockCompressor) EXPECT() *MockCompressorMockRecorder {
 }
 
 // UncompressFromUrl mocks base method.
-func (m *MockCompressor) UncompressFromUrl(url, directoryName string) {
+func (m *MockCompressor) UncompressFromUrl(url, directoryName string) error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "UncompressFromUrl", url, directoryName)
+	ret := m.ctrl.Call(m, "UncompressFromUrl", url, directoryName)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // UncompressFromUrl indicates an expected call of UncompressFromUrl.

@@ -1,11 +1,11 @@
 package root
 
 import (
-	"errors"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/req"
 )
@@ -20,14 +20,10 @@ type (
 	}
 )
 
-var (
-	ErrMissingField = errors.New("all fields should be provided")
-)
-
 func CreateNewProject(opts *CreateCommandOptions) error {
 
 	if !isValid(opts) {
-		return ErrMissingField
+		return model.ErrMissingField
 	}
 
 	requirements := make(executor.Requirements, 0)

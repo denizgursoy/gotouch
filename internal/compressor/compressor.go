@@ -9,18 +9,18 @@ import (
 
 type (
 	Compressor interface {
-		UncompressFromUrl(url, directoryName string)
+		UncompressFromUrl(url, directoryName string) error
 	}
 )
 
 var (
-	extractor Compressor
-	once      sync.Once
+	compressor Compressor
+	once       sync.Once
 )
 
 func GetInstance() Compressor {
 	once.Do(func() {
-		extractor = newZipUncompressor(manager.GetInstance())
+		compressor = newZipCompressor(manager.GetInstance())
 	})
-	return extractor
+	return compressor
 }

@@ -19,7 +19,7 @@ type (
 
 	projectStructureTask struct {
 		ProjectStructure *model.ProjectStructureData
-		Uncompressor     compressor.Compressor
+		Compressor       compressor.Compressor
 		Manager          manager.Manager
 		Executor         executor.Executor
 	}
@@ -43,7 +43,7 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 
 	return &projectStructureTask{
 		ProjectStructure: selected.(*model.ProjectStructureData),
-		Uncompressor:     p.Compressor,
+		Compressor:       p.Compressor,
 		Manager:          p.Manager,
 	}, nil
 }
@@ -52,6 +52,9 @@ func (p *projectStructureTask) Complete(previousResponse interface{}) (interface
 	projectName := previousResponse.(string)
 	folderName := filepath.Base(projectName)
 
-	p.Uncompressor.UncompressFromUrl(p.ProjectStructure.URL, folderName)
+	if err := p.Compressor.UncompressFromUrl(p.ProjectStructure.URL, folderName); err != nil {
+		return nil, err
+	}
+
 	return nil, p.Manager.EditGoModule(projectName, folderName)
 }

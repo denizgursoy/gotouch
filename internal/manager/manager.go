@@ -4,13 +4,18 @@ package manager
 
 import (
 	"io"
+	"sync"
 )
 
 var (
 	manager Manager
+	once    = sync.Once{}
 )
 
 func GetInstance() Manager {
+	once.Do(func() {
+		manager = newFileManager()
+	})
 	return manager
 }
 

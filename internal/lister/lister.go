@@ -47,6 +47,10 @@ func GetInstance() Lister {
 }
 
 func (m *mainLister) GetProjectList(path *string) ([]*model.ProjectStructureData, error) {
+	if !isValid(m) {
+		return nil, model.ErrMissingField
+	}
+
 	strategy := m.defaultStrategy
 
 	if path != nil && len(strings.TrimSpace(*path)) != 0 {
@@ -96,4 +100,8 @@ func determineReadStrategy(path string) ReadStrategy {
 	} else {
 		return NewUrlReader(uri, &http.Client{})
 	}
+}
+
+func isValid(m *mainLister) bool {
+	return m.defaultStrategy != nil
 }
