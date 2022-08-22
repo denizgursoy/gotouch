@@ -29,16 +29,13 @@ func TestParseToProjectStructureData(t *testing.T) {
 		require.NotNil(t, err)
 
 		require.ErrorIs(t, err, NoProjectError)
-
 	})
 }
 
 func Test_determineReadStrategy(t *testing.T) {
-
 	strategy := determineReadStrategy("")
 	require.IsType(t, &fileReader{}, strategy)
 
 	strategy = determineReadStrategy(PropertiesUrl)
 	require.IsType(t, &urlReader{}, strategy)
-
 }
