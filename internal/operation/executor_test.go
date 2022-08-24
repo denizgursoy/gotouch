@@ -3,6 +3,7 @@
 package operation
 
 import (
+	"errors"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -19,12 +20,16 @@ type (
 		isAskCalled bool
 		arg         interface{}
 		returnValue interface{}
+		err         error
 	}
 )
 
 func (t *testTask) Complete(i interface{}) (interface{}, error) {
 	t.isAskCalled = true
 	t.arg = i
+	if t.err != nil {
+		return nil, t.err
+	}
 	return t.returnValue, nil
 }
 
@@ -59,6 +64,18 @@ func Test_executor_Execute(t *testing.T) {
 
 		require.EqualValues(t, firstRequirement.Task.(*testTask).returnValue, secondRequirement.Task.(*testTask).arg)
 	})
+
+	t.Run("should return error if complete function of task returns error", func(t *testing.T) {
+		executor := newExecutor()
+		errorRequirement, taskError := getCompleteErrorRequirement()
+		err := executor.Execute(Requirements{errorRequirement})
+
+		require.True(t, errorRequirement.isAskCalled)
+		require.True(t, errorRequirement.Task.(*testTask).isAskCalled)
+
+		require.NotNil(t, err)
+		require.ErrorIs(t, taskError, err)
+	})
 }
 
 func getRequirements() (Requirements, *testRequirement, *testRequirement) {
@@ -86,4 +103,20 @@ func getRequirements() (Requirements, *testRequirement, *testRequirement) {
 
 	requirements = append(requirements, firstRequirement, secondRequirement)
 	return requirements, firstRequirement, secondRequirement
+}
+
+func getCompleteErrorRequirement() (*testRequirement, error) {
+	completeError := errors.New("could not complete the test")
+	errorRequirement := &testRequirement{
+		isAskCalled: false,
+		Error:       nil,
+		Task: &testTask{
+			isAskCalled: false,
+			arg:         nil,
+			returnValue: nil,
+			err:         completeError,
+		},
+	}
+
+	return errorRequirement, completeError
 }
