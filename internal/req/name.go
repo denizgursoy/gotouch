@@ -3,42 +3,57 @@ package req
 import (
 	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/denizgursoy/gotouch/internal/operation"
-	"github.com/denizgursoy/gotouch/internal/prompts"
-	"log"
-	"os"
+	"github.com/denizgursoy/gotouch/internal/prompter"
 	"path/filepath"
 	"regexp"
 )
 
-type ProjectNameRequirement struct {
-}
+type (
+	ProjectNameRequirement struct {
+		Prompter prompter.Prompter
+		Manager  manager.Manager
+	}
 
-func (p ProjectNameRequirement) AskForInput() (model.Task, error) {
+	projectNameTask struct {
+		ProjectName string
+		Manager     manager.Manager
+	}
+)
 
-	projectName := operation.Prompter.AskForString("Enter Project Name", validateProjectName)
+const (
+	ProjectNameDirection = "Enter Project Name"
+)
 
-	return projectNameTask{
+func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
+	projectName, err := p.Prompter.AskForString(ProjectNameDirection, validateProjectName)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &projectNameTask{
 		ProjectName: projectName,
+		Manager:     p.Manager,
 	}, nil
 }
 
-type projectNameTask struct {
-	ProjectName string
-}
-
-func (p projectNameTask) Complete(interface{}) (interface{}, error) {
+func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
 	folderName := filepath.Base(p.ProjectName)
-	directoryPath := fmt.Sprintf("%s/%s", prompts.GetExtractLocation(), folderName)
-	err := os.Mkdir(directoryPath, os.ModePerm)
-	return p.ProjectName, err
+	directoryPath := fmt.Sprintf("%s/%s", p.Manager.GetExtractLocation(), folderName)
+	dirCreationErr := p.Manager.CreateDirectoryIfNotExists(directoryPath)
+
+	if dirCreationErr != nil {
+		return nil, dirCreationErr
+	}
+	return p.ProjectName, nil
 }
 
 func validateProjectName(projectName string) error {
 	compile, err := regexp.Compile("^([a-zA-Z]+(((\\w|(\\.[a-z]+))*)\\/)+[a-zA-Z]+(\\w)*)$|^([a-zA-Z]+\\w*)$")
 	if err != nil {
-		log.Fatalln("regex error")
+		return errors.New("regex error")
 	}
 	if compile.MatchString(projectName) {
 		return nil
