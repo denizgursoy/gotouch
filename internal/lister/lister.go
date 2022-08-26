@@ -5,6 +5,7 @@ package lister
 import (
 	"errors"
 	"github.com/denizgursoy/gotouch/internal/model"
+	"github.com/go-playground/validator/v10"
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
@@ -24,7 +25,7 @@ type (
 	}
 
 	mainLister struct {
-		defaultStrategy ReadStrategy
+		DefaultStrategy ReadStrategy `validate:"required"`
 	}
 )
 
@@ -40,18 +41,18 @@ func GetInstance() Lister {
 	once.Do(func() {
 		uri, _ := url.ParseRequestURI(PropertiesUrl)
 		lister = &mainLister{
-			defaultStrategy: NewUrlReader(uri, &http.Client{}),
+			DefaultStrategy: NewUrlReader(uri, &http.Client{}),
 		}
 	})
 	return lister
 }
 
 func (m *mainLister) GetProjectList(path *string) ([]*model.ProjectStructureData, error) {
-	if !isValid(m) {
+	if isValid(m) != nil {
 		return nil, model.ErrMissingField
 	}
 
-	strategy := m.defaultStrategy
+	strategy := m.DefaultStrategy
 
 	if path != nil && len(strings.TrimSpace(*path)) != 0 {
 		strategy = determineReadStrategy(*path)
@@ -102,6 +103,6 @@ func determineReadStrategy(path string) ReadStrategy {
 	}
 }
 
-func isValid(m *mainLister) bool {
-	return m.defaultStrategy != nil
+func isValid(m *mainLister) error {
+	return validator.New().Struct(m)
 }

@@ -24,7 +24,7 @@ var (
 )
 
 func TestCreateNewProject(t *testing.T) {
-	t.Run("should call executor with all requirements", func(t *testing.T) {
+	t.Run("should call Executor with all requirements", func(t *testing.T) {
 		controller := gomock.NewController(t)
 		defer controller.Finish()
 
@@ -63,11 +63,11 @@ func TestCreateNewProject(t *testing.T) {
 			})
 
 		opts := &CreateCommandOptions{
-			lister:     mockLister,
-			prompter:   mockPrompter,
-			manager:    newMockManager,
-			compressor: mockCompressor,
-			executor:   mockExecutor,
+			Lister:     mockLister,
+			Prompter:   mockPrompter,
+			Manager:    newMockManager,
+			Compressor: mockCompressor,
+			Executor:   mockExecutor,
 		}
 		err := CreateNewProject(opts)
 
@@ -96,11 +96,11 @@ func Test_isValid(t *testing.T) {
 			name: "all present",
 			args: args{
 				opts: &CreateCommandOptions{
-					lister:     mockLister,
-					prompter:   mockPrompter,
-					manager:    newMockManager,
-					compressor: mockCompressor,
-					executor:   mockExecutor,
+					Lister:     mockLister,
+					Prompter:   mockPrompter,
+					Manager:    newMockManager,
+					Compressor: mockCompressor,
+					Executor:   mockExecutor,
 				},
 			},
 			want: true,
@@ -109,10 +109,10 @@ func Test_isValid(t *testing.T) {
 			name: "missing mockExecutor",
 			args: args{
 				opts: &CreateCommandOptions{
-					lister:     mockLister,
-					prompter:   mockPrompter,
-					manager:    newMockManager,
-					compressor: mockCompressor,
+					Lister:     mockLister,
+					Prompter:   mockPrompter,
+					Manager:    newMockManager,
+					Compressor: mockCompressor,
 				},
 			},
 			want: false,
@@ -121,10 +121,10 @@ func Test_isValid(t *testing.T) {
 			name: "missing mockCompressor",
 			args: args{
 				opts: &CreateCommandOptions{
-					lister:   mockLister,
-					prompter: mockPrompter,
-					manager:  newMockManager,
-					executor: mockExecutor,
+					Lister:   mockLister,
+					Prompter: mockPrompter,
+					Manager:  newMockManager,
+					Executor: mockExecutor,
 				},
 			},
 			want: false,
@@ -133,10 +133,10 @@ func Test_isValid(t *testing.T) {
 			name: "missing newMockManager",
 			args: args{
 				opts: &CreateCommandOptions{
-					lister:     mockLister,
-					prompter:   mockPrompter,
-					compressor: mockCompressor,
-					executor:   mockExecutor,
+					Lister:     mockLister,
+					Prompter:   mockPrompter,
+					Compressor: mockCompressor,
+					Executor:   mockExecutor,
 				},
 			},
 			want: false,
@@ -145,10 +145,10 @@ func Test_isValid(t *testing.T) {
 			name: "missing mockPrompter",
 			args: args{
 				opts: &CreateCommandOptions{
-					lister:     mockLister,
-					manager:    newMockManager,
-					compressor: mockCompressor,
-					executor:   mockExecutor,
+					Lister:     mockLister,
+					Manager:    newMockManager,
+					Compressor: mockCompressor,
+					Executor:   mockExecutor,
 				},
 			},
 			want: false,
@@ -157,10 +157,10 @@ func Test_isValid(t *testing.T) {
 			name: "missing mockLister",
 			args: args{
 				opts: &CreateCommandOptions{
-					prompter:   mockPrompter,
-					manager:    newMockManager,
-					compressor: mockCompressor,
-					executor:   mockExecutor,
+					Prompter:   mockPrompter,
+					Manager:    newMockManager,
+					Compressor: mockCompressor,
+					Executor:   mockExecutor,
 				},
 			},
 			want: false,
@@ -169,7 +169,7 @@ func Test_isValid(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isValid(tt.args.opts); got != tt.want {
+			if got := isValid(tt.args.opts); got == nil != tt.want {
 				t.Errorf("isValid() = %v, want %v", got, tt.want)
 			}
 		})

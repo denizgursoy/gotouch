@@ -8,32 +8,33 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/req"
+	"github.com/go-playground/validator/v10"
 )
 
 type (
 	CreateCommandOptions struct {
-		lister     lister.Lister
-		prompter   prompter.Prompter
-		manager    manager.Manager
-		compressor compressor.Compressor
-		executor   executor.Executor
+		Lister     lister.Lister         `validate:"required"`
+		Prompter   prompter.Prompter     `validate:"required"`
+		Manager    manager.Manager       `validate:"required"`
+		Compressor compressor.Compressor `validate:"required"`
+		Executor   executor.Executor     `validate:"required"`
+		Path       *string               `validate:"isdefault|url"`
 	}
 )
 
 func CreateNewProject(opts *CreateCommandOptions) error {
-
-	if !isValid(opts) {
+	if validationError := isValid(opts); validationError != nil {
 		return model.ErrMissingField
 	}
 
 	requirements := make(executor.Requirements, 0)
 
 	requirements = append(requirements, &req.ProjectNameRequirement{
-		Prompter: opts.prompter,
-		Manager:  opts.manager,
+		Prompter: opts.Prompter,
+		Manager:  opts.Manager,
 	})
 
-	projects, err := opts.lister.GetProjectList(nil)
+	projects, err := opts.Lister.GetProjectList(opts.Path)
 
 	if err != nil {
 		return err
@@ -41,18 +42,14 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 
 	requirements = append(requirements, &req.ProjectStructureRequirement{
 		ProjectsData: projects,
-		Prompter:     opts.prompter,
-		Compressor:   opts.compressor,
-		Manager:      opts.manager,
+		Prompter:     opts.Prompter,
+		Compressor:   opts.Compressor,
+		Manager:      opts.Manager,
 	})
 
-	return opts.executor.Execute(requirements)
+	return opts.Executor.Execute(requirements)
 }
 
-func isValid(opts *CreateCommandOptions) bool {
-	return opts.compressor != nil &&
-		opts.executor != nil &&
-		opts.lister != nil &&
-		opts.prompter != nil &&
-		opts.manager != nil
+func isValid(opts *CreateCommandOptions) error {
+	return validator.New().Struct(opts)
 }

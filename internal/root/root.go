@@ -23,12 +23,19 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
+		flags := cmd.Flags()
+		filePath, inputError := flags.GetString("file")
+		if inputError != nil {
+			log.Fatalln(inputError)
+		}
+
 		options := CreateCommandOptions{
-			lister:     lister.GetInstance(),
-			prompter:   prompter.GetInstance(),
-			manager:    manager.GetInstance(),
-			compressor: compressor.GetInstance(),
-			executor:   executor.GetInstance(),
+			Lister:     lister.GetInstance(),
+			Prompter:   prompter.GetInstance(),
+			Manager:    manager.GetInstance(),
+			Compressor: compressor.GetInstance(),
+			Executor:   executor.GetInstance(),
+			Path:       &filePath,
 		}
 		err := CreateNewProject(&options)
 		log.Fatalln(err)
@@ -46,13 +53,5 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gotouch.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringP("file", "f", "", "input file")
 }

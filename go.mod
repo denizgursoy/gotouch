@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/artdarek/go-unzip v1.0.0 // indirect
+	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.1 // indirect
