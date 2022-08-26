@@ -18,7 +18,7 @@ type (
 		Manager    manager.Manager       `validate:"required"`
 		Compressor compressor.Compressor `validate:"required"`
 		Executor   executor.Executor     `validate:"required"`
-		Path       *string               `validate:"isdefault|url"`
+		Path       *string               `validate:"omitempty,endswith=.yaml,url|file"`
 	}
 )
 

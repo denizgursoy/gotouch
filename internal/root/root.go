@@ -13,6 +13,11 @@ import (
 	"github.com/spf13/cobra"
 	"log"
 	"os"
+	"strings"
+)
+
+const (
+	FileFlagName = "file"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -24,9 +29,14 @@ var rootCmd = &cobra.Command{
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		flags := cmd.Flags()
-		filePath, inputError := flags.GetString("file")
+		filePath, inputError := flags.GetString(FileFlagName)
 		if inputError != nil {
 			log.Fatalln(inputError)
+		}
+
+		point := &filePath
+		if len(strings.TrimSpace(filePath)) == 0 {
+			point = nil
 		}
 
 		options := CreateCommandOptions{
@@ -35,7 +45,7 @@ var rootCmd = &cobra.Command{
 			Manager:    manager.GetInstance(),
 			Compressor: compressor.GetInstance(),
 			Executor:   executor.GetInstance(),
-			Path:       &filePath,
+			Path:       point,
 		}
 		err := CreateNewProject(&options)
 		log.Fatalln(err)
@@ -53,5 +63,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringP("file", "f", "", "input file")
+	rootCmd.Flags().StringP(FileFlagName, "f", "", "input file")
 }

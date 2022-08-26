@@ -4,6 +4,7 @@ package lister
 
 import (
 	"errors"
+	"fmt"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/go-playground/validator/v10"
 	"gopkg.in/yaml.v2"
@@ -11,6 +12,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
 )
@@ -95,11 +97,15 @@ func ParseToProjectStructureData(reader io.ReadCloser) ([]*model.ProjectStructur
 }
 
 func determineReadStrategy(path string) ReadStrategy {
-	uri, err := url.ParseRequestURI(path)
-	if err != nil {
-		return NewFileReader(path)
-	} else {
+	_, err2 := os.Stat(path)
+	if err2 != nil {
+		uri, err := url.ParseRequestURI(path)
+		if err != nil {
+			fmt.Println(err)
+		}
 		return NewUrlReader(uri, &http.Client{})
+	} else {
+		return NewFileReader(path)
 	}
 }
 

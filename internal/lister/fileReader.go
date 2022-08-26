@@ -1,6 +1,10 @@
 package lister
 
-import "io"
+import (
+	"bytes"
+	"io"
+	"os"
+)
 
 func NewFileReader(path string) ReadStrategy {
 	return &fileReader{
@@ -15,5 +19,9 @@ type (
 )
 
 func (f *fileReader) ReadProjectStructures() (io.ReadCloser, error) {
-	panic("implement me")
+	file, err := os.ReadFile(f.path)
+	if err != nil {
+		return nil, nil
+	}
+	return io.NopCloser(bytes.NewReader(file)), nil
 }
