@@ -34,7 +34,9 @@ func TestParseToProjectStructureData(t *testing.T) {
 
 func Test_determineReadStrategy(t *testing.T) {
 	strategy := determineReadStrategy("")
-	require.IsType(t, &fileReader{}, strategy)
+	require.IsType(t, &urlReader{}, strategy)
+
+	//TODO add file stragety test
 
 	strategy = determineReadStrategy(PropertiesUrl)
 	require.IsType(t, &urlReader{}, strategy)
