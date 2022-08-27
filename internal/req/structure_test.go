@@ -108,9 +108,7 @@ func TestStructure_Complete(t *testing.T) {
 		for _, testCase := range testCases {
 			mockUncompressor := compressor.NewMockCompressor(controller)
 			mockManager := manager.NewMockManager(controller)
-			mockLogger := logger.NewMockLogger(controller)
-
-			mockLogger.EXPECT().LogInfo(gomock.Any()).AnyTimes()
+			mockLogger := logger.NewLogger()
 
 			mockUncompressor.
 				EXPECT().

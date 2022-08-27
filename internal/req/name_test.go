@@ -139,7 +139,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
-		mockLogger := logger.NewMockLogger(controller)
+		mockLogger := logger.NewLogger()
 
 		mockPrompter.
 			EXPECT().
@@ -173,7 +173,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
-		mockLogger := logger.NewMockLogger(controller)
+		mockLogger := logger.NewLogger()
 
 		inputErr := errors.New("input error")
 		mockPrompter.
@@ -214,9 +214,8 @@ func Test_projectNameTask_Complete(t *testing.T) {
 		for _, testCase := range testCases {
 
 			mockManager := manager.NewMockManager(controller)
-			mockLogger := logger.NewMockLogger(controller)
+			mockLogger := logger.NewLogger()
 
-			mockLogger.EXPECT().LogInfo(gomock.Any()).AnyTimes()
 			mockManager.
 				EXPECT().
 				GetExtractLocation().

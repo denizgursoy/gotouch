@@ -34,7 +34,7 @@ func TestCreateNewProject(t *testing.T) {
 		newMockManager := manager.NewMockManager(controller)
 		mockCompressor := compressor.NewMockCompressor(controller)
 		mockExecutor := executor.NewMockExecutor(controller)
-		mockLogger := logger.NewMockLogger(controller)
+		mockLogger := logger.NewLogger()
 
 		expectedProjectData := []*model.ProjectStructureData{&project1}
 		mockLister.
@@ -87,7 +87,7 @@ func Test_isValid(t *testing.T) {
 	newMockManager := manager.NewMockManager(controller)
 	mockCompressor := compressor.NewMockCompressor(controller)
 	mockExecutor := executor.NewMockExecutor(controller)
-	mockLogger := logger.NewMockLogger(controller)
+	mockLogger := logger.NewLogger()
 
 	type args struct {
 		opts *CreateCommandOptions
@@ -225,7 +225,7 @@ func Test_isValid_PathTest(t *testing.T) {
 	newMockManager := manager.NewMockManager(controller)
 	mockCompressor := compressor.NewMockCompressor(controller)
 	mockExecutor := executor.NewMockExecutor(controller)
-	mockLogger := logger.NewMockLogger(controller)
+	mockLogger := logger.NewLogger()
 
 	options := CreateCommandOptions{
 		Lister:     mockLister,

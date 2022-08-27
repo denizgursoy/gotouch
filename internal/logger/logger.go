@@ -1,5 +1,3 @@
-//go:generate mockgen -source=./logger.go -destination=mockLogger.go -package=logger
-
 package logger
 
 import "fmt"
