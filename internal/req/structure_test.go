@@ -4,6 +4,7 @@ package req
 
 import (
 	"github.com/denizgursoy/gotouch/internal/compressor"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
@@ -97,6 +98,7 @@ func TestStructure_Complete(t *testing.T) {
 		}
 
 		controller := gomock.NewController(t)
+
 		defer controller.Finish()
 
 		testCases := []testCase{
@@ -106,6 +108,9 @@ func TestStructure_Complete(t *testing.T) {
 		for _, testCase := range testCases {
 			mockUncompressor := compressor.NewMockCompressor(controller)
 			mockManager := manager.NewMockManager(controller)
+			mockLogger := logger.NewMockLogger(controller)
+
+			mockLogger.EXPECT().LogInfo(gomock.Any()).AnyTimes()
 
 			mockUncompressor.
 				EXPECT().
@@ -119,6 +124,7 @@ func TestStructure_Complete(t *testing.T) {
 				ProjectStructure: &projectStructure1,
 				Compressor:       mockUncompressor,
 				Manager:          mockManager,
+				Logger:           mockLogger,
 			}
 			actualData, err := p.Complete(testCase.ProjectName)
 			require.Nil(t, err)

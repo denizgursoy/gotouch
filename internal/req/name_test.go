@@ -4,6 +4,7 @@ package req
 
 import (
 	"errors"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/golang/mock/gomock"
@@ -138,6 +139,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockLogger := logger.NewMockLogger(controller)
 
 		mockPrompter.
 			EXPECT().
@@ -148,6 +150,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		requirement := ProjectNameRequirement{
 			mockPrompter,
 			mockManager,
+			mockLogger,
 		}
 
 		input, err := requirement.AskForInput()
@@ -170,6 +173,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockLogger := logger.NewMockLogger(controller)
 
 		inputErr := errors.New("input error")
 		mockPrompter.
@@ -181,6 +185,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		requirement := ProjectNameRequirement{
 			mockPrompter,
 			mockManager,
+			mockLogger,
 		}
 
 		input, err := requirement.AskForInput()
@@ -209,7 +214,9 @@ func Test_projectNameTask_Complete(t *testing.T) {
 		for _, testCase := range testCases {
 
 			mockManager := manager.NewMockManager(controller)
+			mockLogger := logger.NewMockLogger(controller)
 
+			mockLogger.EXPECT().LogInfo(gomock.Any()).AnyTimes()
 			mockManager.
 				EXPECT().
 				GetExtractLocation().
@@ -223,6 +230,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 			task := projectNameTask{
 				ProjectName: testCase.projectName,
 				Manager:     mockManager,
+				Logger:      mockLogger,
 			}
 
 			complete, err := task.Complete(nil)

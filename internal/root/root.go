@@ -8,6 +8,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/spf13/cobra"
@@ -45,10 +46,11 @@ var rootCmd = &cobra.Command{
 			Manager:    manager.GetInstance(),
 			Compressor: compressor.GetInstance(),
 			Executor:   executor.GetInstance(),
+			Logger:     logger.NewLogger(),
 			Path:       point,
 		}
 		err := CreateNewProject(&options)
-		log.Fatalln(err)
+		options.Logger.LogErrorIfExists(err)
 	},
 }
 

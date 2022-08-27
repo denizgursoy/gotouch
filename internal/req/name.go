@@ -3,6 +3,7 @@ package req
 import (
 	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
@@ -12,13 +13,15 @@ import (
 
 type (
 	ProjectNameRequirement struct {
-		Prompter prompter.Prompter
-		Manager  manager.Manager
+		Prompter prompter.Prompter `validate:"required"`
+		Manager  manager.Manager   `validate:"required"`
+		Logger   logger.Logger     `validate:"required"`
 	}
 
 	projectNameTask struct {
-		ProjectName string
-		Manager     manager.Manager
+		ProjectName string          `validate:"required"`
+		Manager     manager.Manager `validate:"required"`
+		Logger      logger.Logger   `validate:"required"`
 	}
 )
 
@@ -36,6 +39,7 @@ func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
 	return &projectNameTask{
 		ProjectName: projectName,
 		Manager:     p.Manager,
+		Logger:      p.Logger,
 	}, nil
 }
 
@@ -47,6 +51,8 @@ func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
 	if dirCreationErr != nil {
 		return nil, dirCreationErr
 	}
+
+	p.Logger.LogInfo(fmt.Sprintf("%s is created", directoryPath))
 	return p.ProjectName, nil
 }
 

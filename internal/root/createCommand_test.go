@@ -6,6 +6,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
@@ -33,6 +34,7 @@ func TestCreateNewProject(t *testing.T) {
 		newMockManager := manager.NewMockManager(controller)
 		mockCompressor := compressor.NewMockCompressor(controller)
 		mockExecutor := executor.NewMockExecutor(controller)
+		mockLogger := logger.NewMockLogger(controller)
 
 		expectedProjectData := []*model.ProjectStructureData{&project1}
 		mockLister.
@@ -68,6 +70,7 @@ func TestCreateNewProject(t *testing.T) {
 			Manager:    newMockManager,
 			Compressor: mockCompressor,
 			Executor:   mockExecutor,
+			Logger:     mockLogger,
 		}
 		err := CreateNewProject(opts)
 
@@ -77,11 +80,14 @@ func TestCreateNewProject(t *testing.T) {
 
 func Test_isValid(t *testing.T) {
 	controller := gomock.NewController(t)
+	defer controller.Finish()
+
 	mockLister := lister.NewMockLister(controller)
 	mockPrompter := prompter.NewMockPrompter(controller)
 	newMockManager := manager.NewMockManager(controller)
 	mockCompressor := compressor.NewMockCompressor(controller)
 	mockExecutor := executor.NewMockExecutor(controller)
+	mockLogger := logger.NewMockLogger(controller)
 
 	type args struct {
 		opts *CreateCommandOptions
@@ -101,6 +107,7 @@ func Test_isValid(t *testing.T) {
 					Manager:    newMockManager,
 					Compressor: mockCompressor,
 					Executor:   mockExecutor,
+					Logger:     mockLogger,
 				},
 			},
 			want: true,
@@ -113,6 +120,7 @@ func Test_isValid(t *testing.T) {
 					Prompter:   mockPrompter,
 					Manager:    newMockManager,
 					Compressor: mockCompressor,
+					Logger:     mockLogger,
 				},
 			},
 			want: false,
@@ -125,6 +133,7 @@ func Test_isValid(t *testing.T) {
 					Prompter: mockPrompter,
 					Manager:  newMockManager,
 					Executor: mockExecutor,
+					Logger:   mockLogger,
 				},
 			},
 			want: false,
@@ -137,6 +146,7 @@ func Test_isValid(t *testing.T) {
 					Prompter:   mockPrompter,
 					Compressor: mockCompressor,
 					Executor:   mockExecutor,
+					Logger:     mockLogger,
 				},
 			},
 			want: false,
@@ -149,6 +159,7 @@ func Test_isValid(t *testing.T) {
 					Manager:    newMockManager,
 					Compressor: mockCompressor,
 					Executor:   mockExecutor,
+					Logger:     mockLogger,
 				},
 			},
 			want: false,
@@ -161,17 +172,100 @@ func Test_isValid(t *testing.T) {
 					Manager:    newMockManager,
 					Compressor: mockCompressor,
 					Executor:   mockExecutor,
+					Logger:     mockLogger,
 				},
 			},
 			want: false,
+		},
+		{
+			name: "missing logger",
+			args: args{
+				opts: &CreateCommandOptions{
+					Prompter:   mockPrompter,
+					Manager:    newMockManager,
+					Compressor: mockCompressor,
+					Executor:   mockExecutor,
+					Lister:     mockLister,
+				},
+			},
+			want: false,
+		},
+		{
+			name: "should validate if path is nil",
+			args: args{
+				opts: &CreateCommandOptions{
+					Lister:     mockLister,
+					Prompter:   mockPrompter,
+					Manager:    newMockManager,
+					Compressor: mockCompressor,
+					Executor:   mockExecutor,
+					Logger:     mockLogger,
+					Path:       nil,
+				},
+			},
+			want: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := isValid(tt.args.opts); got == nil != tt.want {
-				t.Errorf("isValid() = %v, want %v", got, tt.want)
 			}
 		})
 	}
+}
+
+func Test_isValid_PathTest(t *testing.T) {
+
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	mockLister := lister.NewMockLister(controller)
+	mockPrompter := prompter.NewMockPrompter(controller)
+	newMockManager := manager.NewMockManager(controller)
+	mockCompressor := compressor.NewMockCompressor(controller)
+	mockExecutor := executor.NewMockExecutor(controller)
+	mockLogger := logger.NewMockLogger(controller)
+
+	options := CreateCommandOptions{
+		Lister:     mockLister,
+		Prompter:   mockPrompter,
+		Manager:    newMockManager,
+		Compressor: mockCompressor,
+		Executor:   mockExecutor,
+		Logger:     mockLogger,
+		Path:       nil,
+	}
+	t.Run("should return no error if path is nil", func(t *testing.T) {
+		arg := options
+		err := isValid(&arg)
+		require.Nil(t, err)
+	})
+
+	t.Run("should return error if path does not end with yaml", func(t *testing.T) {
+		arg := options
+		path := "test.zaml"
+		arg.Path = &path
+		err := isValid(&arg)
+		require.NotNil(t, err)
+		require.ErrorIs(t, ErrNotYamlFile, err)
+	})
+
+	t.Run("should return no error if yaml file exists", func(t *testing.T) {
+		arg := options
+		path := "./testdata/input.yaml"
+		arg.Path = &path
+		err := isValid(&arg)
+		require.Nil(t, err)
+	})
+
+	t.Run("should return error if file does not exists", func(t *testing.T) {
+		arg := options
+		path := "./testdata/input2.yaml"
+		arg.Path = &path
+		err := isValid(&arg)
+		require.NotNil(t, err)
+		require.ErrorIs(t, ErrNotValidUrlOrFilePath, err)
+	})
+
 }
