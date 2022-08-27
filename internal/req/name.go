@@ -57,13 +57,13 @@ func (p *projectNameTask) Complete() error {
 		return err
 	}
 
-	folderName := filepath.Base(p.ModuleName)
+	projectName := filepath.Base(p.ModuleName)
 
 	p.Store.SetValue(store.ModuleName, p.ModuleName)
-	p.Store.SetValue(store.ProjectName, folderName)
+	p.Store.SetValue(store.ProjectName, projectName)
 
 	workingDirectory := p.Manager.GetExtractLocation()
-	projectFullPath := fmt.Sprintf("%s/%s", workingDirectory, folderName)
+	projectFullPath := fmt.Sprintf("%s/%s", workingDirectory, projectName)
 	dirCreationErr := p.Manager.CreateDirectoryIfNotExists(projectFullPath)
 
 	p.Store.SetValue(store.WorkingDirectory, workingDirectory)
