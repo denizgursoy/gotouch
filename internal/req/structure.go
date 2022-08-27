@@ -8,16 +8,18 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/go-playground/validator/v10"
 	"path/filepath"
 )
 
 type (
 	ProjectStructureRequirement struct {
-		ProjectsData []*model.ProjectStructureData `validate:"required"`
-		Prompter     prompter.Prompter             `validate:"required"`
-		Compressor   compressor.Compressor         `validate:"required"`
-		Manager      manager.Manager               `validate:"required"`
-		Logger       logger.Logger                 `validate:"required"`
+		ProjectsData []*model.ProjectStructureData
+		Prompter     prompter.Prompter     `validate:"required"`
+		Compressor   compressor.Compressor `validate:"required"`
+		Manager      manager.Manager       `validate:"required"`
+		Logger       logger.Logger         `validate:"required"`
+		Executor     executor.Executor     `validate:"required"`
 	}
 
 	projectStructureTask struct {
@@ -34,6 +36,10 @@ const (
 )
 
 func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
+	if err := validator.New().Struct(p); err != nil {
+		return nil, err
+	}
+
 	options := make([]prompter.Option, 0)
 	for _, datum := range p.ProjectsData {
 		options = append(options, datum)
@@ -45,15 +51,22 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 		return nil, err
 	}
 
-	return &projectStructureTask{
+	task := projectStructureTask{
 		ProjectStructure: selected.(*model.ProjectStructureData),
 		Compressor:       p.Compressor,
 		Manager:          p.Manager,
 		Logger:           p.Logger,
-	}, nil
+		Executor:         p.Executor,
+	}
+
+	return &task, nil
 }
 
 func (p *projectStructureTask) Complete(previousResponse interface{}) (interface{}, error) {
+	if err := validator.New().Struct(p); err != nil {
+		return nil, err
+	}
+
 	projectName := previousResponse.(string)
 	folderName := filepath.Base(projectName)
 

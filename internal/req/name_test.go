@@ -246,6 +246,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 		defer controller.Finish()
 
 		mockManager := manager.NewMockManager(controller)
+		mockLogger := logger.NewLogger()
 
 		mockManager.
 			EXPECT().
@@ -262,6 +263,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 		task := projectNameTask{
 			ProjectName: testProjectName,
 			Manager:     mockManager,
+			Logger:      mockLogger,
 		}
 
 		complete, err := task.Complete(nil)

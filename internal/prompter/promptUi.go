@@ -18,7 +18,7 @@ func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (int
 	count := len(list)
 
 	if count == 0 {
-		return nil, ErrProductStructureListIsEmpty
+		return nil, EmptyList
 	} else if count == 1 {
 		return list[0], nil
 	}

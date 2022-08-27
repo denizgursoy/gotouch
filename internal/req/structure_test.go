@@ -4,6 +4,7 @@ package req
 
 import (
 	"github.com/denizgursoy/gotouch/internal/compressor"
+	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
@@ -34,6 +35,8 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockUncompressor := compressor.NewMockCompressor(controller)
+		mockManager := manager.NewMockManager(controller)
+		mockExecutor := executor.NewMockExecutor(controller)
 
 		options := make([]prompter.Option, 0)
 		for _, datum := range testProjectData {
@@ -50,6 +53,9 @@ func TestStructure_AskForInput(t *testing.T) {
 			ProjectsData: testProjectData,
 			Prompter:     mockPrompter,
 			Compressor:   mockUncompressor,
+			Logger:       logger.NewLogger(),
+			Executor:     mockExecutor,
+			Manager:      mockManager,
 		}
 
 		input, err := p.AskForInput()
@@ -68,21 +74,29 @@ func TestStructure_AskForInput(t *testing.T) {
 		defer controller.Finish()
 
 		mockPrompter := prompter.NewMockPrompter(controller)
+		mockCompressor := compressor.NewMockCompressor(controller)
+		mockManager := manager.NewMockManager(controller)
+		mockExecutor := executor.NewMockExecutor(controller)
+		mockLogger := logger.NewLogger()
 
 		p := &ProjectStructureRequirement{
-			Prompter: mockPrompter,
+			Prompter:   mockPrompter,
+			Compressor: mockCompressor,
+			Manager:    mockManager,
+			Logger:     mockLogger,
+			Executor:   mockExecutor,
 		}
 
 		mockPrompter.
 			EXPECT().
 			AskForSelectionFromList(gomock.Any(), gomock.Any()).
-			Return(nil, prompter.ErrProductStructureListIsEmpty).
+			Return(nil, prompter.EmptyList).
 			Times(1)
 
 		input, err := p.AskForInput()
 
 		require.NotNil(t, err)
-		require.ErrorIs(t, err, prompter.ErrProductStructureListIsEmpty)
+		require.ErrorIs(t, err, prompter.EmptyList)
 
 		require.Nil(t, input)
 	})
@@ -109,6 +123,7 @@ func TestStructure_Complete(t *testing.T) {
 			mockUncompressor := compressor.NewMockCompressor(controller)
 			mockManager := manager.NewMockManager(controller)
 			mockLogger := logger.NewLogger()
+			mockExecutor := executor.NewMockExecutor(controller)
 
 			mockUncompressor.
 				EXPECT().
@@ -123,6 +138,7 @@ func TestStructure_Complete(t *testing.T) {
 				Compressor:       mockUncompressor,
 				Manager:          mockManager,
 				Logger:           mockLogger,
+				Executor:         mockExecutor,
 			}
 			actualData, err := p.Complete(testCase.ProjectName)
 			require.Nil(t, err)

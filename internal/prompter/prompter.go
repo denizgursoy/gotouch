@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	once                           = sync.Once{}
-	prompter                       Prompter
-	ErrProductStructureListIsEmpty = errors.New("options can not be empty")
+	once      = sync.Once{}
+	prompter  Prompter
+	EmptyList = errors.New("options can not be empty")
 )
 
 type (

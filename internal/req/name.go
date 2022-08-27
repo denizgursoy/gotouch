@@ -7,6 +7,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/go-playground/validator/v10"
 	"path/filepath"
 	"regexp"
 )
@@ -30,6 +31,10 @@ const (
 )
 
 func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
+	if err := validator.New().Struct(p); err != nil {
+		return nil, err
+	}
+
 	projectName, err := p.Prompter.AskForString(ProjectNameDirection, validateProjectName)
 
 	if err != nil {
@@ -44,6 +49,10 @@ func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
 }
 
 func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
+	if err := validator.New().Struct(p); err != nil {
+		return nil, err
+	}
+
 	folderName := filepath.Base(p.ProjectName)
 	directoryPath := fmt.Sprintf("%s/%s", p.Manager.GetExtractLocation(), folderName)
 	dirCreationErr := p.Manager.CreateDirectoryIfNotExists(directoryPath)

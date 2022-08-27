@@ -55,6 +55,7 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 		Compressor:   opts.Compressor,
 		Manager:      opts.Manager,
 		Logger:       opts.Logger,
+		Executor:     opts.Executor,
 	})
 
 	return opts.Executor.Execute(requirements)
