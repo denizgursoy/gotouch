@@ -27,6 +27,5 @@ type (
 		GetExtractLocation() string
 		GetWd() string
 		EditGoModule(projectName, folderName string) error
-		AddDependency(dependency string) error
 	}
 )

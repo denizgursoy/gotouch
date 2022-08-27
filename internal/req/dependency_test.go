@@ -2,7 +2,8 @@ package req
 
 import (
 	"errors"
-	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/executor"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -10,48 +11,94 @@ import (
 
 var (
 	dependencyWithoutVersion = "github.com/labstack/echo/v4"
-	dependencyWithVersion    = "github.com/labstack/echo/v4@latest"
+	latestDependencies       = dependencyWithoutVersion + atSign + latestVersion
+	dependencyWithVersion    = "github.com/labstack/echo/v4@v1.2.3"
 )
 
 func Test_dependencyTask_Complete(t *testing.T) {
-	t.Run("should call add dependency method", func(t *testing.T) {
+	t.Run("should call add dependency method with latest if version is not present", func(t *testing.T) {
 		controller := gomock.NewController(t)
-		mockManager := manager.NewMockManager(controller)
 
-		mockManager.
-			EXPECT().
-			AddDependency(dependencyWithoutVersion).
-			Return(nil).
-			Times(1)
-
-		task := dependencyTask{
-			Manager:    mockManager,
-			Dependency: dependencyWithoutVersion,
+		type arg struct {
+			Dependency string
+			CallValue  executor.CommandData
 		}
 
-		complete, err := task.Complete(nil)
-		require.Nil(t, err)
-		require.Nil(t, complete)
+		dependencies := []arg{
+			{
+				Dependency: dependencyWithoutVersion,
+				CallValue: executor.CommandData{
+					Command: "go",
+					Args:    []string{"get", latestDependencies},
+				},
+			},
+			{
+				Dependency: dependencyWithVersion,
+				CallValue: executor.CommandData{
+					Command: "go",
+					Args:    []string{"get", dependencyWithVersion},
+				},
+			},
+		}
+
+		for _, testArg := range dependencies {
+			mockExecutor := executor.NewMockExecutor(controller)
+
+			mockExecutor.
+				EXPECT().
+				RunCommand(gomock.Eq(&testArg.CallValue)).
+				Return(nil).
+				Times(1)
+
+			task := dependencyTask{
+				Dependency: testArg.Dependency,
+				Logger:     logger.NewLogger(),
+				Executor:   mockExecutor,
+			}
+
+			complete, err := task.Complete(nil)
+			require.Nil(t, err)
+			require.Nil(t, complete)
+		}
+
 	})
 
 	t.Run("should return error if dependency is not installed ", func(t *testing.T) {
 		controller := gomock.NewController(t)
-		mockManager := manager.NewMockManager(controller)
+		mockExecutor := executor.NewMockExecutor(controller)
 
-		dependencyError := errors.New("dependency error")
-		mockManager.
+		commandError := errors.New("command error")
+		mockExecutor.
 			EXPECT().
-			AddDependency(dependencyWithoutVersion).
-			Return(dependencyError).
+			RunCommand(gomock.Any()).
+			Return(commandError).
 			Times(1)
 
 		task := dependencyTask{
-			Manager:    mockManager,
 			Dependency: dependencyWithoutVersion,
+			Logger:     logger.NewLogger(),
+			Executor:   mockExecutor,
 		}
 
 		complete, err := task.Complete(nil)
-		require.ErrorIs(t, dependencyError, err)
+		require.ErrorIs(t, commandError, err)
+		require.Nil(t, complete)
+	})
+
+	t.Run("should return error if string is empty", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		mockExecutor := executor.NewMockExecutor(controller)
+
+		mockExecutor.EXPECT().RunCommand(gomock.Any()).AnyTimes()
+
+		task := dependencyTask{
+			Dependency: "   ",
+			Logger:     logger.NewLogger(),
+			Executor:   mockExecutor,
+		}
+
+		complete, err := task.Complete(nil)
+		require.ErrorIs(t, ErrDependencyIsNotValid, err)
 		require.Nil(t, complete)
 	})
 }
