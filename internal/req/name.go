@@ -7,6 +7,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
 	"path/filepath"
 	"regexp"
@@ -17,12 +18,14 @@ type (
 		Prompter prompter.Prompter `validate:"required"`
 		Manager  manager.Manager   `validate:"required"`
 		Logger   logger.Logger     `validate:"required"`
+		Store    store.Store       `validate:"required"`
 	}
 
 	projectNameTask struct {
-		ProjectName string          `validate:"required"`
-		Manager     manager.Manager `validate:"required"`
-		Logger      logger.Logger   `validate:"required"`
+		ModuleName string          `validate:"required"`
+		Manager    manager.Manager `validate:"required"`
+		Logger     logger.Logger   `validate:"required"`
+		Store      store.Store     `validate:"required"`
 	}
 )
 
@@ -35,34 +38,43 @@ func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
 		return nil, err
 	}
 
-	projectName, err := p.Prompter.AskForString(ProjectNameDirection, validateProjectName)
+	moduleName, err := p.Prompter.AskForString(ProjectNameDirection, validateProjectName)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &projectNameTask{
-		ProjectName: projectName,
-		Manager:     p.Manager,
-		Logger:      p.Logger,
+		ModuleName: moduleName,
+		Manager:    p.Manager,
+		Logger:     p.Logger,
+		Store:      p.Store,
 	}, nil
 }
 
-func (p *projectNameTask) Complete(interface{}) (interface{}, error) {
+func (p *projectNameTask) Complete() error {
 	if err := validator.New().Struct(p); err != nil {
-		return nil, err
+		return err
 	}
 
-	folderName := filepath.Base(p.ProjectName)
-	directoryPath := fmt.Sprintf("%s/%s", p.Manager.GetExtractLocation(), folderName)
-	dirCreationErr := p.Manager.CreateDirectoryIfNotExists(directoryPath)
+	folderName := filepath.Base(p.ModuleName)
+
+	p.Store.SetValue(store.ModuleName, p.ModuleName)
+	p.Store.SetValue(store.ProjectName, folderName)
+
+	workingDirectory := p.Manager.GetExtractLocation()
+	projectFullPath := fmt.Sprintf("%s/%s", workingDirectory, folderName)
+	dirCreationErr := p.Manager.CreateDirectoryIfNotExists(projectFullPath)
+
+	p.Store.SetValue(store.WorkingDirectory, workingDirectory)
+	p.Store.SetValue(store.ProjectFullPath, projectFullPath)
 
 	if dirCreationErr != nil {
-		return nil, dirCreationErr
+		return dirCreationErr
 	}
 
-	p.Logger.LogInfo(fmt.Sprintf("%s is created", directoryPath))
-	return p.ProjectName, nil
+	p.Logger.LogInfo(fmt.Sprintf("%s is created", projectFullPath))
+	return nil
 }
 
 func validateProjectName(projectName string) error {

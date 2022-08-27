@@ -2,12 +2,15 @@ package executor
 
 import (
 	"errors"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"log"
+	"os"
 	"os/exec"
 )
 
 type (
 	executor struct {
+		Store store.Store `validate:"required"`
 	}
 )
 
@@ -16,7 +19,9 @@ var (
 )
 
 func newExecutor() Executor {
-	return executor{}
+	return &executor{
+		Store: store.GetInstance(),
+	}
 }
 
 func (e executor) Execute(requirements Requirements) error {
@@ -31,22 +36,26 @@ func (e executor) Execute(requirements Requirements) error {
 		tasks = append(tasks, task)
 	}
 
-	var previousResponse interface{}
-
 	for _, task := range tasks {
-		data, err := task.Complete(previousResponse)
-
+		err := task.Complete()
 		if err != nil {
 			return err
 		}
-		previousResponse = data
 	}
 
 	return nil
 }
 
-func (e executor) RunCommand(data *CommandData) error {
+func (e *executor) RunCommand(data *CommandData) error {
+	if data.WorkingDir == nil {
+		projectFullPath := e.Store.GetValue(store.ProjectFullPath)
+		err := os.Chdir(projectFullPath)
+		if err != nil {
+			return err
+		}
+	}
 	cmd := exec.Command(data.Command, data.Args...)
+
 	err := cmd.Run()
 	if err != nil {
 		log.Printf("Command finished with error: %v", err)

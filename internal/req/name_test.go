@@ -7,6 +7,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -140,6 +141,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
 		mockLogger := logger.NewLogger()
+		mockStore := store.GetInstance()
 
 		mockPrompter.
 			EXPECT().
@@ -151,6 +153,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 			mockPrompter,
 			mockManager,
 			mockLogger,
+			mockStore,
 		}
 
 		input, err := requirement.AskForInput()
@@ -163,7 +166,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 
 		task := input.(*projectNameTask)
 		require.NotNil(t, task.Manager)
-		require.EqualValues(t, testProjectName, task.ProjectName)
+		require.EqualValues(t, testProjectName, task.ModuleName)
 		require.NotNil(t, task.Manager)
 	})
 
@@ -174,6 +177,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
 		mockLogger := logger.NewLogger()
+		mockStore := store.GetInstance()
 
 		inputErr := errors.New("input error")
 		mockPrompter.
@@ -186,6 +190,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 			mockPrompter,
 			mockManager,
 			mockLogger,
+			mockStore,
 		}
 
 		input, err := requirement.AskForInput()
@@ -215,6 +220,9 @@ func Test_projectNameTask_Complete(t *testing.T) {
 
 			mockManager := manager.NewMockManager(controller)
 			mockLogger := logger.NewLogger()
+			mockStore := store.NewMockStore(controller)
+
+			mockStore.EXPECT().SetValue(gomock.Any(), gomock.Any()).AnyTimes()
 
 			mockManager.
 				EXPECT().
@@ -227,18 +235,14 @@ func Test_projectNameTask_Complete(t *testing.T) {
 				CreateDirectoryIfNotExists(gomock.Eq(testCase.projectDirectory))
 
 			task := projectNameTask{
-				ProjectName: testCase.projectName,
-				Manager:     mockManager,
-				Logger:      mockLogger,
+				ModuleName: testCase.projectName,
+				Manager:    mockManager,
+				Logger:     mockLogger,
+				Store:      mockStore,
 			}
 
-			complete, err := task.Complete(nil)
+			err := task.Complete()
 			require.NoError(t, err)
-			require.NotNil(t, complete)
-
-			actualOutput := complete.(string)
-
-			require.EqualValues(t, testCase.projectName, actualOutput)
 		}
 	})
 	t.Run("should return error if directory exists", func(t *testing.T) {
@@ -247,6 +251,9 @@ func Test_projectNameTask_Complete(t *testing.T) {
 
 		mockManager := manager.NewMockManager(controller)
 		mockLogger := logger.NewLogger()
+		mockStore := store.NewMockStore(controller)
+
+		mockStore.EXPECT().SetValue(gomock.Any(), gomock.Any()).AnyTimes()
 
 		mockManager.
 			EXPECT().
@@ -261,14 +268,14 @@ func Test_projectNameTask_Complete(t *testing.T) {
 			Times(1)
 
 		task := projectNameTask{
-			ProjectName: testProjectName,
-			Manager:     mockManager,
-			Logger:      mockLogger,
+			ModuleName: testProjectName,
+			Manager:    mockManager,
+			Logger:     mockLogger,
+			Store:      mockStore,
 		}
 
-		complete, err := task.Complete(nil)
+		err := task.Complete()
 
 		require.NotNil(t, err)
-		require.Nil(t, complete)
 	})
 }

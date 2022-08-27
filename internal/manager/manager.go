@@ -26,6 +26,6 @@ type (
 		IsTest() bool
 		GetExtractLocation() string
 		GetWd() string
-		EditGoModule(projectName, folderName string) error
+		EditGoModule() error
 	}
 )

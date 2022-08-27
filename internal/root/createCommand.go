@@ -9,6 +9,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/req"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -27,6 +28,7 @@ type (
 		Executor   executor.Executor     `validate:"required"`
 		Logger     logger.Logger         `validate:"required"`
 		Path       *string               `validate:"omitempty,endswith=.yaml,url|file"`
+		Store      store.Store           `validate:"required"`
 	}
 )
 
@@ -41,6 +43,7 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 		Prompter: opts.Prompter,
 		Manager:  opts.Manager,
 		Logger:   opts.Logger,
+		Store:    opts.Store,
 	})
 
 	projects, err := opts.Lister.GetProjectList(opts.Path)
@@ -56,6 +59,7 @@ func CreateNewProject(opts *CreateCommandOptions) error {
 		Manager:      opts.Manager,
 		Logger:       opts.Logger,
 		Executor:     opts.Executor,
+		Store:        opts.Store,
 	})
 
 	return opts.Executor.Execute(requirements)

@@ -11,6 +11,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/req"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -35,6 +36,7 @@ func TestCreateNewProject(t *testing.T) {
 		mockCompressor := compressor.NewMockCompressor(controller)
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockLogger := logger.NewLogger()
+		mockStore := store.GetInstance()
 
 		expectedProjectData := []*model.ProjectStructureData{&project1}
 		mockLister.
@@ -71,6 +73,7 @@ func TestCreateNewProject(t *testing.T) {
 			Compressor: mockCompressor,
 			Executor:   mockExecutor,
 			Logger:     mockLogger,
+			Store:      mockStore,
 		}
 		err := CreateNewProject(opts)
 
@@ -226,6 +229,7 @@ func Test_isValid_PathTest(t *testing.T) {
 	mockCompressor := compressor.NewMockCompressor(controller)
 	mockExecutor := executor.NewMockExecutor(controller)
 	mockLogger := logger.NewLogger()
+	mockStore := store.GetInstance()
 
 	options := CreateCommandOptions{
 		Lister:     mockLister,
@@ -234,6 +238,7 @@ func Test_isValid_PathTest(t *testing.T) {
 		Compressor: mockCompressor,
 		Executor:   mockExecutor,
 		Logger:     mockLogger,
+		Store:      mockStore,
 		Path:       nil,
 	}
 	t.Run("should return no error if path is nil", func(t *testing.T) {

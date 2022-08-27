@@ -13,8 +13,9 @@ type (
 	Requirements []model.Requirement
 
 	CommandData struct {
-		Command string
-		Args    []string
+		WorkingDir *string
+		Command    string
+		Args       []string
 	}
 
 	Executor interface {

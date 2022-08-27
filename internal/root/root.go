@@ -11,6 +11,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -48,6 +49,7 @@ var rootCmd = &cobra.Command{
 			Executor:   executor.GetInstance(),
 			Logger:     logger.NewLogger(),
 			Path:       point,
+			Store:      store.GetInstance(),
 		}
 		err := CreateNewProject(&options)
 		options.Logger.LogErrorIfExists(err)

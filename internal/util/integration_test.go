@@ -132,7 +132,7 @@ func (z *ZippingTestSuite) checkModuleName(expectedModuleName, folderName string
 	}
 	split := strings.Split(string(open), "\n")
 	if split[0] != expectedModuleName {
-		z.T().Fatal("Module name did not change")
+		z.T().Fatalf("Module name did not change: expected: %s, actual: %s", expectedModuleName, split[0])
 	}
 }
 

@@ -9,6 +9,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -37,6 +38,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		mockUncompressor := compressor.NewMockCompressor(controller)
 		mockManager := manager.NewMockManager(controller)
 		mockExecutor := executor.NewMockExecutor(controller)
+		mockStore := store.GetInstance()
 
 		options := make([]prompter.Option, 0)
 		for _, datum := range testProjectData {
@@ -56,17 +58,13 @@ func TestStructure_AskForInput(t *testing.T) {
 			Logger:       logger.NewLogger(),
 			Executor:     mockExecutor,
 			Manager:      mockManager,
+			Store:        mockStore,
 		}
 
 		input, err := p.AskForInput()
 
 		require.NoError(t, err)
 		require.NotNil(t, input)
-
-		task := input.(*projectStructureTask)
-
-		require.EqualValues(t, task.ProjectStructure, testProjectData[0])
-		require.NotNil(t, task.Compressor)
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {
@@ -78,6 +76,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		mockManager := manager.NewMockManager(controller)
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockLogger := logger.NewLogger()
+		mockStore := store.GetInstance()
 
 		p := &ProjectStructureRequirement{
 			Prompter:   mockPrompter,
@@ -85,6 +84,7 @@ func TestStructure_AskForInput(t *testing.T) {
 			Manager:    mockManager,
 			Logger:     mockLogger,
 			Executor:   mockExecutor,
+			Store:      mockStore,
 		}
 
 		mockPrompter.
@@ -124,6 +124,10 @@ func TestStructure_Complete(t *testing.T) {
 			mockManager := manager.NewMockManager(controller)
 			mockLogger := logger.NewLogger()
 			mockExecutor := executor.NewMockExecutor(controller)
+			mockStore := store.NewMockStore(controller)
+
+			mockStore.EXPECT().GetValue(store.ProjectName).Return(testCase.DirectoryName).Times(1)
+			mockStore.EXPECT().GetValue(store.ModuleName).Return(testCase.ProjectName).Times(1)
 
 			mockUncompressor.
 				EXPECT().
@@ -131,7 +135,8 @@ func TestStructure_Complete(t *testing.T) {
 
 			mockManager.
 				EXPECT().
-				EditGoModule(gomock.Eq(testCase.ProjectName), gomock.Eq(testCase.DirectoryName))
+				EditGoModule().
+				AnyTimes()
 
 			p := &projectStructureTask{
 				ProjectStructure: &projectStructure1,
@@ -139,10 +144,10 @@ func TestStructure_Complete(t *testing.T) {
 				Manager:          mockManager,
 				Logger:           mockLogger,
 				Executor:         mockExecutor,
+				Store:            mockStore,
 			}
-			actualData, err := p.Complete(testCase.ProjectName)
+			err := p.Complete()
 			require.Nil(t, err)
-			require.Nil(t, actualData)
 		}
 
 	})

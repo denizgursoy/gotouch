@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/executor"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"io"
 	"log"
 	"os"
@@ -20,18 +21,37 @@ var (
 
 type (
 	fManager struct {
-		Executor executor.Executor
-	}
-
-	Dependency struct {
-		Url     *string
-		Version *string
+		Executor executor.Executor `validate:"required"`
+		Store    store.Store       `validate:"required"`
 	}
 )
+
+func init() {
+	manager = newFileManager()
+	if manager.IsTest() {
+		exPath := fmt.Sprintf("%s/input.txt", manager.GetExtractLocation())
+		file, err := os.ReadFile(exPath)
+		if err != nil {
+			log.Println("deniz", err)
+		}
+		urls = make([]string, 0)
+		for _, line := range strings.Split(string(file), "\n") {
+			split := strings.Split(line, " ")
+			ints := make([]byte, 0)
+
+			for _, s := range split {
+				atoi, _ := strconv.Atoi(s)
+				ints = append(ints, byte(atoi))
+			}
+			urls = append(urls, string(ints))
+		}
+	}
+}
 
 func newFileManager() Manager {
 	return &fManager{
 		Executor: executor.GetInstance(),
+		Store:    store.GetInstance(),
 	}
 }
 
@@ -74,46 +94,16 @@ func (f *fManager) GetWd() string {
 	return wd
 }
 
-func (d *Dependency) String() string {
-	return fmt.Sprintf("%s@%s", *d.Url, *d.Version)
-}
-
-func init() {
-	manager = newFileManager()
-	if manager.IsTest() {
-		exPath := fmt.Sprintf("%s/input.txt", manager.GetExtractLocation())
-		file, err := os.ReadFile(exPath)
-		if err != nil {
-			log.Println("deniz", err)
-		}
-		urls = make([]string, 0)
-		for _, line := range strings.Split(string(file), "\n") {
-			split := strings.Split(line, " ")
-			ints := make([]byte, 0)
-
-			for _, s := range split {
-				atoi, _ := strconv.Atoi(s)
-				ints = append(ints, byte(atoi))
-			}
-			urls = append(urls, string(ints))
-		}
-	}
-}
-
-func (f *fManager) EditGoModule(projectName, folderName string) error {
-	workingDirectory := f.GetExtractLocation()
-	projectDirectory := fmt.Sprintf("%s/%s", workingDirectory, folderName)
-
-	if err := os.Chdir(projectDirectory); err != nil {
-		return err
-	}
+func (f *fManager) EditGoModule() error {
+	projectFullPath := f.Store.GetValue(store.ProjectFullPath)
+	moduleName := f.Store.GetValue(store.ModuleName)
 
 	args := make([]string, 0)
 
-	if f.hasGoModule(projectDirectory) {
-		args = append(args, "mod", "edit", "-module", projectName)
+	if f.hasGoModule(projectFullPath) {
+		args = append(args, "mod", "edit", "-module", moduleName)
 	} else {
-		args = append(args, "mod", "init", projectName)
+		args = append(args, "mod", "init", moduleName)
 	}
 
 	data := &executor.CommandData{

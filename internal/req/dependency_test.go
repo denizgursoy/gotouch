@@ -56,9 +56,8 @@ func Test_dependencyTask_Complete(t *testing.T) {
 				Executor:   mockExecutor,
 			}
 
-			complete, err := task.Complete(nil)
+			err := task.Complete()
 			require.Nil(t, err)
-			require.Nil(t, complete)
 		}
 
 	})
@@ -80,9 +79,8 @@ func Test_dependencyTask_Complete(t *testing.T) {
 			Executor:   mockExecutor,
 		}
 
-		complete, err := task.Complete(nil)
+		err := task.Complete()
 		require.ErrorIs(t, commandError, err)
-		require.Nil(t, complete)
 	})
 
 	t.Run("should return error if string is empty", func(t *testing.T) {
@@ -97,8 +95,7 @@ func Test_dependencyTask_Complete(t *testing.T) {
 			Executor:   mockExecutor,
 		}
 
-		complete, err := task.Complete(nil)
+		err := task.Complete()
 		require.ErrorIs(t, ErrDependencyIsNotValid, err)
-		require.Nil(t, complete)
 	})
 }

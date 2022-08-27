@@ -18,19 +18,17 @@ type (
 
 	testTask struct {
 		isAskCalled bool
-		arg         interface{}
 		returnValue interface{}
 		err         error
 	}
 )
 
-func (t *testTask) Complete(i interface{}) (interface{}, error) {
+func (t *testTask) Complete() error {
 	t.isAskCalled = true
-	t.arg = i
 	if t.err != nil {
-		return nil, t.err
+		return t.err
 	}
-	return t.returnValue, nil
+	return nil
 }
 
 func (t *testRequirement) AskForInput() (model.Task, error) {
@@ -61,8 +59,6 @@ func Test_executor_Execute(t *testing.T) {
 
 		require.True(t, firstRequirement.Task.(*testTask).isAskCalled)
 		require.True(t, secondRequirement.Task.(*testTask).isAskCalled)
-
-		require.EqualValues(t, firstRequirement.Task.(*testTask).returnValue, secondRequirement.Task.(*testTask).arg)
 	})
 
 	t.Run("should return error if complete function of task returns error", func(t *testing.T) {
@@ -86,7 +82,6 @@ func getRequirements() (Requirements, *testRequirement, *testRequirement) {
 		Error:       nil,
 		Task: &testTask{
 			isAskCalled: false,
-			arg:         nil,
 			returnValue: "test return value",
 		},
 	}
@@ -96,7 +91,6 @@ func getRequirements() (Requirements, *testRequirement, *testRequirement) {
 		Error:       nil,
 		Task: &testTask{
 			isAskCalled: false,
-			arg:         nil,
 			returnValue: nil,
 		},
 	}
@@ -112,7 +106,6 @@ func getCompleteErrorRequirement() (*testRequirement, error) {
 		Error:       nil,
 		Task: &testTask{
 			isAskCalled: false,
-			arg:         nil,
 			returnValue: nil,
 			err:         completeError,
 		},

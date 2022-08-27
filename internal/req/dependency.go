@@ -24,13 +24,13 @@ var (
 	ErrDependencyIsNotValid = errors.New("dependency is not valid")
 )
 
-func (d *dependencyTask) Complete(i interface{}) (interface{}, error) {
+func (d *dependencyTask) Complete() error {
 	if err := validator.New().Struct(d); err != nil {
-		return nil, err
+		return err
 	}
 
 	if len(strings.TrimSpace(d.Dependency)) == 0 {
-		return nil, ErrDependencyIsNotValid
+		return ErrDependencyIsNotValid
 	}
 
 	url := d.Dependency
@@ -55,10 +55,10 @@ func (d *dependencyTask) Complete(i interface{}) (interface{}, error) {
 	}
 
 	if err := d.Executor.RunCommand(data); err != nil {
-		return nil, err
+		return err
 	}
 
 	d.Logger.LogInfo(fmt.Sprintf("Added  -> %s", dependency.String()))
 
-	return nil, nil
+	return nil
 }
