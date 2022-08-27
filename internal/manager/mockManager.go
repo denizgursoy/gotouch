@@ -34,6 +34,20 @@ func (m *MockManager) EXPECT() *MockManagerMockRecorder {
 	return m.recorder
 }
 
+// AddDependency mocks base method.
+func (m *MockManager) AddDependency(dependency string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddDependency", dependency)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddDependency indicates an expected call of AddDependency.
+func (mr *MockManagerMockRecorder) AddDependency(dependency interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddDependency", reflect.TypeOf((*MockManager)(nil).AddDependency), dependency)
+}
+
 // CreateDirectoryIfNotExists mocks base method.
 func (m *MockManager) CreateDirectoryIfNotExists(directoryName string) error {
 	m.ctrl.T.Helper()

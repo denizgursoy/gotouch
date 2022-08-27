@@ -22,6 +22,11 @@ type (
 	fManager struct {
 		Executor executor.Executor
 	}
+
+	Dependency struct {
+		Url     *string
+		Version *string
+	}
 )
 
 func newFileManager() Manager {
@@ -67,6 +72,14 @@ func (f *fManager) GetWd() string {
 	}
 
 	return wd
+}
+
+func (f *fManager) AddDependency(dependency string) error {
+	panic("implement me")
+}
+
+func (d *Dependency) String() string {
+	return fmt.Sprintf("%s@%s", *d.Url, *d.Version)
 }
 
 func init() {
