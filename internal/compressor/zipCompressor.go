@@ -5,6 +5,7 @@ import (
 	"github.com/artdarek/go-unzip"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"io"
 	"net/http"
 	"os"
@@ -12,16 +13,18 @@ import (
 )
 
 type zipCompressor struct {
-	manager manager.Manager
+	Manager manager.Manager
+	Store   store.Store
 }
 
 func newZipCompressor(manager manager.Manager) Compressor {
 	return &zipCompressor{
-		manager: manager,
+		Manager: manager,
+		Store:   store.GetInstance(),
 	}
 }
 
-func (z *zipCompressor) UncompressFromUrl(url, projectName string) error {
+func (z *zipCompressor) UncompressFromUrl(url string) error {
 	if !isValid(z) {
 		return model.ErrMissingField
 	}
@@ -41,7 +44,9 @@ func (z *zipCompressor) UncompressFromUrl(url, projectName string) error {
 	if _, copyErr := io.Copy(create, response.Body); copyErr != nil {
 		return copyErr
 	}
-	target := fmt.Sprintf("%s/%s", z.manager.GetExtractLocation(), projectName)
+
+	projectName := z.Store.GetValue(store.ProjectName)
+	target := fmt.Sprintf("%s/%s", z.Manager.GetExtractLocation(), projectName)
 	uz := unzip.New(filePath, target)
 
 	if extractErr := uz.Extract(); extractErr != nil {
@@ -52,7 +57,7 @@ func (z *zipCompressor) UncompressFromUrl(url, projectName string) error {
 }
 
 func isValid(compressor *zipCompressor) bool {
-	if compressor.manager == nil {
+	if compressor.Manager == nil {
 		return false
 	}
 	return true

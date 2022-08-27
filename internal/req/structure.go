@@ -71,10 +71,9 @@ func (p *projectStructureTask) Complete() error {
 	}
 
 	moduleName := p.Store.GetValue(store.ModuleName)
-	folderName := p.Store.GetValue(store.ProjectName)
 
 	p.Logger.LogInfo("Extracting files...")
-	if err := p.Compressor.UncompressFromUrl(p.ProjectStructure.URL, folderName); err != nil {
+	if err := p.Compressor.UncompressFromUrl(p.ProjectStructure.URL); err != nil {
 		return err
 	}
 	p.Logger.LogInfo("Zip is extracted successfully")

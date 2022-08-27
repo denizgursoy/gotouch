@@ -105,7 +105,6 @@ func TestStructure_AskForInput(t *testing.T) {
 
 func TestStructure_Complete(t *testing.T) {
 	t.Run("should call uncompress with the URL", func(t *testing.T) {
-
 		type testCase struct {
 			ProjectName   string
 			DirectoryName string
@@ -126,12 +125,11 @@ func TestStructure_Complete(t *testing.T) {
 			mockExecutor := executor.NewMockExecutor(controller)
 			mockStore := store.NewMockStore(controller)
 
-			mockStore.EXPECT().GetValue(store.ProjectName).Return(testCase.DirectoryName).Times(1)
 			mockStore.EXPECT().GetValue(store.ModuleName).Return(testCase.ProjectName).Times(1)
 
 			mockUncompressor.
 				EXPECT().
-				UncompressFromUrl(gomock.Eq(projectStructure1.URL), gomock.Eq(testCase.DirectoryName))
+				UncompressFromUrl(gomock.Eq(projectStructure1.URL))
 
 			mockManager.
 				EXPECT().
