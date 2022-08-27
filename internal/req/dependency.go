@@ -33,21 +33,21 @@ func (d *dependencyTask) Complete(i interface{}) (interface{}, error) {
 		return nil, ErrDependencyIsNotValid
 	}
 
-	dependency := manager.Dependency{
-		Url:     &d.Dependency,
-		Version: &latestVersion,
-	}
+	url := d.Dependency
+	version := latestVersion
 
 	atIndex := strings.LastIndex(d.Dependency, atSign)
 	if atIndex != -1 {
-		url := d.Dependency[:atIndex]
-		version := d.Dependency[atIndex+1:]
-
-		dependency.Url = &url
-		dependency.Version = &version
+		url = d.Dependency[:atIndex]
+		version = d.Dependency[atIndex+1:]
 	}
 
-	d.Logger.LogInfo(fmt.Sprintf("Adding dependency -> %s", dependency.String()))
+	dependency := manager.Dependency{
+		Url:     &url,
+		Version: &version,
+	}
+
+	d.Logger.LogInfo(fmt.Sprintf("Adding -> %s", dependency.String()))
 
 	data := &executor.CommandData{
 		Command: "go",
@@ -58,7 +58,7 @@ func (d *dependencyTask) Complete(i interface{}) (interface{}, error) {
 		return nil, err
 	}
 
-	d.Logger.LogInfo(fmt.Sprintf("Dependency add succesfully -> %s", dependency.String()))
+	d.Logger.LogInfo(fmt.Sprintf("Added  -> %s", dependency.String()))
 
 	return nil, nil
 }
