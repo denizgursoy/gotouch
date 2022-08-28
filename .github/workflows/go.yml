@@ -18,6 +18,9 @@ jobs:
       - name: Build
         run: make
 
+      - name: Prepare test binary
+        run: make build-test
+
       - name: Unit Test
         run: make unit-test
 
