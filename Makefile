@@ -9,7 +9,7 @@ build-test:
 unit-test:
 	go test -v --tags=unit ./...
 
-integration-test:
+integration-test: build-test
 	go test -v --tags=integration ./...
 
 generate-mocks:
