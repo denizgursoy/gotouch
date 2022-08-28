@@ -48,6 +48,20 @@ func (mr *MockManagerMockRecorder) CreateDirectoryIfNotExists(directoryName inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDirectoryIfNotExists", reflect.TypeOf((*MockManager)(nil).CreateDirectoryIfNotExists), directoryName)
 }
 
+// CreateFile mocks base method.
+func (m *MockManager) CreateFile(reader io.ReadCloser, path string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateFile", reader, path)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateFile indicates an expected call of CreateFile.
+func (mr *MockManagerMockRecorder) CreateFile(reader, path interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFile", reflect.TypeOf((*MockManager)(nil).CreateFile), reader, path)
+}
+
 // EditGoModule mocks base method.
 func (m *MockManager) EditGoModule() error {
 	m.ctrl.T.Helper()

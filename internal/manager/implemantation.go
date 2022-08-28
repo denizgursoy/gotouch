@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/executor"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"io"
 	"log"
@@ -23,6 +24,7 @@ type (
 	fManager struct {
 		Executor executor.Executor `validate:"required"`
 		Store    store.Store       `validate:"required"`
+		Logger   logger.Logger     `validate:"required"`
 	}
 )
 
@@ -52,6 +54,7 @@ func newFileManager() Manager {
 	return &fManager{
 		Executor: executor.GetInstance(),
 		Store:    store.GetInstance(),
+		Logger:   logger.NewLogger(),
 	}
 }
 
@@ -121,4 +124,11 @@ func (f *fManager) hasGoModule(projectDirectory string) bool {
 	}
 
 	return true
+}
+
+func (f *fManager) CreateFile(reader io.ReadCloser, path string) error {
+	f.Logger.LogInfo(fmt.Sprintf("Creating file -> %s", path))
+
+	f.Logger.LogInfo(fmt.Sprintf("Created file  -> %s", path))
+	return nil
 }
