@@ -5,6 +5,7 @@
 package prompter
 
 import (
+	"fmt"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -34,7 +35,7 @@ func (m *MockPrompter) EXPECT() *MockPrompterMockRecorder {
 }
 
 // AskForSelectionFromList mocks base method.
-func (m *MockPrompter) AskForSelectionFromList(direction string, list []Option) (interface{}, error) {
+func (m *MockPrompter) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AskForSelectionFromList", direction, list)
 	ret0, _ := ret[0].(interface{})
@@ -63,7 +64,7 @@ func (mr *MockPrompterMockRecorder) AskForString(direction, validator interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForString", reflect.TypeOf((*MockPrompter)(nil).AskForString), direction, validator)
 }
 
-// MockOption is a mock of Option interface.
+// MockOption is a mock of Choice interface.
 type MockOption struct {
 	ctrl     *gomock.Controller
 	recorder *MockOptionMockRecorder

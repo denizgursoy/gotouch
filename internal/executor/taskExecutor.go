@@ -31,9 +31,15 @@ func (e executor) Execute(requirements Requirements) error {
 
 	tasks := make(Tasks, 0)
 
-	for _, requirement := range requirements {
-		task, _ := requirement.AskForInput()
-		tasks = append(tasks, task)
+	index := 0
+	for len(requirements) > index {
+		inputTask, inputRequirements, err := requirements[index].AskForInput()
+		if err != nil {
+			return err
+		}
+		tasks = append(tasks, inputTask...)
+		requirements = append(requirements, inputRequirements...)
+		index++
 	}
 
 	for _, task := range tasks {

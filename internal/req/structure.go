@@ -37,12 +37,12 @@ const (
 	SelectProjectTypeDirection = "Select Project Type"
 )
 
-func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
+func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	if err := validator.New().Struct(p); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	options := make([]prompter.Option, 0)
+	options := make([]fmt.Stringer, 0)
 	for _, datum := range p.ProjectsData {
 		options = append(options, datum)
 	}
@@ -50,7 +50,7 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 	selected, err := p.Prompter.AskForSelectionFromList(SelectProjectTypeDirection, options)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	task := projectStructureTask{
@@ -62,7 +62,22 @@ func (p *ProjectStructureRequirement) AskForInput() (model.Task, error) {
 		Store:            p.Store,
 	}
 
-	return &task, nil
+	tasks := make([]model.Task, 0)
+	tasks = append(tasks, &task)
+
+	requirements := make([]model.Requirement, 0)
+
+	for _, question := range task.ProjectStructure.Questions {
+		requirements = append(requirements, &QuestionRequirement{
+			Question: *question,
+			Prompter: p.Prompter,
+			Logger:   p.Logger,
+			Executor: p.Executor,
+			Manager:  p.Manager,
+		})
+	}
+
+	return tasks, requirements, nil
 }
 
 func (p *projectStructureTask) Complete() error {

@@ -45,6 +45,10 @@ var (
 	ErrProjectURLIsNotValid = errors.New("project name can not be empty")
 )
 
+func (o *Option) String() string {
+	return o.Answer
+}
+
 func (p *ProjectStructureData) IsValid() error {
 	if len(strings.TrimSpace(p.Name)) == 0 {
 		return ErrProjectNameIsEmpty

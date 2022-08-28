@@ -1,6 +1,7 @@
 package prompter
 
 import (
+	"fmt"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/manifoldco/promptui"
@@ -10,7 +11,7 @@ type promptUi struct {
 	Manager manager.Manager
 }
 
-func (p *promptUi) AskForSelectionFromList(direction string, list []Option) (interface{}, error) {
+func (p *promptUi) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {
 	if !isValid(p) {
 		return "", model.ErrMissingField
 	}

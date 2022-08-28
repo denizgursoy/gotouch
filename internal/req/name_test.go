@@ -156,15 +156,16 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 			mockStore,
 		}
 
-		input, err := requirement.AskForInput()
+		tasks, requirements, err := requirement.AskForInput()
 		if err != nil {
 			return
 		}
 
 		require.NoError(t, err)
-		require.NotNil(t, input)
+		require.NotNil(t, tasks)
+		require.Empty(t, requirements)
 
-		task := input.(*projectNameTask)
+		task := tasks[0].(*projectNameTask)
 		require.NotNil(t, task.Manager)
 		require.EqualValues(t, testProjectName, task.ModuleName)
 		require.NotNil(t, task.Manager)
@@ -193,10 +194,11 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 			mockStore,
 		}
 
-		input, err := requirement.AskForInput()
+		tasks, requirements, err := requirement.AskForInput()
 
 		require.NotNil(t, err)
-		require.Nil(t, input)
+		require.Nil(t, tasks)
+		require.Nil(t, requirements)
 		require.ErrorIs(t, inputErr, err)
 	})
 

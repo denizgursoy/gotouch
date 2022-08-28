@@ -11,9 +11,10 @@ import (
 
 type (
 	testRequirement struct {
-		isAskCalled bool
-		Error       error
-		Task        model.Task
+		isAskCalled  bool
+		Error        error
+		Tasks        []model.Task
+		Requirements []model.Requirement
 	}
 
 	testTask struct {
@@ -31,12 +32,12 @@ func (t *testTask) Complete() error {
 	return nil
 }
 
-func (t *testRequirement) AskForInput() (model.Task, error) {
+func (t *testRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	t.isAskCalled = true
 	if t.Error != nil {
-		return nil, t.Error
+		return nil, nil, t.Error
 	}
-	return t.Task, nil
+	return t.Tasks, t.Requirements, nil
 }
 
 func Test_executor_Execute(t *testing.T) {
@@ -57,8 +58,8 @@ func Test_executor_Execute(t *testing.T) {
 		require.True(t, firstRequirement.isAskCalled)
 		require.True(t, secondRequirement.isAskCalled)
 
-		require.True(t, firstRequirement.Task.(*testTask).isAskCalled)
-		require.True(t, secondRequirement.Task.(*testTask).isAskCalled)
+		require.True(t, firstRequirement.Tasks[0].(*testTask).isAskCalled)
+		require.True(t, secondRequirement.Tasks[0].(*testTask).isAskCalled)
 	})
 
 	t.Run("should return error if complete function of task returns error", func(t *testing.T) {
@@ -67,10 +68,27 @@ func Test_executor_Execute(t *testing.T) {
 		err := executor.Execute(Requirements{errorRequirement})
 
 		require.True(t, errorRequirement.isAskCalled)
-		require.True(t, errorRequirement.Task.(*testTask).isAskCalled)
+		require.True(t, errorRequirement.Tasks[0].(*testTask).isAskCalled)
 
 		require.NotNil(t, err)
 		require.ErrorIs(t, taskError, err)
+	})
+
+	t.Run("should return error if complete function of task returns error", func(t *testing.T) {
+		executor := newExecutor()
+		req := getRequirementReturningTwoRequirements()
+		err := executor.Execute(Requirements{req})
+
+		require.True(t, req.Requirements[0].(*testRequirement).isAskCalled)
+		require.True(t, req.Requirements[1].(*testRequirement).isAskCalled)
+
+		require.True(t, req.Requirements[0].(*testRequirement).Tasks[0].(*testTask).isAskCalled)
+		require.True(t, req.Requirements[1].(*testRequirement).Tasks[0].(*testTask).isAskCalled)
+
+		require.True(t, req.isAskCalled)
+		require.True(t, req.Tasks[0].(*testTask).isAskCalled)
+
+		require.NoError(t, err)
 	})
 }
 
@@ -80,18 +98,22 @@ func getRequirements() (Requirements, *testRequirement, *testRequirement) {
 	firstRequirement := &testRequirement{
 		isAskCalled: false,
 		Error:       nil,
-		Task: &testTask{
-			isAskCalled: false,
-			returnValue: "test return value",
+		Tasks: []model.Task{
+			&testTask{
+				isAskCalled: false,
+				returnValue: "test return value",
+			},
 		},
 	}
 
 	secondRequirement := &testRequirement{
 		isAskCalled: false,
 		Error:       nil,
-		Task: &testTask{
-			isAskCalled: false,
-			returnValue: nil,
+		Tasks: []model.Task{
+			&testTask{
+				isAskCalled: false,
+				returnValue: nil,
+			},
 		},
 	}
 
@@ -104,12 +126,31 @@ func getCompleteErrorRequirement() (*testRequirement, error) {
 	errorRequirement := &testRequirement{
 		isAskCalled: false,
 		Error:       nil,
-		Task: &testTask{
-			isAskCalled: false,
-			returnValue: nil,
-			err:         completeError,
+		Tasks: []model.Task{
+			&testTask{
+				isAskCalled: false,
+				returnValue: nil,
+				err:         completeError,
+			},
 		},
 	}
 
 	return errorRequirement, completeError
+}
+
+func getRequirementReturningTwoRequirements() *testRequirement {
+	requirements, _, _ := getRequirements()
+	return &testRequirement{
+		isAskCalled:  false,
+		Error:        nil,
+		Requirements: requirements,
+		Tasks: []model.Task{
+			&testTask{
+				isAskCalled: false,
+				returnValue: nil,
+				err:         nil,
+			},
+		},
+	}
+
 }

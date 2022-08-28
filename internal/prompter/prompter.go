@@ -4,6 +4,7 @@ package prompter
 
 import (
 	"errors"
+	"fmt"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"sync"
 )
@@ -17,7 +18,7 @@ var (
 type (
 	Prompter interface {
 		AskForString(direction string, validator StringValidator) (string, error)
-		AskForSelectionFromList(direction string, list []Option) (interface{}, error)
+		AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error)
 	}
 
 	ListOption struct {
@@ -26,10 +27,6 @@ type (
 	}
 
 	StringValidator func(string) error
-
-	Option interface {
-		String() string
-	}
 )
 
 func GetInstance() Prompter {

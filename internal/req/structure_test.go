@@ -3,6 +3,7 @@
 package req
 
 import (
+	"fmt"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -40,7 +41,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockStore := store.GetInstance()
 
-		options := make([]prompter.Option, 0)
+		options := make([]fmt.Stringer, 0)
 		for _, datum := range testProjectData {
 			options = append(options, datum)
 		}
@@ -61,10 +62,10 @@ func TestStructure_AskForInput(t *testing.T) {
 			Store:        mockStore,
 		}
 
-		input, err := p.AskForInput()
+		tasks, _, err := p.AskForInput()
 
 		require.NoError(t, err)
-		require.NotNil(t, input)
+		require.NotNil(t, tasks)
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {
@@ -93,12 +94,12 @@ func TestStructure_AskForInput(t *testing.T) {
 			Return(nil, prompter.EmptyList).
 			Times(1)
 
-		input, err := p.AskForInput()
+		tasks, _, err := p.AskForInput()
 
 		require.NotNil(t, err)
 		require.ErrorIs(t, err, prompter.EmptyList)
 
-		require.Nil(t, input)
+		require.Empty(t, tasks)
 	})
 
 }

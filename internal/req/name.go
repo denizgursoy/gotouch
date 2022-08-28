@@ -33,23 +33,28 @@ const (
 	ProjectNameDirection = "Enter Project Name"
 )
 
-func (p *ProjectNameRequirement) AskForInput() (model.Task, error) {
+func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	if err := validator.New().Struct(p); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	moduleName, err := p.Prompter.AskForString(ProjectNameDirection, validateProjectName)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return &projectNameTask{
+	task := projectNameTask{
 		ModuleName: moduleName,
 		Manager:    p.Manager,
 		Logger:     p.Logger,
 		Store:      p.Store,
-	}, nil
+	}
+
+	tasks := make([]model.Task, 0)
+	tasks = append(tasks, &task)
+
+	return tasks, nil, nil
 }
 
 func (p *projectNameTask) Complete() error {
