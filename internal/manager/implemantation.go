@@ -7,6 +7,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -127,8 +128,30 @@ func (f *fManager) hasGoModule(projectDirectory string) bool {
 }
 
 func (f *fManager) CreateFile(reader io.ReadCloser, path string) error {
-	f.Logger.LogInfo(fmt.Sprintf("Creating file -> %s", path))
+	fullPath := filepath.Join(f.Store.GetValue(store.ProjectFullPath), path)
+	directoryOfFile := filepath.Dir(fullPath)
 
-	f.Logger.LogInfo(fmt.Sprintf("Created file  -> %s", path))
+	err2 := os.MkdirAll(directoryOfFile, os.ModePerm)
+	if err2 != nil {
+		return err2
+	}
+	f.Logger.LogInfo(fmt.Sprintf("Creating file -> %s", fullPath))
+
+	create, err := os.Create(fullPath)
+	if err != nil {
+		return err
+	}
+	defer create.Close()
+
+	all, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return err
+	}
+	_, err = create.Write(all)
+	if err != nil {
+		return err
+	}
+
+	f.Logger.LogInfo(fmt.Sprintf("Created file  -> %s", fullPath))
 	return nil
 }
