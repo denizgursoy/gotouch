@@ -5,6 +5,8 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/manifoldco/promptui"
+	"os"
+	"syscall"
 )
 
 type promptUi struct {
@@ -37,10 +39,17 @@ func (p *promptUi) AskForSelectionFromList(direction string, list []fmt.Stringer
 
 	index, _, err := prompt.Run()
 	if err != nil {
+		p.exitIfInterrupted(err)
 		return nil, err
 	}
 
 	return list[index], nil
+}
+
+func (p *promptUi) exitIfInterrupted(err error) {
+	if err.Error() == "^C" || err.Error() == "^D" {
+		os.Exit(int(syscall.SIGINT))
+	}
 }
 
 func (p *promptUi) AskForString(direction string, validator StringValidator) (string, error) {
@@ -55,6 +64,7 @@ func (p *promptUi) AskForString(direction string, validator StringValidator) (st
 	}
 	input, err := prompt.Run()
 	if err != nil {
+		p.exitIfInterrupted(err)
 		return "", err
 	}
 	return input, nil
