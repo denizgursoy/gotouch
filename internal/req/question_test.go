@@ -2,6 +2,7 @@ package req
 
 import (
 	"errors"
+	"fmt"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
@@ -25,18 +26,33 @@ var (
 		Content: "",
 		Path:    "",
 	}
+	option = model.Option{
+		Answer:       "112322",
+		Dependencies: []*string{&dependency1, &dependency2},
+		Files:        []*model.File{&file1, &file2},
+	}
+
 	yesNoQuestion = model.Question{
 		Direction:         "yes no question",
 		CanSkip:           true,
 		CanSelectMultiple: false,
-		Options: []*model.Option{
-			{
-				Answer:       "112322",
-				Dependencies: []*string{&dependency1, &dependency2},
-				Files:        []*model.File{&file1, &file2},
-			},
-		},
+		Options:           []*model.Option{&option},
 	}
+
+	multipleOptionQuestion = model.Question{
+		Direction:         "yes no question",
+		CanSkip:           false,
+		CanSelectMultiple: false,
+		Options:           []*model.Option{&option, &option},
+	}
+
+	multipleOptionQuestionWithSkip = model.Question{
+		Direction:         "yes no question",
+		CanSkip:           true,
+		CanSelectMultiple: false,
+		Options:           []*model.Option{&option, &option},
+	}
+	promptErr = errors.New("prompt-err")
 )
 
 func TestQuestionRequirement_AskForInput(t *testing.T) {
@@ -101,12 +117,99 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Manager:  mockManager,
 		}
 
-		promptErr := errors.New("prompt-err")
 		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, promptErr).Times(1)
 
 		task, requirements, err := requirement.AskForInput()
 		require.ErrorIs(t, promptErr, err)
 		require.Nil(t, requirements)
 		require.Nil(t, task)
+	})
+
+	t.Run("should select from list if there is more than 1 option", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		mockExecutor := executor.NewMockExecutor(controller)
+		mockPrompter := prompter.NewMockPrompter(controller)
+		mockManager := manager.NewMockManager(controller)
+
+		requirement := QuestionRequirement{
+			Question: multipleOptionQuestion,
+			Prompter: mockPrompter,
+			Logger:   logger.NewLogger(),
+			Executor: mockExecutor,
+			Manager:  mockManager,
+		}
+
+		options := make([]fmt.Stringer, 0)
+		for _, option := range requirement.Question.Options {
+			options = append(options, option)
+		}
+
+		mockPrompter.
+			EXPECT().
+			AskForSelectionFromList(gomock.Eq(multipleOptionQuestion.Direction), gomock.Eq(options)).
+			Return(multipleOptionQuestion.Options[0], nil).
+			Times(1)
+
+		_, _, _ = requirement.AskForInput()
+	})
+
+	t.Run("should add none of above option if canskip is true", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		mockExecutor := executor.NewMockExecutor(controller)
+		mockPrompter := prompter.NewMockPrompter(controller)
+		mockManager := manager.NewMockManager(controller)
+
+		requirement := QuestionRequirement{
+			Question: multipleOptionQuestionWithSkip,
+			Prompter: mockPrompter,
+			Logger:   logger.NewLogger(),
+			Executor: mockExecutor,
+			Manager:  mockManager,
+		}
+
+		options := make([]fmt.Stringer, 0)
+		for _, option := range requirement.Question.Options {
+			options = append(options, option)
+		}
+		options = append(options, noneOfAboveOption)
+
+		mockPrompter.
+			EXPECT().
+			AskForSelectionFromList(gomock.Eq(multipleOptionQuestionWithSkip.Direction), gomock.Eq(options)).
+			Return(multipleOptionQuestionWithSkip.Options[0], nil).
+			Times(1)
+
+		_, _, _ = requirement.AskForInput()
+	})
+
+	t.Run("should return error if select from list returns errors", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		mockExecutor := executor.NewMockExecutor(controller)
+		mockPrompter := prompter.NewMockPrompter(controller)
+		mockManager := manager.NewMockManager(controller)
+
+		requirement := QuestionRequirement{
+			Question: multipleOptionQuestionWithSkip,
+			Prompter: mockPrompter,
+			Logger:   logger.NewLogger(),
+			Executor: mockExecutor,
+			Manager:  mockManager,
+		}
+
+		options := make([]fmt.Stringer, 0)
+		for _, option := range requirement.Question.Options {
+			options = append(options, option)
+		}
+		options = append(options, noneOfAboveOption)
+
+		mockPrompter.
+			EXPECT().
+			AskForSelectionFromList(gomock.Eq(multipleOptionQuestionWithSkip.Direction), gomock.Eq(options)).
+			Return(nil, promptErr).
+			Times(1)
+
+		_, _, err := requirement.AskForInput()
+		require.NotNil(t, err)
+		require.ErrorIs(t, err, promptErr)
 	})
 }
