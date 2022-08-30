@@ -17,10 +17,25 @@ import (
 )
 
 var (
+	questions = []*model.Question{
+		{
+			Direction:         "question 1",
+			CanSkip:           false,
+			CanSelectMultiple: false,
+			Options:           nil,
+		},
+		{
+			Direction:         "question 2",
+			CanSkip:           false,
+			CanSelectMultiple: false,
+			Options:           nil,
+		},
+	}
 	projectStructure1 = model.ProjectStructureData{
 		Name:      "Project -1",
 		Reference: "go.dev",
 		URL:       "https://project1.com",
+		Questions: questions,
 	}
 	projectStructure2 = model.ProjectStructureData{
 		Name:      "Project -2",
@@ -62,10 +77,16 @@ func TestStructure_AskForInput(t *testing.T) {
 			Store:        mockStore,
 		}
 
-		tasks, _, err := p.AskForInput()
+		tasks, requirements, err := p.AskForInput()
 
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
+
+		actualQuestions := make([]*model.Question, 0)
+		for _, requirement := range requirements {
+			actualQuestions = append(actualQuestions, &requirement.(*QuestionRequirement).Question)
+		}
+		require.Equal(t, questions, actualQuestions)
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {

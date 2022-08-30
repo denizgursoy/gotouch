@@ -6,11 +6,33 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/manifoldco/promptui"
 	"os"
+	"strings"
 	"syscall"
 )
 
 type promptUi struct {
 	Manager manager.Manager
+}
+
+func (p *promptUi) AskForYesOrNo(direction string) (bool, error) {
+	if !isValid(p) {
+		return false, model.ErrMissingField
+	}
+
+	direction = fmt.Sprintf("%s (y/N)", direction)
+	prompt := promptui.Prompt{
+		Label: direction,
+		Stdin: p.Manager.GetStream(),
+	}
+
+	input, err := prompt.Run()
+	if err != nil {
+		p.exitIfInterrupted(err)
+		return false, err
+	}
+
+	return strings.ToLower(input) == "y", nil
+
 }
 
 func (p *promptUi) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {

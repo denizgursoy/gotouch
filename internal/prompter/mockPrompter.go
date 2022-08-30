@@ -5,7 +5,7 @@
 package prompter
 
 import (
-	"fmt"
+	fmt "fmt"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -64,39 +64,17 @@ func (mr *MockPrompterMockRecorder) AskForString(direction, validator interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForString", reflect.TypeOf((*MockPrompter)(nil).AskForString), direction, validator)
 }
 
-// MockOption is a mock of Choice interface.
-type MockOption struct {
-	ctrl     *gomock.Controller
-	recorder *MockOptionMockRecorder
-}
-
-// MockOptionMockRecorder is the mock recorder for MockOption.
-type MockOptionMockRecorder struct {
-	mock *MockOption
-}
-
-// NewMockOption creates a new mock instance.
-func NewMockOption(ctrl *gomock.Controller) *MockOption {
-	mock := &MockOption{ctrl: ctrl}
-	mock.recorder = &MockOptionMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockOption) EXPECT() *MockOptionMockRecorder {
-	return m.recorder
-}
-
-// String mocks base method.
-func (m *MockOption) String() string {
+// AskForYesOrNo mocks base method.
+func (m *MockPrompter) AskForYesOrNo(direction string) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "String")
-	ret0, _ := ret[0].(string)
-	return ret0
+	ret := m.ctrl.Call(m, "AskForYesOrNo", direction)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// String indicates an expected call of String.
-func (mr *MockOptionMockRecorder) String() *gomock.Call {
+// AskForYesOrNo indicates an expected call of AskForYesOrNo.
+func (mr *MockPrompterMockRecorder) AskForYesOrNo(direction interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "String", reflect.TypeOf((*MockOption)(nil).String))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForYesOrNo", reflect.TypeOf((*MockPrompter)(nil).AskForYesOrNo), direction)
 }

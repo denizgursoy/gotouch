@@ -19,6 +19,7 @@ type (
 	Prompter interface {
 		AskForString(direction string, validator StringValidator) (string, error)
 		AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error)
+		AskForYesOrNo(direction string) (bool, error)
 	}
 
 	ListOption struct {

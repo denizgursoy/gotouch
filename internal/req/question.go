@@ -7,6 +7,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/go-playground/validator/v10"
 	"net/http"
 )
 
@@ -19,43 +20,53 @@ type (
 		Manager  manager.Manager   `validate:"required"`
 	}
 
-	NoOption struct{}
-
 	NoneOfAboveOption struct{}
 )
 
 var (
-	noOption          = NoOption{}
 	noneOfAboveOption = NoneOfAboveOption{}
 )
 
 func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
+	if err := validator.New().Struct(q); err != nil {
+		return nil, nil, err
+	}
+
 	question := q.Question
 
 	options := make([]fmt.Stringer, 0)
 	for _, option := range question.Options {
 		options = append(options, option)
 	}
+	var selection *model.Option
 
-	if question.CanSkip {
-		if len(question.Options) > 1 {
-			options = append(options, noneOfAboveOption)
-		} else {
-			options = append(options, noOption)
-		}
+	if question.CanSkip && len(question.Options) > 1 {
+		options = append(options, noneOfAboveOption)
 	}
+	isYesNoQuestion := question.CanSkip && len(options) == 1
 
-	selection, err := q.Prompter.AskForSelectionFromList(question.Direction, options)
-	if err != nil {
-		return nil, nil, err
+	if isYesNoQuestion {
+		userSelection, err := q.Prompter.AskForYesOrNo(question.Direction)
+		if err != nil {
+			return nil, nil, err
+		}
+		if userSelection {
+			selection = question.Options[0]
+		}
+	} else {
+		userSelection, err := q.Prompter.AskForSelectionFromList(question.Direction, options)
+		if err != nil {
+			return nil, nil, err
+		}
+		if userSelection != noneOfAboveOption {
+			selection = userSelection.(*model.Option)
+		}
 	}
 
 	tasks := make([]model.Task, 0)
 
-	if selection != noOption && selection != noneOfAboveOption {
-		selectedOption := selection.(*model.Option)
-
-		for _, dependency := range selectedOption.Dependencies {
+	if selection != nil {
+		for _, dependency := range selection.Dependencies {
 			tasks = append(tasks, &dependencyTask{
 				Dependency: *dependency,
 				Logger:     q.Logger,
@@ -63,7 +74,7 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 			})
 		}
 
-		for _, file := range selectedOption.Files {
+		for _, file := range selection.Files {
 			tasks = append(tasks, &fileTask{
 				File:    *file,
 				Logger:  q.Logger,
@@ -71,13 +82,8 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 				Client:  &http.Client{},
 			})
 		}
-
 	}
 	return tasks, nil, nil
-}
-
-func (n NoOption) String() string {
-	return "No"
 }
 
 func (n NoneOfAboveOption) String() string {
