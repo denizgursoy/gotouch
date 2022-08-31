@@ -3,6 +3,7 @@ module github.com/denizgursoy/gotouch
 go 1.16
 
 require (
+	github.com/AlecAivazis/survey/v2 v2.3.5 // indirect
 	github.com/artdarek/go-unzip v1.0.0
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/golang/mock v1.6.0
