@@ -9,6 +9,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/hashicorp/go-uuid v1.0.1
 	github.com/manifoldco/promptui v0.9.0
+	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966 // indirect
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.8.0
 	github.com/testcontainers/testcontainers-go v0.13.0

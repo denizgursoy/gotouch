@@ -13,6 +13,7 @@ type (
 		Reference string      `yaml:"reference"`
 		URL       string      `yaml:"url"`
 		Questions []*Question `yaml:"Questions"`
+		Values    interface{} `yaml:"Values"`
 	}
 
 	Question struct {

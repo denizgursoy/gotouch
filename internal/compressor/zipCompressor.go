@@ -9,7 +9,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path/filepath"
 )
 
 type zipCompressor struct {
@@ -34,20 +33,19 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 	if httpErr != nil {
 		return httpErr
 	}
-	filePath := filepath.Join(os.TempDir(), filepath.Base(url))
+	temp, httpErr := os.CreateTemp("", "*.zip")
 
-	create, createFileErr := os.Create(filePath)
-	if createFileErr != nil {
-		return createFileErr
-	}
+	defer func() {
+		os.Remove(temp.Name())
+	}()
 
-	if _, copyErr := io.Copy(create, response.Body); copyErr != nil {
+	if _, copyErr := io.Copy(temp, response.Body); copyErr != nil {
 		return copyErr
 	}
 
 	projectName := z.Store.GetValue(store.ProjectName)
 	target := fmt.Sprintf("%s/%s", z.Manager.GetExtractLocation(), projectName)
-	uz := unzip.New(filePath, target)
+	uz := unzip.New(temp.Name(), target)
 
 	if extractErr := uz.Extract(); extractErr != nil {
 		return extractErr

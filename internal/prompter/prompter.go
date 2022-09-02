@@ -32,7 +32,7 @@ type (
 
 func GetInstance() Prompter {
 	once.Do(func() {
-		prompter = &promptUi{
+		prompter = &srv{
 			Manager: manager.GetInstance(),
 		}
 	})
