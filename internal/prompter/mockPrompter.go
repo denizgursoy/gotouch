@@ -50,7 +50,7 @@ func (mr *MockPrompterMockRecorder) AskForSelectionFromList(direction, list inte
 }
 
 // AskForString mocks base method.
-func (m *MockPrompter) AskForString(direction string, validator StringValidator) (string, error) {
+func (m *MockPrompter) AskForString(direction string, validator Validator) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AskForString", direction, validator)
 	ret0, _ := ret[0].(string)
