@@ -14,6 +14,10 @@ type promptUi struct {
 	Manager manager.Manager
 }
 
+type (
+	StringValidator func(string2 string) error
+)
+
 func (p *promptUi) AskForYesOrNo(direction string) (bool, error) {
 	if !isValid(p) {
 		return false, model.ErrMissingField

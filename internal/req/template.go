@@ -38,9 +38,9 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 		if err2 != nil {
 			return nil, nil, err2
 		}
-		tasks := make([]model.Task, 0)
 
 		if yes {
+			tasks := make([]model.Task, 0)
 			marshal, err2 := yaml.Marshal(t.Values)
 			if err2 != nil {
 				return nil, nil, err2

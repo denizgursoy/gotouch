@@ -82,7 +82,8 @@ func (p *projectNameTask) Complete() error {
 	return nil
 }
 
-func validateProjectName(projectName string) error {
+func validateProjectName(name interface{}) error {
+	projectName := name.(string)
 	compile, err := regexp.Compile("^([a-zA-Z]+(((\\w|(\\.[a-z]+))*)\\/)+[a-zA-Z]+(\\w)*)$|^([a-zA-Z]+\\w*)$")
 	if err != nil {
 		return errors.New("regex error")

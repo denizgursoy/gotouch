@@ -12,12 +12,13 @@ type (
 	}
 )
 
-func (s srv) AskForString(direction string, validator StringValidator) (string, error) {
+func (s srv) AskForString(direction string, validator Validator) (string, error) {
 	result := ""
+
 	input := survey.Input{
 		Message: direction,
 	}
-	err := survey.AskOne(&input, &result)
+	err := survey.AskOne(&input, &result, survey.WithValidator(survey.Validator(validator)))
 	return result, err
 }
 
