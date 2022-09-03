@@ -33,7 +33,10 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 	if httpErr != nil {
 		return httpErr
 	}
-	temp, httpErr := os.CreateTemp("", "*.zip")
+	temp, tempFileErr := os.CreateTemp("", "*.zip")
+	if tempFileErr != nil {
+		return tempFileErr
+	}
 
 	defer func() {
 		os.Remove(temp.Name())
