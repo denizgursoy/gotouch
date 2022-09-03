@@ -68,7 +68,7 @@ func Test_dependencyTask_Complete(t *testing.T) {
 		controller := gomock.NewController(t)
 		mockExecutor := executor.NewMockExecutor(controller)
 
-		commandError := errors.New("command error")
+		commandError := errors.New("commander error")
 		mockExecutor.
 			EXPECT().
 			RunCommand(gomock.Any()).

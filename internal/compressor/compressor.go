@@ -3,7 +3,6 @@
 package compressor
 
 import (
-	"github.com/denizgursoy/gotouch/internal/manager"
 	"sync"
 )
 
@@ -21,7 +20,7 @@ var (
 
 func GetInstance() Compressor {
 	once.Do(func() {
-		compressor = newZipCompressor(manager.GetInstance())
+		compressor = newZipCompressor()
 	})
 	return compressor
 }

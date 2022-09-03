@@ -83,7 +83,7 @@ package util
 //		Started:          true,
 //	})
 //
-//	z.T().Log("command:", fmt.Sprintf("docker exec -it %s /bin/bash", cnt.GetContainerID()))
+//	z.T().Log("commander:", fmt.Sprintf("docker exec -it %s /bin/bash", cnt.GetContainerID()))
 //
 //	if cnt == nil {
 //		z.T().Fatal("could not create cnt", uuidErr)
@@ -154,10 +154,10 @@ package util
 //
 //func (z *ZippingTestSuite) executeCommand() {
 //	sprintf := fmt.Sprintf("%s/gotouch", z.containerWorkingDir)
-//	command := []string{sprintf}
-//	i, err := z.c.Exec(context.Background(), command)
+//	commander := []string{sprintf}
+//	i, err := z.c.Exec(context.Background(), commander)
 //	if err != nil {
-//		z.T().Fatal("could not execute command", err, i)
+//		z.T().Fatal("could not execute commander", err, i)
 //	}
 //}
 //

@@ -27,9 +27,9 @@ type (
 	}
 )
 
-func newZipCompressor(manager manager.Manager) Compressor {
+func newZipCompressor() Compressor {
 	return &zipCompressor{
-		Manager: manager,
+		Manager: manager.GetInstance(),
 		Store:   store.GetInstance(),
 	}
 }
