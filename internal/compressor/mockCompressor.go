@@ -34,17 +34,17 @@ func (m *MockCompressor) EXPECT() *MockCompressorMockRecorder {
 }
 
 // CompressDirectory mocks base method.
-func (m *MockCompressor) CompressDirectory(path string) error {
+func (m *MockCompressor) CompressDirectory(source, target string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CompressDirectory", path)
+	ret := m.ctrl.Call(m, "CompressDirectory", source, target)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CompressDirectory indicates an expected call of CompressDirectory.
-func (mr *MockCompressorMockRecorder) CompressDirectory(path interface{}) *gomock.Call {
+func (mr *MockCompressorMockRecorder) CompressDirectory(source, target interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompressDirectory", reflect.TypeOf((*MockCompressor)(nil).CompressDirectory), path)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompressDirectory", reflect.TypeOf((*MockCompressor)(nil).CompressDirectory), source, target)
 }
 
 // UncompressFromUrl mocks base method.

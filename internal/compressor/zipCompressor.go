@@ -13,12 +13,19 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-type zipCompressor struct {
-	Manager manager.Manager `validate:"required"`
-	Store   store.Store     `validate:"required"`
-}
+const (
+	compressExtension = ".zip"
+)
+
+type (
+	zipCompressor struct {
+		Manager manager.Manager `validate:"required"`
+		Store   store.Store     `validate:"required"`
+	}
+)
 
 func newZipCompressor(manager manager.Manager) Compressor {
 	return &zipCompressor{
@@ -37,7 +44,8 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 	if httpErr != nil {
 		return httpErr
 	}
-	temp, tempFileErr := os.CreateTemp("", "*.zip")
+	pattern := fmt.Sprintf("*.%s", compressExtension)
+	temp, tempFileErr := os.CreateTemp("", pattern)
 	if tempFileErr != nil {
 		return tempFileErr
 	}
@@ -61,29 +69,30 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 	return nil
 }
 
-func (z *zipCompressor) CompressDirectory(path string) error {
-	open, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-	stat, err := open.Stat()
-	if err != nil {
-		return err
+func (z *zipCompressor) CompressDirectory(source, target string) error {
+	if len(strings.TrimSpace(target)) == 0 {
+		getwd, _ := os.Getwd()
+		target = getwd
 	}
 
-	if !stat.IsDir() {
-		return errors.New("not a directory")
-	} else {
-		return zipDirectory(open.Name(), filepath.Base(open.Name()))
+	if !checkIsDirectory(source) {
+		return errors.New("source is not a directory")
+	} else if !checkIsDirectory(target) {
+		return errors.New("target is not a directory")
 	}
 
-	return nil
+	if !strings.HasSuffix(source, string(os.PathSeparator)) {
+		source = fmt.Sprintf("%s%s", source, string(os.PathSeparator))
+	}
+
+	filename := fmt.Sprintf("%s%s", filepath.Base(source), compressExtension)
+	join := filepath.Join(target, string(os.PathSeparator), filename)
+
+	return zipDirectory(source, join)
 }
 
-func zipDirectory(baseFolder, name string) error {
-
-	// Get a Buffer to Write To
-	outFile, err := os.Create(name + `.zip`)
+func zipDirectory(sourceFolder, targetFilePath string) error {
+	outFile, err := os.Create(targetFilePath)
 	if err != nil {
 		return err
 	}
@@ -93,7 +102,7 @@ func zipDirectory(baseFolder, name string) error {
 	w := zip.NewWriter(outFile)
 
 	// Add some files to the archive.
-	addFiles(w, baseFolder, "")
+	addFiles(w, sourceFolder, "")
 
 	// Make sure to check the error on Close.
 	err = w.Close()
@@ -131,10 +140,22 @@ func addFiles(w *zip.Writer, basePath, baseInZip string) {
 
 			// Recurse
 			newBase := basePath + file.Name() + "/"
-			fmt.Println("Recursing and Adding SubDir: " + file.Name())
-			fmt.Println("Recursing and Adding SubDir: " + newBase)
+			//	fmt.Println("Recursing and Adding SubDir: " + file.Name())
+			//		fmt.Println("Recursing and Adding SubDir: " + newBase)
 
 			addFiles(w, newBase, baseInZip+file.Name()+"/")
 		}
 	}
+}
+
+func checkIsDirectory(path string) bool {
+	open, err := os.Open(path)
+	if err != nil {
+		return false
+	}
+	stat, err := open.Stat()
+	if err != nil {
+		return false
+	}
+	return stat.IsDir()
 }

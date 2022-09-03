@@ -10,7 +10,7 @@ import (
 type (
 	Compressor interface {
 		UncompressFromUrl(url string) error
-		CompressDirectory(path string) error
+		CompressDirectory(source, target string) error
 	}
 )
 
