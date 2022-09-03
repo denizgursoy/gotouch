@@ -126,8 +126,8 @@ func Test_validateProjectName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := validateProjectName(tt.args.projectName); (err != nil) != tt.wantErr {
-				t.Errorf("validateProjectName() error = %v, wantErr %v", err, tt.wantErr)
+			if err := validateModuleName(tt.args.projectName); (err != nil) != tt.wantErr {
+				t.Errorf("validateModuleName() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

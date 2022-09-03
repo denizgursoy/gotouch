@@ -30,7 +30,7 @@ type (
 )
 
 const (
-	ProjectNameDirection = "Enter Project Name"
+	ModuleNameDirection = "Enter Go Module Name : "
 )
 
 func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
@@ -38,7 +38,7 @@ func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requiremen
 		return nil, nil, err
 	}
 
-	moduleName, err := p.Prompter.AskForString(ProjectNameDirection, validateProjectName)
+	moduleName, err := p.Prompter.AskForString(ModuleNameDirection, validateModuleName)
 
 	if err != nil {
 		return nil, nil, err
@@ -82,7 +82,7 @@ func (p *projectNameTask) Complete() error {
 	return nil
 }
 
-func validateProjectName(name interface{}) error {
+func validateModuleName(name interface{}) error {
 	projectName := name.(string)
 	compile, err := regexp.Compile("^([a-zA-Z]+(((\\w|(\\.[a-z]+))*)\\/)+[a-zA-Z]+(\\w)*)$|^([a-zA-Z]+\\w*)$")
 	if err != nil {
