@@ -2,13 +2,15 @@ package req
 
 import (
 	"bytes"
+	"io"
+	"net/http"
+	"path/filepath"
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/go-playground/validator/v10"
-	"io"
-	"net/http"
-	"strings"
 )
 
 type (
@@ -39,7 +41,11 @@ func (f *fileTask) Complete() error {
 		readCloser = io.NopCloser(reader)
 	}
 
-	if err := f.Manager.CreateFile(readCloser, f.File.Path); err != nil {
+	path := f.File.Path
+	if len(strings.TrimSpace(path)) == 0 {
+		path += filepath.Base(f.File.Url)
+	}
+	if err := f.Manager.CreateFile(readCloser, path); err != nil {
 		return err
 	}
 
