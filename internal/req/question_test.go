@@ -27,7 +27,7 @@ var (
 		Path:    "",
 	}
 	option = model.Option{
-		Answer:       "112322",
+		Choice:       "112322",
 		Dependencies: []*string{&dependency1, &dependency2},
 		Files:        []*model.File{&file1, &file2},
 	}

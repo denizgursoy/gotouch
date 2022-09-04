@@ -24,7 +24,7 @@ type (
 	}
 
 	Option struct {
-		Answer       string    `yaml:"answer"`
+		Choice       string    `yaml:"choice"`
 		Dependencies []*string `yaml:"dependencies"`
 		Files        []*File   `yaml:"files"`
 	}
@@ -47,7 +47,7 @@ var (
 )
 
 func (o *Option) String() string {
-	return o.Answer
+	return o.Choice
 }
 
 func (p *ProjectStructureData) IsValid() error {
