@@ -14,7 +14,7 @@ type (
 	}
 )
 
-func (e *cmdExecutor) CompressDirectory(opts *PackageCommandOptions) error {
+func (c *cmdExecutor) CompressDirectory(opts *PackageCommandOptions) error {
 	targetDirectory := ""
 	if opts.TargetDirectory != nil {
 		targetDirectory = *opts.TargetDirectory

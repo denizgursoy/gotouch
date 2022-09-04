@@ -10,6 +10,7 @@ type (
 	Commander interface {
 		CreateNewProject(opts *CreateCommandOptions) error
 		CompressDirectory(opts *PackageCommandOptions) error
+		ValidateYaml(opts *ValidateCommandOptions) error
 	}
 	cmdExecutor struct {
 	}

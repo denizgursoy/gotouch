@@ -24,6 +24,7 @@ func CreateRootCommand(cmdr commander.Commander) *cobra.Command {
 	createCommand.Flags().StringP(FileFlagName, "f", "", "input file")
 
 	createCommand.AddCommand(CreatePackageCommand(cmdr))
+	createCommand.AddCommand(CreateValidateCommand(cmdr))
 
 	return createCommand
 }
@@ -40,4 +41,17 @@ func CreatePackageCommand(cmdr commander.Commander) *cobra.Command {
 	packageCommand.Flags().StringP(TargetDirectoryFlagName, "t", ".", "target directory")
 
 	return packageCommand
+}
+
+func CreateValidateCommand(cmdr commander.Commander) *cobra.Command {
+	validateCommand := &cobra.Command{
+		Use:   "validate",
+		Short: "Validation Check for YAML files",
+		Long:  `Tag`,
+		Run:   GetValidateCommandHandler(cmdr),
+	}
+
+	validateCommand.Flags().StringP(FileFlagName, "f", "", "input file")
+
+	return validateCommand
 }

@@ -32,7 +32,7 @@ type (
 	}
 )
 
-func (e *cmdExecutor) CreateNewProject(opts *CreateCommandOptions) error {
+func (c *cmdExecutor) CreateNewProject(opts *CreateCommandOptions) error {
 	if validationError := isValid(opts); validationError != nil {
 		return validationError
 	}
