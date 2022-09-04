@@ -12,27 +12,27 @@ type (
 		Name      string      `yaml:"name"`
 		Reference string      `yaml:"reference"`
 		URL       string      `yaml:"url"`
-		Questions []*Question `yaml:"Questions"`
-		Values    interface{} `yaml:"Values"`
+		Questions []*Question `yaml:"questions"`
+		Values    interface{} `yaml:"values"`
 	}
 
 	Question struct {
-		Direction         string    `yaml:"Direction"`
-		CanSkip           bool      `yaml:"CanSkip"`
-		CanSelectMultiple bool      `yaml:"CanSelectMultiple"`
+		Direction         string    `yaml:"direction"`
+		CanSkip           bool      `yaml:"canSkip"`
+		CanSelectMultiple bool      `yaml:"canSelectMultiple"`
 		Options           []*Option `yaml:"options"`
 	}
 
 	Option struct {
-		Answer       string    `yaml:"Answer"`
-		Dependencies []*string `yaml:"Dependencies"`
-		Files        []*File   `yaml:"Files"`
+		Answer       string    `yaml:"answer"`
+		Dependencies []*string `yaml:"dependencies"`
+		Files        []*File   `yaml:"files"`
 	}
 
 	File struct {
-		Url     string `yaml:"Url"`
-		Content string `yaml:"Content"`
-		Path    string `yaml:"Path"`
+		Url     string `yaml:"url"`
+		Content string `yaml:"content"`
+		Path    string `yaml:"path"`
 	}
 )
 
