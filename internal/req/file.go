@@ -41,7 +41,7 @@ func (f *fileTask) Complete() error {
 		readCloser = io.NopCloser(reader)
 	}
 
-	path := f.File.Path
+	path := f.File.TargetDirectory
 	if len(strings.TrimSpace(path)) == 0 {
 		path += filepath.Base(f.File.Url)
 	}

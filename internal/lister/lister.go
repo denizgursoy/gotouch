@@ -80,20 +80,27 @@ func (m *mainLister) getProjectsFromStrategy(strategy ReadStrategy) ([]*model.Pr
 }
 
 func ParseToProjectStructureData(reader io.ReadCloser) ([]*model.ProjectStructureData, error) {
-	data := make([]*model.ProjectStructureData, 0)
+	structures := make([]*model.ProjectStructureData, 0)
 
 	allBytes, err := ioutil.ReadAll(reader)
-	err = yaml.Unmarshal(allBytes, &data)
+	err = yaml.Unmarshal(allBytes, &structures)
 
 	if err != nil {
 		return nil, ProjectDataParseError
 	}
 
-	if data == nil {
+	for _, structure := range structures {
+		err = structure.IsValid()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if structures == nil {
 		return nil, NoProjectError
 	}
 
-	return data, nil
+	return structures, nil
 }
 
 func determineReadStrategy(path string) ReadStrategy {
