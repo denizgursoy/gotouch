@@ -11,6 +11,7 @@ require (
 	github.com/manifoldco/promptui v0.9.0
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966 // indirect
 	github.com/spf13/cobra v1.3.0
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.8.0
 	github.com/testcontainers/testcontainers-go v0.13.0
 	gopkg.in/yaml.v2 v2.4.0
