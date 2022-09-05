@@ -1,9 +1,10 @@
 package root
 
 import (
+	"os"
+
 	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 func Execute() {
