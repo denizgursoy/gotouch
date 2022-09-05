@@ -4,16 +4,17 @@ import (
 	"archive/zip"
 	"errors"
 	"fmt"
-	"github.com/artdarek/go-unzip"
-	"github.com/denizgursoy/gotouch/internal/manager"
-	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/go-playground/validator/v10"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/artdarek/go-unzip"
+	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/store"
+	"github.com/go-playground/validator/v10"
 )
 
 const (
@@ -70,9 +71,20 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 }
 
 func (z *zipCompressor) CompressDirectory(source, target string) error {
-	if len(strings.TrimSpace(target)) == 0 {
-		getwd, _ := os.Getwd()
-		target = getwd
+	if !filepath.IsAbs(source) {
+		absoluteSource, err := filepath.Abs(source)
+		if err != nil {
+			return err
+		}
+		source = absoluteSource
+	}
+
+	if !filepath.IsAbs(target) {
+		absoluteTarget, err := filepath.Abs(target)
+		if err != nil {
+			return err
+		}
+		target = absoluteTarget
 	}
 
 	if !checkIsDirectory(source) {
@@ -86,9 +98,9 @@ func (z *zipCompressor) CompressDirectory(source, target string) error {
 	}
 
 	filename := fmt.Sprintf("%s%s", filepath.Base(source), compressExtension)
-	join := filepath.Join(target, string(os.PathSeparator), filename)
+	target = filepath.Join(target, string(os.PathSeparator), filename)
 
-	return zipDirectory(source, join)
+	return zipDirectory(source, target)
 }
 
 func zipDirectory(sourceFolder, targetFilePath string) error {
