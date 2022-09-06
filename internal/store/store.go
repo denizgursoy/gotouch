@@ -17,6 +17,8 @@ type (
 	Store interface {
 		SetValue(key, value string)
 		GetValue(key string) string
+		StoreValues(key map[string]interface{})
+		GetStoreValues() map[string]interface{}
 	}
 
 	storeImpl struct {
@@ -24,9 +26,10 @@ type (
 )
 
 var (
-	store         = map[string]string{}
-	keyValueStore Store
-	once          = sync.Once{}
+	store          = map[string]string{}
+	QuestionValues = map[string]interface{}{}
+	keyValueStore  Store
+	once           = sync.Once{}
 )
 
 func init() {
@@ -50,4 +53,16 @@ func (s *storeImpl) SetValue(key, value string) {
 
 func (s *storeImpl) GetValue(key string) string {
 	return store[key]
+}
+
+func (s *storeImpl) StoreValues(key map[string]interface{}) {
+	if key != nil {
+		for key, value := range key {
+			QuestionValues[key] = value
+		}
+	}
+}
+
+func (s *storeImpl) GetStoreValues() map[string]interface{} {
+	return QuestionValues
 }

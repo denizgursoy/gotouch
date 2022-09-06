@@ -2,6 +2,7 @@ package req
 
 import (
 	"fmt"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -74,6 +75,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 			Logger:   p.Logger,
 			Executor: p.Executor,
 			Manager:  p.Manager,
+			Store:    p.Store,
 		})
 	}
 

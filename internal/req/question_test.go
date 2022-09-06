@@ -3,6 +3,10 @@ package req
 import (
 	"errors"
 	"fmt"
+	"testing"
+
+	"github.com/denizgursoy/gotouch/internal/store"
+
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
@@ -10,7 +14,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 var (
@@ -30,6 +33,9 @@ var (
 		Choice:       "112322",
 		Dependencies: []*string{&dependency1, &dependency2},
 		Files:        []*model.File{&file1, &file2},
+		Values: map[string]interface{}{
+			"X": "sds",
+		},
 	}
 
 	yesNoQuestion = model.Question{
@@ -61,6 +67,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
 			Question: yesNoQuestion,
@@ -68,8 +75,10 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
 			Manager:  mockManager,
+			Store:    mockStore,
 		}
 
+		mockStore.EXPECT().StoreValues(gomock.Eq(yesNoQuestion.Options[0].Values))
 		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(true, nil).Times(1)
 
 		task, requirements, err := requirement.AskForInput()
@@ -85,6 +94,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
 			Question: yesNoQuestion,
@@ -92,6 +102,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
 			Manager:  mockManager,
+			Store:    mockStore,
 		}
 
 		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, nil).Times(1)
@@ -108,6 +119,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
 			Question: yesNoQuestion,
@@ -115,6 +127,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
 			Manager:  mockManager,
+			Store:    mockStore,
 		}
 
 		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, promptErr).Times(1)
@@ -130,6 +143,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
 			Question: multipleOptionQuestion,
@@ -137,6 +151,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
 			Manager:  mockManager,
+			Store:    mockStore,
 		}
 
 		options := make([]fmt.Stringer, 0)
@@ -150,6 +165,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Return(multipleOptionQuestion.Options[0], nil).
 			Times(1)
 
+		mockStore.EXPECT().StoreValues(gomock.Eq(multipleOptionQuestion.Options[0].Values))
 		_, _, _ = requirement.AskForInput()
 	})
 
@@ -158,6 +174,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
 			Question: multipleOptionQuestionWithSkip,
@@ -165,6 +182,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
 			Manager:  mockManager,
+			Store:    mockStore,
 		}
 
 		options := make([]fmt.Stringer, 0)
@@ -179,6 +197,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Return(multipleOptionQuestionWithSkip.Options[0], nil).
 			Times(1)
 
+		mockStore.EXPECT().StoreValues(gomock.Eq(multipleOptionQuestion.Options[0].Values))
 		_, _, _ = requirement.AskForInput()
 	})
 
@@ -187,6 +206,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
 		mockManager := manager.NewMockManager(controller)
+		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
 			Question: multipleOptionQuestionWithSkip,
@@ -194,6 +214,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
 			Manager:  mockManager,
+			Store:    mockStore,
 		}
 
 		options := make([]fmt.Stringer, 0)

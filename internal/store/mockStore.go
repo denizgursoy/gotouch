@@ -33,6 +33,20 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// GetStoreValues mocks base method.
+func (m *MockStore) GetStoreValues() map[string]interface{} {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetStoreValues")
+	ret0, _ := ret[0].(map[string]interface{})
+	return ret0
+}
+
+// GetStoreValues indicates an expected call of GetStoreValues.
+func (mr *MockStoreMockRecorder) GetStoreValues() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStoreValues", reflect.TypeOf((*MockStore)(nil).GetStoreValues))
+}
+
 // GetValue mocks base method.
 func (m *MockStore) GetValue(key string) string {
 	m.ctrl.T.Helper()
@@ -57,4 +71,16 @@ func (m *MockStore) SetValue(key, value string) {
 func (mr *MockStoreMockRecorder) SetValue(key, value interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetValue", reflect.TypeOf((*MockStore)(nil).SetValue), key, value)
+}
+
+// StoreValues mocks base method.
+func (m *MockStore) StoreValues(key map[string]interface{}) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "StoreValues", key)
+}
+
+// StoreValues indicates an expected call of StoreValues.
+func (mr *MockStoreMockRecorder) StoreValues(key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreValues", reflect.TypeOf((*MockStore)(nil).StoreValues), key)
 }

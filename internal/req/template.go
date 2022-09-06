@@ -2,16 +2,17 @@ package req
 
 import (
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/denizgursoy/gotouch/internal/prompter"
-	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/skratchdot/open-golang/open"
-	"gopkg.in/yaml.v2"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/denizgursoy/gotouch/internal/model"
+	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/denizgursoy/gotouch/internal/store"
+	"github.com/skratchdot/open-golang/open"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -126,7 +127,12 @@ func (t *templateTask) AddSimpleTemplate(path string) {
 
 func (t *templateTask) combineWithDefaultValues() {
 	m := t.Values.(map[interface{}]interface{})
+
 	for key, value := range t.getDefaultValues() {
+		m[key] = value
+	}
+
+	for key, value := range t.Store.GetStoreValues() {
 		m[key] = value
 	}
 	t.Values = m

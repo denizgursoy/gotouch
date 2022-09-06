@@ -2,13 +2,15 @@ package req
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
+	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
-	"net/http"
 )
 
 type (
@@ -18,6 +20,7 @@ type (
 		Logger   logger.Logger     `validate:"required"`
 		Executor executor.Executor `validate:"required"`
 		Manager  manager.Manager   `validate:"required"`
+		Store    store.Store       `validate:"required"`
 	}
 
 	NoneOfAboveOption struct{}
@@ -82,6 +85,7 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 				Client:  &http.Client{},
 			})
 		}
+		q.Store.StoreValues(selection.Values)
 	}
 	return tasks, nil, nil
 }

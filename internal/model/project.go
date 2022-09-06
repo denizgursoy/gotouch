@@ -24,9 +24,10 @@ type (
 	}
 
 	Option struct {
-		Choice       string    `yaml:"choice"`
-		Dependencies []*string `yaml:"dependencies"`
-		Files        []*File   `yaml:"files"`
+		Choice       string                 `yaml:"choice"`
+		Dependencies []*string              `yaml:"dependencies"`
+		Files        []*File                `yaml:"files"`
+		Values       map[string]interface{} `yaml:"values"`
 	}
 
 	File struct {
