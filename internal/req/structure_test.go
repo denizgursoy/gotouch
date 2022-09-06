@@ -4,6 +4,8 @@ package req
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -13,7 +15,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 var (
@@ -36,6 +37,9 @@ var (
 		Reference: "go.dev",
 		URL:       "https://project1.com",
 		Questions: questions,
+		Values: map[interface{}]interface{}{
+			1: "23",
+		},
 	}
 	projectStructure2 = model.ProjectStructureData{
 		Name:      "Project -2",
@@ -94,14 +98,19 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NotNil(t, tasks)
 
 		require.Len(t, tasks, 1)
-		require.IsType(t, tasks[0], &projectStructureTask{})
-		require.IsType(t, tasks[0].(*projectStructureTask).ProjectStructure, testProjectData[0])
+		require.IsType(t, &projectStructureTask{}, tasks[0])
+		require.IsType(t, testProjectData[0], tasks[0].(*projectStructureTask).ProjectStructure)
 
 		actualQuestions := make([]*model.Question, 0)
-		for _, requirement := range requirements {
-			actualQuestions = append(actualQuestions, &requirement.(*QuestionRequirement).Question)
+
+		require.Len(t, requirements, 3)
+		for i := 0; i < 2; i++ {
+			actualQuestions = append(actualQuestions, &requirements[i].(*QuestionRequirement).Question)
 		}
 		require.Equal(t, questions, actualQuestions)
+
+		require.IsType(t, &templateRequirement{}, requirements[2])
+		require.IsType(t, testProjectData[0].Values, requirements[2].(*templateRequirement).Values)
 	})
 
 	t.Run("should add template requirement if value is not nil", func(t *testing.T) {

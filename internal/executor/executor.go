@@ -3,8 +3,9 @@
 package executor
 
 import (
-	"github.com/denizgursoy/gotouch/internal/model"
 	"sync"
+
+	"github.com/denizgursoy/gotouch/internal/model"
 )
 
 type (

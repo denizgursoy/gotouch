@@ -28,12 +28,18 @@ type (
 	}
 
 	templateTask struct {
-		Store  store.Store
+		Store  store.Store `validate:"required"`
 		Values interface{} `validate:"required"`
 	}
 )
 
 func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
+	tasks := make([]model.Task, 0)
+	templateTsk := &templateTask{
+		Store:  t.Store,
+		Values: nil,
+	}
+
 	if t.Values != nil {
 		yes, err2 := t.Prompter.AskForYesOrNo(EnterValues)
 		if err2 != nil {
@@ -41,7 +47,6 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 		}
 
 		if yes {
-			tasks := make([]model.Task, 0)
 			marshal, err2 := yaml.Marshal(t.Values)
 			if err2 != nil {
 				return nil, nil, err2
@@ -77,17 +82,12 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 			all, err2 := ioutil.ReadFile(temp.Name())
 			var output interface{}
 			err2 = yaml.Unmarshal(all, &output)
-			templateTsk := &templateTask{
-				Store:  t.Store,
-				Values: output,
-			}
-			tasks = append(tasks, templateTsk)
-			return tasks, nil, nil
+			templateTsk.Values = output
 		}
-
 	}
+	tasks = append(tasks, templateTsk)
 
-	return nil, nil, nil
+	return tasks, nil, nil
 }
 
 func (t *templateTask) Complete() error {
@@ -123,19 +123,25 @@ func (t *templateTask) AddSimpleTemplate(path string) {
 	defer f.Close()
 
 	err = files.Execute(f, t.Values)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (t *templateTask) combineWithDefaultValues() {
-	m := t.Values.(map[interface{}]interface{})
+	combinedValues := map[interface{}]interface{}{}
+	if t.Values != nil {
+		combinedValues = t.Values.(map[interface{}]interface{})
+	}
 
 	for key, value := range t.getDefaultValues() {
-		m[key] = value
+		combinedValues[key] = value
 	}
 
 	for key, value := range t.Store.GetStoreValues() {
-		m[key] = value
+		combinedValues[key] = value
 	}
-	t.Values = m
+	t.Values = combinedValues
 }
 
 func (t *templateTask) getDefaultValues() map[interface{}]interface{} {

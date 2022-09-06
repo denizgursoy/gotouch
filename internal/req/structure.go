@@ -79,13 +79,11 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		})
 	}
 
-	if task.ProjectStructure.Values != nil {
-		requirements = append(requirements, &templateRequirement{
-			Prompter: p.Prompter,
-			Store:    p.Store,
-			Values:   task.ProjectStructure.Values,
-		})
-	}
+	requirements = append(requirements, &templateRequirement{
+		Prompter: p.Prompter,
+		Store:    p.Store,
+		Values:   task.ProjectStructure.Values,
+	})
 
 	return tasks, requirements, nil
 }
