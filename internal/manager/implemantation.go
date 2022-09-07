@@ -3,16 +3,16 @@ package manager
 import (
 	"errors"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/executor"
-	"github.com/denizgursoy/gotouch/internal/logger"
-	"github.com/denizgursoy/gotouch/internal/store"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
+
+	"github.com/denizgursoy/gotouch/internal/executor"
+	"github.com/denizgursoy/gotouch/internal/logger"
+	"github.com/denizgursoy/gotouch/internal/store"
 )
 
 var (
@@ -39,14 +39,7 @@ func init() {
 		}
 		urls = make([]string, 0)
 		for _, line := range strings.Split(string(file), "\n") {
-			split := strings.Split(line, " ")
-			ints := make([]byte, 0)
-
-			for _, s := range split {
-				atoi, _ := strconv.Atoi(s)
-				ints = append(ints, byte(atoi))
-			}
-			urls = append(urls, string(ints))
+			urls = append(urls, line)
 		}
 	}
 }
