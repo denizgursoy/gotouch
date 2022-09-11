@@ -31,9 +31,9 @@ type (
 	}
 
 	File struct {
-		Url             string `yaml:"url"`
-		Content         string `yaml:"content"`
-		TargetDirectory string `yaml:"targetDirectory"`
+		Url          string `yaml:"url"`
+		Content      string `yaml:"content"`
+		PathFromRoot string `yaml:"pathFromRoot"`
 	}
 )
 
@@ -102,12 +102,12 @@ func (p *ProjectStructureData) IsValid() error {
 				if len(option.Files) > 0 {
 					for k, file := range option.Files {
 
-						if len(strings.TrimSpace(file.TargetDirectory)) == 0 {
+						if len(strings.TrimSpace(file.PathFromRoot)) == 0 {
 							return ErrEmptyFileField{
 								questionIndex: i,
 								optionIndex:   j,
 								fileIndex:     k,
-								field:         "Target Directory",
+								field:         "PathFromRoot",
 							}
 						}
 

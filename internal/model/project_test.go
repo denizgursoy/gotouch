@@ -21,27 +21,27 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 	choice2 := "2"
 
 	fileValid := &File{
-		Url:             "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/k8s-deployment.yaml",
-		Content:         "",
-		TargetDirectory: "cmd",
+		Url:          "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/k8s-deployment.yaml",
+		Content:      "",
+		PathFromRoot: "cmd",
 	}
 
 	fileInvalidUrl := &File{
-		Url:             "invalidUrl",
-		Content:         "",
-		TargetDirectory: "cmd",
+		Url:          "invalidUrl",
+		Content:      "",
+		PathFromRoot: "cmd",
 	}
 
 	fileInvalidHaveBothUrlAndContent := &File{
-		Url:             "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/k8s-deployment.yaml",
-		Content:         "content",
-		TargetDirectory: "cmd",
+		Url:          "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/k8s-deployment.yaml",
+		Content:      "content",
+		PathFromRoot: "cmd",
 	}
 
-	fileInvalidEmptyTargetDirectory := &File{
-		Url:             "",
-		Content:         "blablabla",
-		TargetDirectory: "",
+	fileInvalidEmptyPathFromRoot := &File{
+		Url:          "",
+		Content:      "blablabla",
+		PathFromRoot: "",
 	}
 
 	optionValidWithDependencies := &Option{
@@ -68,10 +68,10 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Files:        []*File{fileInvalidUrl},
 	}
 
-	optionEmptyTargetDirectory := &Option{
+	optionEmptyPathFromRoot := &Option{
 		Choice:       "choice",
 		Dependencies: nil,
-		Files:        []*File{fileInvalidEmptyTargetDirectory},
+		Files:        []*File{fileInvalidEmptyPathFromRoot},
 	}
 
 	optionInvalid1 := &Option{
@@ -129,11 +129,11 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Options:           []*Option{optionInvalidURL, optionValidWithDependencies},
 	}
 
-	questionEmptyTargetDirectory := &Question{
+	questionEmptyPathFromRoot := &Question{
 		Direction:         "direction",
 		CanSkip:           false,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionValidWithFile, optionValidWithDependencies, optionEmptyTargetDirectory},
+		Options:           []*Option{optionValidWithFile, optionValidWithDependencies, optionEmptyPathFromRoot},
 	}
 
 	questionInvalid1 := &Question{
@@ -191,7 +191,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Name:      "invalid project 4",
 		Reference: "",
 		URL:       validProjectURL,
-		Questions: []*Question{questionValid, questionEmptyTargetDirectory},
+		Questions: []*Question{questionValid, questionEmptyPathFromRoot},
 	}
 
 	invalidProject5 := ProjectStructureData{
@@ -308,7 +308,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.Equal(t, 0, expectedError.fileIndex)
 	})
 
-	t.Run("should return error if file Target Directory is empty", func(t *testing.T) {
+	t.Run("should return error if file PathFromRoot is empty", func(t *testing.T) {
 		err := invalidProject4.IsValid()
 
 		expectedError := &ErrEmptyFileField{}
@@ -318,7 +318,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.Equal(t, 1, expectedError.questionIndex)
 		require.Equal(t, 2, expectedError.optionIndex)
 		require.Equal(t, 0, expectedError.fileIndex)
-		require.Equal(t, "Target Directory", expectedError.field)
+		require.Equal(t, "PathFromRoot", expectedError.field)
 	})
 
 	t.Run("should return error if file content and url len > 0", func(t *testing.T) {

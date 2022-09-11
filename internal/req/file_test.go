@@ -46,17 +46,17 @@ func Test_fileTask_Complete(t *testing.T) {
 		}
 
 		onlyContentFile := model.File{
-			Url:             "",
-			Content:         "adsasdsas",
-			TargetDirectory: testPath,
+			Url:          "",
+			Content:      "adsasdsas",
+			PathFromRoot: testPath,
 		}
 
 		urlFileContent := "asds"
 
 		onlyUrlFile := model.File{
-			Url:             testUrl,
-			Content:         "",
-			TargetDirectory: testPath,
+			Url:          testUrl,
+			Content:      "",
+			PathFromRoot: testPath,
 		}
 
 		urlBytes := []byte(urlFileContent)
@@ -83,7 +83,7 @@ func Test_fileTask_Complete(t *testing.T) {
 
 			mockManager := manager.NewMockManager(controller)
 
-			mockManager.EXPECT().CreateFile(gomock.Any(), gomock.Eq(arg.file.TargetDirectory)).DoAndReturn(func(arg1, arg2 interface{}) error {
+			mockManager.EXPECT().CreateFile(gomock.Any(), gomock.Eq(arg.file.PathFromRoot)).DoAndReturn(func(arg1, arg2 interface{}) error {
 				closer := arg1.(io.ReadCloser)
 				all, err := ioutil.ReadAll(closer)
 				if err != nil {
@@ -115,9 +115,9 @@ func Test_fileTask_Complete(t *testing.T) {
 
 		task := &fileTask{
 			File: model.File{
-				Url:             testUrl,
-				Content:         "",
-				TargetDirectory: testPath,
+				Url:          testUrl,
+				Content:      "",
+				PathFromRoot: testPath,
 			},
 			Logger:  logger.NewLogger(),
 			Manager: mockManager,
@@ -138,9 +138,9 @@ func Test_fileTask_Complete(t *testing.T) {
 
 		task := &fileTask{
 			File: model.File{
-				Url:             "",
-				Content:         "sdsd",
-				TargetDirectory: testPath,
+				Url:          "",
+				Content:      "sdsd",
+				PathFromRoot: testPath,
 			},
 			Logger:  logger.NewLogger(),
 			Manager: mockManager,
