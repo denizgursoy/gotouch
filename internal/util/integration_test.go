@@ -6,12 +6,12 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/manager"
-	"github.com/hashicorp/go-uuid"
 	"github.com/stretchr/testify/suite"
 	"github.com/testcontainers/testcontainers-go"
 )
@@ -36,33 +36,24 @@ func (z *ZippingTestSuite) SetupSuite() {
 }
 
 func (z *ZippingTestSuite) SetupTest() {
-
 	z.containerWorkingDir = "/go/test"
 	z.execPath = manager.GetInstance().GetWd()
 
-	generateUUID, uuidErr := uuid.GenerateUUID()
+	temp, uuidErr := ioutil.TempDir("", "gotouch-test*")
 	if uuidErr != nil {
-		z.T().Fatal("could not generate uuid", uuidErr)
-	}
-	tempDirPath := os.TempDir()
-	z.T().Log("temp dir ->", tempDirPath)
-	if !strings.HasSuffix(tempDirPath, string(os.PathSeparator)) {
-		tempDirPath = fmt.Sprintf("%s%s", tempDirPath, string(os.PathSeparator))
+		z.T().Fatal("could not create directory", temp, uuidErr)
 	}
 
-	z.mountPath = fmt.Sprintf("%s%s", tempDirPath, generateUUID)
+	z.mountPath = temp
+
 	z.T().Log("mount:", z.mountPath)
-	mkdirErr := os.Mkdir(z.mountPath, os.ModePerm)
-	if mkdirErr != nil {
-		z.T().Fatal("could not create directory", mkdirErr)
-	}
+
 	binaryName := "gotouch-linux-test"
 	sourcePath := fmt.Sprintf("%s/%s", z.execPath, binaryName)
 	targetPath := fmt.Sprintf("%s/gotouch", z.mountPath)
 
-	i, uuidErr := z.copy(sourcePath, targetPath)
-	if uuidErr != nil {
-		z.T().Fatal("could not copy the binary", uuidErr, i)
+	if _, err := z.copy(sourcePath, targetPath); err != nil {
+		z.T().Fatal("could not copy the binary", err)
 	}
 
 	request := testcontainers.ContainerRequest{
