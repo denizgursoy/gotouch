@@ -82,7 +82,6 @@ func (z *ZippingTestSuite) SetupTest() {
 	}
 
 	z.c = cnt
-
 }
 
 func (z *ZippingTestSuite) TestUnzipping() {
