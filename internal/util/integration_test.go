@@ -1,4 +1,4 @@
-//+build integration
+//+build integration_test
 
 package util
 
@@ -11,7 +11,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/stretchr/testify/suite"
 	"github.com/testcontainers/testcontainers-go"
 )
@@ -19,7 +18,6 @@ import (
 type ZippingTestSuite struct {
 	suite.Suite
 	c                   testcontainers.Container
-	execPath            string
 	mountPath           string
 	containerWorkingDir string
 }
@@ -37,7 +35,6 @@ func (z *ZippingTestSuite) SetupSuite() {
 
 func (z *ZippingTestSuite) SetupTest() {
 	z.containerWorkingDir = "/go/test"
-	z.execPath = manager.GetInstance().GetWd()
 
 	temp, uuidErr := ioutil.TempDir("", "gotouch-test*")
 	if uuidErr != nil {
@@ -47,9 +44,10 @@ func (z *ZippingTestSuite) SetupTest() {
 	z.mountPath = temp
 
 	z.T().Log("mount:", z.mountPath)
+	getwd := getWorkingDirectory()
 
 	binaryName := "gotouch-linux-test"
-	sourcePath := fmt.Sprintf("%s/%s", z.execPath, binaryName)
+	sourcePath := fmt.Sprintf("%s/%s", getwd, binaryName)
 	targetPath := fmt.Sprintf("%s/gotouch", z.mountPath)
 
 	if _, err := z.copy(sourcePath, targetPath); err != nil {
@@ -82,6 +80,11 @@ func (z *ZippingTestSuite) SetupTest() {
 	}
 
 	z.c = cnt
+}
+
+func getWorkingDirectory() string {
+	getwd, _ := os.Getwd()
+	return getwd
 }
 
 func (z *ZippingTestSuite) TestUnzipping() {
@@ -129,7 +132,8 @@ func (z *ZippingTestSuite) checkModuleName(expectedModuleName, folderName string
 
 func (z *ZippingTestSuite) checkDirectoriesExist(directories []string, folderName string) {
 	for _, directory := range directories {
-		if stat, err := os.Stat(fmt.Sprintf("%s/%s/%s", z.mountPath, folderName, directory)); err != nil || !stat.IsDir() {
+		directoryPath := fmt.Sprintf("%s/%s/%s", z.mountPath, folderName, directory)
+		if stat, err := os.Stat(directoryPath); err != nil || !stat.IsDir() {
 			z.T().Fatalf("%s does not exists", directory)
 		}
 	}
@@ -153,7 +157,7 @@ func (z *ZippingTestSuite) executeCommand() {
 }
 
 func (z *ZippingTestSuite) moveToDirectory(fileName string) {
-	source := fmt.Sprintf("%s/internal/testdata/%s", z.execPath, fileName)
+	source := fmt.Sprintf("%s/internal/testdata/%s", getWorkingDirectory(), fileName)
 	target := fmt.Sprintf("%s/input.txt", z.mountPath)
 	i, err := z.copy(source, target)
 	if err != nil {

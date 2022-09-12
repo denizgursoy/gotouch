@@ -4,16 +4,16 @@ build:
 	go build -o gotouch-mac -v ./cmd/gotouch/
 
 build-test:
-	 $(LINUX_BUILD) --ldflags="-X 'github.com/denizgursoy/gotouch/internal/manager.Environment=test'" -v -o gotouch-linux-test ./cmd/gotouch/
+	 $(LINUX_BUILD) -v -o gotouch-linux-test -tags=integration ./cmd/gotouch/
 
 build-mac-test:
-	go build --ldflags="-X 'github.com/denizgursoy/gotouch/internal/manager.Environment=test'" -v -o gotouch-mac-test ./cmd/gotouch/
+	go build -v -o gotouch-mac-test ./cmd/gotouch/
 
 unit-test:
 	go test -v --tags=unit ./...
 
 integration-test: build-test
-	go test -v --tags=integration ./...
+	go test -v --tags=integration_test ./...
 
 generate-mocks:
 	go generate -v ./...

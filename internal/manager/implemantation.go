@@ -8,17 +8,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
-)
-
-var (
-	urls        []string
-	index       = 0
-	Environment = "prod"
 )
 
 type (
@@ -31,17 +24,6 @@ type (
 
 func init() {
 	manager = newFileManager()
-	if manager.IsTest() {
-		exPath := fmt.Sprintf("%s/input.txt", manager.GetExtractLocation())
-		file, err := os.ReadFile(exPath)
-		if err != nil {
-			log.Println("deniz", err)
-		}
-		urls = make([]string, 0)
-		for _, line := range strings.Split(string(file), "\n") {
-			urls = append(urls, line)
-		}
-	}
 }
 
 func newFileManager() Manager {
@@ -56,39 +38,9 @@ func (f *fManager) CreateDirectoryIfNotExists(directoryName string) error {
 	return os.Mkdir(directoryName, os.ModePerm)
 }
 
-func (f *fManager) GetStream() (ioReader io.ReadCloser) {
-	if f.IsTest() {
-		ioReader = io.NopCloser(strings.NewReader(urls[index]))
-	} else {
-		ioReader = os.Stdin
-	}
-	index++
-	return
-}
-
-func (f *fManager) IsTest() bool {
-	return Environment == "test"
-}
-
 func (f *fManager) GetExtractLocation() string {
-	if f.IsTest() {
-		ex, err := os.Executable()
-		if err != nil {
-			log.Fatal("could not fetch executable information", err)
-		}
-		return filepath.Dir(ex)
-	} else {
-		return f.GetWd()
-	}
-}
-
-func (f *fManager) GetWd() string {
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Fatal("could not get working directory", err)
-	}
-
-	return wd
+	log.Println("GetExtractLocation()", GetExtractLocation())
+	return GetExtractLocation()
 }
 
 func (f *fManager) EditGoModule() error {

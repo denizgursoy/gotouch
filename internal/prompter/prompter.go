@@ -5,8 +5,9 @@ package prompter
 import (
 	"errors"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/manager"
 	"sync"
+
+	"github.com/denizgursoy/gotouch/internal/manager"
 )
 
 var (
@@ -28,6 +29,10 @@ type (
 	}
 
 	Validator func(interface{}) error
+
+	srv struct {
+		Manager manager.Manager
+	}
 )
 
 func GetInstance() Prompter {

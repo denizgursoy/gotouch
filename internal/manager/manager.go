@@ -23,10 +23,7 @@ type (
 	Manager interface {
 		CreateDirectoryIfNotExists(directoryName string) error
 		CreateFile(reader io.ReadCloser, path string) error
-		GetStream() io.ReadCloser
-		IsTest() bool
-		GetExtractLocation() string
-		GetWd() string
 		EditGoModule() error
+		GetExtractLocation() string
 	}
 )

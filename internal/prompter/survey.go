@@ -1,29 +1,14 @@
+//+build !integration
+
 package prompter
 
 import (
 	"fmt"
-	"io/ioutil"
-	"strconv"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/denizgursoy/gotouch/internal/manager"
-)
-
-type (
-	srv struct {
-		Manager manager.Manager
-	}
 )
 
 func (s srv) AskForString(direction string, validator Validator) (string, error) {
-	if s.Manager.IsTest() {
-		all, err := ioutil.ReadAll(s.Manager.GetStream())
-		if err != nil {
-			return "", err
-		}
-		return string(all), nil
-	}
-
 	result := ""
 
 	input := survey.Input{
@@ -35,16 +20,6 @@ func (s srv) AskForString(direction string, validator Validator) (string, error)
 }
 
 func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {
-	if s.Manager.IsTest() {
-		all, err := ioutil.ReadAll(s.Manager.GetStream())
-		if err != nil {
-			return "", err
-		}
-
-		atoi, err := strconv.Atoi(string(all))
-		return list[atoi], nil
-	}
-
 	count := len(list)
 
 	if count == 0 {
@@ -71,16 +46,6 @@ func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (int
 }
 
 func (s srv) AskForYesOrNo(direction string) (bool, error) {
-	if s.Manager.IsTest() {
-		all, err := ioutil.ReadAll(s.Manager.GetStream())
-		if err != nil {
-			return false, err
-		}
-		atoi, err := strconv.Atoi(string(all))
-
-		return atoi == 1, nil
-	}
-
 	name := false
 	prompt := &survey.Confirm{
 		Message: direction,
