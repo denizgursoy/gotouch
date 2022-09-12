@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -39,7 +38,6 @@ func (f *fManager) CreateDirectoryIfNotExists(directoryName string) error {
 }
 
 func (f *fManager) GetExtractLocation() string {
-	log.Println("GetExtractLocation()", GetExtractLocation())
 	return GetExtractLocation()
 }
 
