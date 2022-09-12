@@ -20,14 +20,14 @@ var (
 	dependency1 = "2132"
 	dependency2 = "2132"
 	file1       = model.File{
-		Url:             "",
-		Content:         "",
-		TargetDirectory: "",
+		Url:          "",
+		Content:      "",
+		PathFromRoot: "",
 	}
 	file2 = model.File{
-		Url:             "",
-		Content:         "",
-		TargetDirectory: "",
+		Url:          "",
+		Content:      "",
+		PathFromRoot: "",
 	}
 	option = model.Option{
 		Choice:       "112322",
