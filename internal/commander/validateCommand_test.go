@@ -1,10 +1,11 @@
 package commander
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/golang/mock/gomock"
-	"testing"
 )
 
 func Test_cmdExecutor_ValidateYaml(t *testing.T) {
@@ -34,8 +35,8 @@ func Test_isValidYaml(t *testing.T) {
 
 	mockLister := lister.NewMockLister(controller)
 	mockLogger := logger.NewLogger()
-	path := "./testdata/input.yaml"
-	failPath := "./testdata/xxx.yaml"
+	path := "../testdata/input.yaml"
+	failPath := "../testdata/xxx.yaml"
 
 	type args struct {
 		opts *ValidateCommandOptions

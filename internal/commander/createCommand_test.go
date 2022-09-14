@@ -3,6 +3,8 @@
 package commander
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -14,7 +16,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 var (
@@ -259,7 +260,7 @@ func Test_isValid_PathTest(t *testing.T) {
 
 	t.Run("should return no error if yaml file exists", func(t *testing.T) {
 		arg := options
-		path := "./testdata/input.yaml"
+		path := "../testdata/input.yaml"
 		arg.Path = &path
 		err := isValid(&arg)
 		require.Nil(t, err)
