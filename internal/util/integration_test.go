@@ -20,6 +20,7 @@ type ZippingTestSuite struct {
 	c                   testcontainers.Container
 	mountPath           string
 	containerWorkingDir string
+	folderName          string
 }
 
 func TestUnzipping(t *testing.T) {
@@ -27,19 +28,16 @@ func TestUnzipping(t *testing.T) {
 }
 
 func (z *ZippingTestSuite) SetupSuite() {
+	z.folderName = "testapp"
 	err := os.Chdir("../../")
-	if err != nil {
-		z.T().Fatal("could not change directory", err)
-	}
+	z.Nil(err, "could not change directory")
 }
 
 func (z *ZippingTestSuite) SetupTest() {
 	z.containerWorkingDir = "/go/test"
 
 	temp, uuidErr := ioutil.TempDir("", "gotouch-test*")
-	if uuidErr != nil {
-		z.T().Fatal("could not create directory", temp, uuidErr)
-	}
+	z.Nil(uuidErr, "could not create directory")
 
 	z.mountPath = temp
 
@@ -50,9 +48,8 @@ func (z *ZippingTestSuite) SetupTest() {
 	sourcePath := fmt.Sprintf("%s/%s", getwd, binaryName)
 	targetPath := fmt.Sprintf("%s/gotouch", z.mountPath)
 
-	if _, err := z.copy(sourcePath, targetPath); err != nil {
-		z.T().Fatal("could not copy the binary", err)
-	}
+	_, err := z.copy(sourcePath, targetPath)
+	z.Nil(err, "could not copy the binary")
 
 	request := testcontainers.ContainerRequest{
 		Image: "golang:latest",
@@ -73,11 +70,9 @@ func (z *ZippingTestSuite) SetupTest() {
 		Started:          true,
 	})
 
-	z.T().Log("commander:", fmt.Sprintf("docker exec -it %s /bin/bash", cnt.GetContainerID()))
+	z.NotNil(cnt, "Make sure docker is running")
 
-	if cnt == nil {
-		z.T().Fatal("could not create cnt", uuidErr)
-	}
+	z.T().Log("commander:", fmt.Sprintf("docker exec -it %s /bin/bash", cnt.GetContainerID()))
 
 	z.c = cnt
 }
@@ -88,60 +83,68 @@ func getWorkingDirectory() string {
 }
 
 func (z *ZippingTestSuite) TestUnzipping() {
-	z.moveToDirectory("unzip-test.txt")
+	z.moveToDirectory("testapp.txt")
 	z.executeCommand()
 
-	folderName := "unzip"
+	z.checkDefaultProjectStructure()
 
-	z.checkDefaultProjectStructure(folderName)
-
-	z.checkModuleName("module unzip", folderName)
+	z.checkModuleName("module testapp")
 }
 
 func (z *ZippingTestSuite) TestGithub() {
 	z.moveToDirectory("github-full-name.txt")
 	z.executeCommand()
 
-	folderName := "call"
-
-	z.checkDefaultProjectStructure(folderName)
-	z.checkModuleName("module g.c/dg/call", folderName)
+	z.checkDefaultProjectStructure()
+	z.checkModuleName("module g.c/dg/testapp")
 }
 
-func (z *ZippingTestSuite) checkDefaultProjectStructure(folderName string) {
+func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	directories := make([]string, 0)
 	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
 	directories = append(directories, "init", "internal", "pkg", "configs", "test", "vendor")
-	z.checkDirectoriesExist(directories, folderName)
+	z.checkDirectoriesExist(directories)
 
 	files := make([]string, 0)
 	files = append(files, "cmd/main.go", "go.mod", "Dockerfile")
-	z.checkFilesExist(files, folderName)
+	z.checkFilesExist(files)
+	z.checkFileContent("Dockerfile", "Dockerfile")
 }
 
-func (z *ZippingTestSuite) checkModuleName(expectedModuleName, folderName string) {
-	open, err := os.ReadFile(fmt.Sprintf("%s/%s/go.mod", z.mountPath, folderName))
-	if err != nil {
-		z.T().Fatal("go module file not found")
-	}
+func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
+	actualFilePath := fmt.Sprintf("%s/%s/%s", z.mountPath, z.folderName, fileName)
+	actualFileContent, err := ioutil.ReadFile(actualFilePath)
+	z.Nil(err)
+
+	expectedFilePath := fmt.Sprintf("%s/internal/testdata/%s", getWorkingDirectory(), expectedFile)
+	expectedFileContent, err := ioutil.ReadFile(expectedFilePath)
+	z.Nil(err)
+
+	z.EqualValues(expectedFileContent, actualFileContent)
+}
+
+func (z *ZippingTestSuite) checkModuleName(expectedModuleName string) {
+	open, err := os.ReadFile(fmt.Sprintf("%s/%s/go.mod", z.mountPath, z.folderName))
+	z.Nil(err, "go module file not found")
+
 	split := strings.Split(string(open), "\n")
 	if split[0] != expectedModuleName {
 		z.T().Fatalf("Module name did not change: expected: %s, actual: %s", expectedModuleName, split[0])
 	}
 }
 
-func (z *ZippingTestSuite) checkDirectoriesExist(directories []string, folderName string) {
+func (z *ZippingTestSuite) checkDirectoriesExist(directories []string) {
 	for _, directory := range directories {
-		directoryPath := fmt.Sprintf("%s/%s/%s", z.mountPath, folderName, directory)
+		directoryPath := fmt.Sprintf("%s/%s/%s", z.mountPath, z.folderName, directory)
 		if stat, err := os.Stat(directoryPath); err != nil || !stat.IsDir() {
 			z.T().Fatalf("%s does not exists", directory)
 		}
 	}
 }
 
-func (z *ZippingTestSuite) checkFilesExist(files []string, folderName string) {
+func (z *ZippingTestSuite) checkFilesExist(files []string) {
 	for _, file := range files {
-		if stat, err := os.Stat(fmt.Sprintf("%s/%s/%s", z.mountPath, folderName, file)); err != nil || stat.IsDir() {
+		if stat, err := os.Stat(fmt.Sprintf("%s/%s/%s", z.mountPath, z.folderName, file)); err != nil || stat.IsDir() {
 			z.T().Fatalf("%s does not exists", file)
 		}
 	}

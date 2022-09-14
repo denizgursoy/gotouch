@@ -1,4 +1,4 @@
-g.c/dg/call
+g.c/dg/testapp
 1
 1
 0
