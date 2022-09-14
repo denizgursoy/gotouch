@@ -115,7 +115,7 @@ func (z *ZippingTestSuite) checkDefaultProjectStructure(folderName string) {
 	z.checkDirectoriesExist(directories, folderName)
 
 	files := make([]string, 0)
-	files = append(files, "cmd/main.go", "go.mod")
+	files = append(files, "cmd/main.go", "go.mod", "Dockerfile")
 	z.checkFilesExist(files, folderName)
 }
 
