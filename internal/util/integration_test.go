@@ -128,25 +128,23 @@ func (z *ZippingTestSuite) checkModuleName(expectedModuleName string) {
 	z.Nil(err, "go module file not found")
 
 	split := strings.Split(string(open), "\n")
-	if split[0] != expectedModuleName {
-		z.T().Fatalf("Module name did not change: expected: %s, actual: %s", expectedModuleName, split[0])
-	}
+	z.EqualValues(expectedModuleName, split[0], "Module name did not change: expected: %s, actual: %s", expectedModuleName, split[0])
 }
 
 func (z *ZippingTestSuite) checkDirectoriesExist(directories []string) {
 	for _, directory := range directories {
 		directoryPath := fmt.Sprintf("%s/%s/%s", z.mountPath, z.folderName, directory)
-		if stat, err := os.Stat(directoryPath); err != nil || !stat.IsDir() {
-			z.T().Fatalf("%s does not exists", directory)
-		}
+		stat, err := os.Stat(directoryPath)
+		z.Nil(err, "%s does not exists", directory)
+		z.True(stat.IsDir(), "%s does not exists", directory)
 	}
 }
 
 func (z *ZippingTestSuite) checkFilesExist(files []string) {
 	for _, file := range files {
-		if stat, err := os.Stat(fmt.Sprintf("%s/%s/%s", z.mountPath, z.folderName, file)); err != nil || stat.IsDir() {
-			z.T().Fatalf("%s does not exists", file)
-		}
+		stat, err := os.Stat(fmt.Sprintf("%s/%s/%s", z.mountPath, z.folderName, file))
+		z.Nil(err, "%s does not exists", file)
+		z.False(stat.IsDir(), "%s does not exists", file)
 	}
 }
 
@@ -154,18 +152,14 @@ func (z *ZippingTestSuite) executeCommand() {
 	sprintf := fmt.Sprintf("%s/gotouch", z.containerWorkingDir)
 	commander := []string{sprintf}
 	i, err := z.c.Exec(context.Background(), commander)
-	if err != nil {
-		z.T().Fatal("could not execute commander", err, i)
-	}
+	z.Nil(err, "could not execute commander", err, i)
 }
 
 func (z *ZippingTestSuite) moveToDirectory(fileName string) {
 	source := fmt.Sprintf("%s/internal/testdata/%s", getWorkingDirectory(), fileName)
 	target := fmt.Sprintf("%s/input.txt", z.mountPath)
 	i, err := z.copy(source, target)
-	if err != nil {
-		fmt.Println(err, i)
-	}
+	z.Nil(err, i)
 }
 
 func (z *ZippingTestSuite) copy(src, dst string) (int64, error) {
