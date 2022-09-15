@@ -74,25 +74,25 @@ func (f *fManager) CreateFile(reader io.ReadCloser, path string) error {
 	fullPath := filepath.Join(f.Store.GetValue(store.ProjectFullPath), path)
 	directoryOfFile := filepath.Dir(fullPath)
 
-	err2 := os.MkdirAll(directoryOfFile, os.ModePerm)
-	if err2 != nil {
-		return err2
+	err := os.MkdirAll(directoryOfFile, os.ModePerm)
+	if err != nil {
+		return err
 	}
 	f.Logger.LogInfo(fmt.Sprintf("Creating file -> %s", fullPath))
 
-	create, err := os.Create(fullPath)
-	if err != nil {
-		return err
+	create, createError := os.Create(fullPath)
+	if createError != nil {
+		return createError
 	}
 	defer create.Close()
 
-	all, err := ioutil.ReadAll(reader)
-	if err != nil {
-		return err
+	all, readError := ioutil.ReadAll(reader)
+	if readError != nil {
+		return readError
 	}
-	_, err = create.Write(all)
-	if err != nil {
-		return err
+	_, writeError := create.Write(all)
+	if writeError != nil {
+		return writeError
 	}
 
 	f.Logger.LogInfo(fmt.Sprintf("Created file  -> %s", fullPath))
