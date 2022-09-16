@@ -39,7 +39,7 @@ func CreatePackageCommand(cmdr commander.Commander) *cobra.Command {
 	}
 
 	packageCommand.Flags().StringP(SourceDirectoryFlagName, "s", ".", "source directory")
-	packageCommand.Flags().StringP(TargetDirectoryFlagName, "t", ".", "target directory")
+	packageCommand.Flags().StringP(TargetDirectoryFlagName, "t", "..", "target directory")
 
 	return packageCommand
 }
