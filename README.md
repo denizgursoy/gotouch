@@ -39,13 +39,24 @@ with the [values](#values)
 ### values
 
 # Commands
-### package command
+### gotouch command
+
+`gotouch --file path-to-yaml`
+
+gotouch command uses yaml file for prompting user to enter name and select  project structure. If file flag value
+is not provided, it is going to use [default properties yaml](https://github.com/denizgursoy/go-touch-projects/blob/main/properties.yaml). 
+The command ask for project name first. Project name is written to go module and used for directory name.
+
+
+### package subcommand
+`gotouch package --source path-to-source --target path-to-target`
+
 Package command compresses the source directory with the zip extension and moves the zip file to target directory.
 `source` and `target` flags are optional. Default values for `source` and `target` are `./`, `../` respectively.
 
-`gotouch package --source path-to-source --target path-to-target`
 
-### validate command
+### validate subcommand
+`gotouch validate --file path-to-yaml`
+
 Validate checks if your yaml is valid or not. 
 
-`gotouch validate --file path-to-yaml`
