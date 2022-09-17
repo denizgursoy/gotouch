@@ -36,10 +36,10 @@ with the [values](#values)
 
 ## Write your yaml file
 
-###package command
+### package command
 Package command compresses the source directory with the zip extension and moves the zip file to target directory.
 `source` and `target` flags are optional. Default values for `source` and `target` are `./`, `../` respectively.
 
 `gotouch package --source path-to-source --target path-to-target`
 
-###values
+### values
