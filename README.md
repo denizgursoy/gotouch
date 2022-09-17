@@ -24,7 +24,7 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 - Choose from go project templates
 - Easily install your dependencies and packages
 
-#How to use
+# How to use
 1. [Create your template project](#Create your template project)
 2. [Write your yaml file](#Write your yaml file)
 
