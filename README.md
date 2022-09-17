@@ -43,9 +43,9 @@ with the [values](#values)
 
 `gotouch --file path-to-yaml`
 
-gotouch command uses yaml file for prompting user to enter name and select  project structure. If file flag value
+gotouch command uses [properties yaml](#Write-your-yaml-file) file for prompting user to enter name and select  project structure. If file flag value
 is not provided, it is going to use [default properties yaml](https://github.com/denizgursoy/go-touch-projects/blob/main/properties.yaml). 
-The command ask for project name first. Project name is written to go module and used for directory name.
+Firstly,The command asks for project name. Project name is written to go module and used for directory name.
 
 
 ### package subcommand
