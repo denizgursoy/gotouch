@@ -30,7 +30,7 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 
 
 ## Create your template project
-Template is a zip file that has your directories and files inside.Template can be created with [package command](#package-command).
+Template is a zip file that has your directories and files inside.Template can be created with [package command](#package subcommand).
 Files inside a template can have [actions](https://pkg.go.dev/text/template#hdr-Actions) which will be [templated](https://pkg.go.dev/text/template)
 with the [values](#values)
 
