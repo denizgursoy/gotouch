@@ -23,3 +23,23 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 
 - Choose from go project templates
 - Easily install your dependencies and packages
+
+#How to use
+1. [Create your template project](#Create your template project)
+2. [Write your yaml file](#Write your yaml file)
+
+
+## Create your template project
+Template is a zip file that has your directories and files inside.Template can be created with [package command](#package-command).
+Files inside a template can have [actions](https://pkg.go.dev/text/template#hdr-Actions) which will be [templated](https://pkg.go.dev/text/template)
+with the [values](#values)
+
+## Write your yaml file
+
+###package command
+Package command compresses the source directory with the zip extension and moves the zip file to target directory.
+`source` and `target` flags are optional. Default values for `source` and `target` are `./`, `../` respectively.
+
+`gotouch package --source path-to-source --target path-to-target`
+
+###values
