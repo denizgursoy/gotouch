@@ -57,6 +57,29 @@ You can also use other go template library's capabilities such as conditions, it
 see [go template library](https://pkg.go.dev/text/template).
 
 ## Write your yaml file
+Properties yaml is a **list** of what we call `Project Structure` as it can be seen below: 
+```yaml
+- name: Empty Project Layout #mandatory - used for displaying project in listing
+  reference: https://go.dev/ #optional - is appended to name while prompting project name
+  url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory - url of template project 
+  questions: #optional
+    - direction: Do you want Dockerfile? #mandatory
+      canSkip: true #if true, there must be at least one choice. 
+      options:
+        - choice: Yes
+          files:
+            - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+              pathFromRoot: Dockerfile
+          values:
+            isDocker: true
+```
+A Project Structure has name, reference, url and list of [questions](#Question) and described above.
+
+After creating your template project, it should be hosted in http server and url must be a address of your template project. Gotouch downloads the template from the url 
+and uncompress it. 
+
+
+#### Question
 
 ### values
 
