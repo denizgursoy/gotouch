@@ -1,12 +1,13 @@
 package root
 
 import (
+	"log"
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/spf13/cobra"
-	"log"
-	"strings"
 )
 
 func GetValidateCommandHandler(cmdr commander.Commander) CommandHandler {

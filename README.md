@@ -32,7 +32,29 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 ## Create your template project
 Template is a zip file that has your directories and files inside.Template can be created with [package command](#package-subcommand).
 Files inside a template can have [actions](https://pkg.go.dev/text/template#hdr-Actions) which will be [templated](https://pkg.go.dev/text/template)
-with the [values](#values)
+with the [values](#values). As an example, If you have `Port` key in your [values](#values), `{{ .Port }}` will be replaced
+with the corresponding value.
+
+``` go
+package main
+
+import (
+	"io"
+	"log"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", getRoot)
+	log.Fatalln(http.ListenAndServe(":{{ .Port }}", nil))
+}
+
+func getRoot(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Server got the request\n")
+}
+```
+You can also use other go template library's capabilities such as conditions, iterating array values etc. For more information
+see [go template library](https://pkg.go.dev/text/template).
 
 ## Write your yaml file
 
