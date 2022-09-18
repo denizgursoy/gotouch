@@ -87,14 +87,14 @@ If a question has only one choice and `canSkip` is true, it is evaluated as Yes/
 
 Example Yes/No question:
 ```yaml
-  questions: #optional
-    - direction: Do you want Dockerfile? #mandatory
-      canSkip: true #if true, there must be at least one choice. 
-      options: #mandatory
-        - choice: Yes
-          files:
-            - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
-              pathFromRoot: Dockerfile
+questions: #optional
+- direction: Do you want Dockerfile? #mandatory
+  canSkip: true #if true, there must be at least one choice. 
+  options: #mandatory
+    - choice: Yes
+      files:
+        - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+          pathFromRoot: Dockerfile
 ```
 If there are choices more than one, Gotouch will prompt user to select form list of choices. If can skip is true,
 user will have `None of above` choice as well.
