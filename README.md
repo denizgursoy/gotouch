@@ -122,7 +122,7 @@ Select question will be displayed like:
 ![Select Question](./.readme/select-question.png)
 
 
-#### choice
+#### Choice
 If selected, a choice can create files, add dependencies and introduce new values. Dependencies are list of string. If 
 version is not written `go get -u ` will be called. Otherwise, gotouch will execute `go get`. A choice can create files with
 address of source file, or content. A file entry must have `pathFromRoot` value is the location of the file inside project.
@@ -130,7 +130,7 @@ address of source file, or content. A file entry must have `pathFromRoot` value 
 Creator of this yaml might want to customize project if a specific choice is selected, so values written under a choice 
 will be appended to general [value](#values). But choice values cannot be changed by the user.
 
-A complete choice can be written like:
+A choice can be written like:
 
 ```yaml
 - choice: Yes
