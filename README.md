@@ -99,6 +99,7 @@ questions: #optional
 Yes/No will be displayed like:
 
 ![Yes/No Question](./.readme/yes-no-question.png)
+
 If there are choices more than one, Gotouch will prompt user to select form list of choices. If can skip is true,
 user will have `None of above` choice as well.
 
@@ -119,7 +120,8 @@ questions:
 ```
 Select question will be displayed like:
 
-![Yes/No Question](./.readme/select-question.png)
+![Select Question](./.readme/select-question.png)
+
 ### values
 
 # Commands
