@@ -75,12 +75,12 @@ Properties yaml is a **list** of what we call `Project Structure` as it can be s
 ```
 A Project Structure has name, reference, url and list of [questions](#Question) and described above.
 
-After creating your template project, it should be hosted in http server and url must be address of your template project.
+After creating your template project, it should be hosted in a http server and url must be address of your template project.
 Gotouch downloads the template from the url and uncompress it. 
 
 #### Question
 Question allows your users to customize their projects. A question must have a direction and choices. Gotouch prompts user 
-to select a choice for every question of Project Structure. If selected, a choice can create files, add dependencies and
+to make a choice for every question in the selected Project Structure. If selected, a choice can create files, add dependencies and
 introduce new values.
 
 If a question has only one choice and `canSkip` is true, it is evaluated as Yes/No question
@@ -96,6 +96,9 @@ questions: #optional
         - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
           pathFromRoot: Dockerfile
 ```
+Yes/No will be displayed like:
+
+![Yes/No Question](./.readme/yes-no-question.png)
 If there are choices more than one, Gotouch will prompt user to select form list of choices. If can skip is true,
 user will have `None of above` choice as well.
 
@@ -114,7 +117,9 @@ questions:
           dependencies:
             - github.com/gin-gonic/gin
 ```
+Select question will be displayed like:
 
+![Yes/No Question](./.readme/select-question.png)
 ### values
 
 # Commands
