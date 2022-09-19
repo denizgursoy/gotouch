@@ -1,12 +1,23 @@
 questions:
   - direction: Which http library do you want to use?
     options:
-      - choice: Echo
-        dependencies:
-          - github.com/labstack/echo/v4
-      - choice: Gorilla Mux
+        - choice: Echo
           dependencies:
-            - github.com/gorilla/mux
-      - choice: Gin
-          dependencies:
-            - github.com/gin-gonic/gin
+            - github.com/labstack/echo/v4
+          - choice: Gorilla Mux
+            dependencies:
+              - github.com/gorilla/mux
+          - choice: Gin
+            dependencies:
+              - github.com/gin-gonic/gin
+
+- choice: Yes
+    dependencies:
+      - github.com/labstack/echo/v4
+    files:
+        - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+          pathFromRoot: Dockerfile
+        - content: "My input"
+          pathFromRoot: input.txt
+    values:
+      httpLibrary: echo
