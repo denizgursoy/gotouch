@@ -61,7 +61,9 @@ Properties yaml is a **list** of what we call `Project Structure` as it can be s
 ```yaml
 - name: Empty Project Layout #mandatory - used for displaying project in listing
   reference: https://go.dev/ #optional - is appended to name while prompting project name
-  url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory - url of template project 
+  url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory - url of template project
+  values: # optional
+    Port: 8080
   questions: #optional
     - direction: Do you want Dockerfile? #mandatory
       canSkip: true #if true, there must be at least one choice. 
@@ -73,7 +75,7 @@ Properties yaml is a **list** of what we call `Project Structure` as it can be s
           values:
             isDocker: true
 ```
-A Project Structure has name, reference, url and list of [questions](#Question) and described above.
+A Project Structure has name, reference, url, list of [questions](#Question) and [values](#values).
 
 After creating your template project, it should be hosted in a http server and url must be address of your template project.
 Gotouch downloads the template from the url and uncompress it. 

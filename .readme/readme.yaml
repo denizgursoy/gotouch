@@ -1,3 +1,21 @@
+- name: Empty Project Layout #mandatory - used for displaying project in listing
+  reference: https://go.dev/ #optional - is appended to name while prompting project name
+  url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory - url of template project
+  values: # optional
+    Port: 8080
+  questions: #optional
+    - direction: Do you want Dockerfile? #mandatory
+      canSkip: true #if true, there must be at least one choice.
+      options:
+        - choice: Yes
+          files:
+            - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+              pathFromRoot: Dockerfile
+          values:
+            isDocker: true
+
+
+
 questions:
   - direction: Which http library do you want to use?
     options:
