@@ -75,7 +75,7 @@ Properties yaml is a **list** of what we call `Project Structure` as it can be s
           values:
             isDocker: true
 ```
-A Project Structure has name, reference, url, list of [questions](#Question) and [values](#values).
+A Project Structure has name, reference, url, list of [question](#Question) and [values](#values).
 
 After creating your template project, it should be hosted in a http server and url must be address of your template project.
 Gotouch downloads the template from the url and uncompress it. 
@@ -147,7 +147,7 @@ A choice can be written like:
       httpLibrary: echo
 ```
 
-### values
+### Values
 
 # Commands
 ### gotouch command
