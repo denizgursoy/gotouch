@@ -136,13 +136,16 @@ Select question will be displayed like:
 
 #### Choice
 
-If selected, a choice can create files, add dependencies and introduce new values. Dependencies are list of string. If
-version is not written `go get -u ` will be called. Otherwise, gotouch will execute `go get`. A choice can create files
+If selected, a choice can create files, add dependencies and introduce new values. 
+
+Dependencies are list of string. If version of a dependency is not written Gotouch will append `@latest` and execute `go get`. 
+
+A choice can create files
 with address of source file, or content. A file entry must have `pathFromRoot` value is the location of the file inside
 project.
 
 Creator of this yaml might want to customize project if a specific choice is selected, so values written under a choice
-will be appended to general [value](#values). But choice values cannot be changed by the user.
+will be appended to general [value](#values). Values of choice cannot be changed by the user.
 
 A choice can be written like:
 
