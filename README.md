@@ -164,9 +164,8 @@ A choice can be written like:
 
 ### Values
 
-If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`
-. The most common cases can be port numbers, service addresses, and some configuration values etc. Gotouch will ask user
-to change the values if he/she wants.
+If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`.
+The most common cases can be port numbers, service addresses, and some configuration values etc. Gotouch will ask user to change the values if he/she wants.
 
 Values under Project Structure will be merged with selected choices' values.
 
