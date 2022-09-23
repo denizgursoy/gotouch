@@ -72,7 +72,7 @@ Properties yaml is a **list** of what we call `Project Structure` as it can be s
   questions: #optional
     - direction: Do you want Dockerfile? #mandatory
       canSkip: true #if true, there must be at least one choice. 
-      options:
+      choices:
         - choice: Yes
           files:
             - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
@@ -99,7 +99,7 @@ Example Yes/No question:
 questions: #optional
   - direction: Do you want Dockerfile? #mandatory
     canSkip: true #if true, there must be at least one choice. 
-    options: #mandatory
+    choices: #mandatory
       - choice: Yes
         files:
           - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
@@ -118,7 +118,7 @@ Example select question:
 ```yaml
 questions:
   - direction: Which http library do you want to use?
-    options:
+    choices:
       - choice: Echo
         dependencies:
           - github.com/labstack/echo/v4
