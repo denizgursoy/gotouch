@@ -20,10 +20,10 @@ type (
 		Direction         string    `yaml:"direction"`
 		CanSkip           bool      `yaml:"canSkip"`
 		CanSelectMultiple bool      `yaml:"canSelectMultiple"`
-		Options           []*Option `yaml:"options"`
+		Choices           []*Choice `yaml:"choices"`
 	}
 
-	Option struct {
+	Choice struct {
 		Choice       string                 `yaml:"choice"`
 		Dependencies []*string              `yaml:"dependencies"`
 		Files        []*File                `yaml:"files"`
@@ -47,7 +47,7 @@ var (
 	ErrProjectURLIsNotValid = errors.New("project url invalid")
 )
 
-func (o *Option) String() string {
+func (o *Choice) String() string {
 	return o.Choice
 }
 
@@ -73,39 +73,39 @@ func (p *ProjectStructureData) IsValid() error {
 					field: "Direction",
 				}
 			}
-			if len(q.Options) == 0 {
+			if len(q.Choices) == 0 {
 				return ErrEmptyQuestionField{
 					index: i,
-					field: "Options",
+					field: "Choices",
 				}
-			} else if len(q.Options) == 1 && q.CanSelectMultiple == true {
+			} else if len(q.Choices) == 1 && q.CanSelectMultiple == true {
 				return ErrCanSelectMultiple{index: i}
-			} else if len(q.Options) == 1 && q.CanSkip == false {
+			} else if len(q.Choices) == 1 && q.CanSkip == false {
 				return ErrCanSkip{index: i}
 			}
-			for j, option := range q.Options {
-				if len(strings.TrimSpace(option.Choice)) == 0 {
-					return ErrEmptyOption{
+			for j, choice := range q.Choices {
+				if len(strings.TrimSpace(choice.Choice)) == 0 {
+					return ErrEmptyChoice{
 						questionIndex: i,
-						optionIndex:   j,
+						choiceIndex:   j,
 						field:         "Choice",
 					}
 				}
 
-				if len(option.Files) == 0 && len(option.Dependencies) == 0 {
+				if len(choice.Files) == 0 && len(choice.Dependencies) == 0 {
 					return ErrEmptyFileAndDependency{
 						questionIndex: i,
-						optionIndex:   j,
+						choiceIndex:   j,
 					}
 				}
 
-				if len(option.Files) > 0 {
-					for k, file := range option.Files {
+				if len(choice.Files) > 0 {
+					for k, file := range choice.Files {
 
 						if len(strings.TrimSpace(file.PathFromRoot)) == 0 {
 							return ErrEmptyFileField{
 								questionIndex: i,
-								optionIndex:   j,
+								choiceIndex:   j,
 								fileIndex:     k,
 								field:         "PathFromRoot",
 							}
@@ -114,7 +114,7 @@ func (p *ProjectStructureData) IsValid() error {
 						if len(strings.TrimSpace(file.Url)) == 0 && len(strings.TrimSpace(file.Content)) == 0 {
 							return ErrEmptyUrlAndContent{
 								questionIndex: i,
-								optionIndex:   j,
+								choiceIndex:   j,
 								fileIndex:     k,
 							}
 						}
@@ -122,7 +122,7 @@ func (p *ProjectStructureData) IsValid() error {
 						if len(strings.TrimSpace(file.Url)) > 0 && len(strings.TrimSpace(file.Content)) > 0 {
 							return ErrMultipleFieldUrlAndContent{
 								questionIndex: i,
-								optionIndex:   j,
+								choiceIndex:   j,
 								fileIndex:     k,
 							}
 						}
@@ -133,7 +133,7 @@ func (p *ProjectStructureData) IsValid() error {
 							if len(fileUrl) == 0 {
 								return ErrEmptyFileField{
 									questionIndex: i,
-									optionIndex:   j,
+									choiceIndex:   j,
 									fileIndex:     k,
 									field:         "URL",
 								}
@@ -142,7 +142,7 @@ func (p *ProjectStructureData) IsValid() error {
 							if _, err := url.ParseRequestURI(fileUrl); err != nil {
 								return ErrInvalidURLFile{
 									questionIndex: i,
-									optionIndex:   j,
+									choiceIndex:   j,
 									fileIndex:     k,
 								}
 							}
@@ -152,7 +152,7 @@ func (p *ProjectStructureData) IsValid() error {
 							if len(content) == 0 {
 								return ErrEmptyFileField{
 									questionIndex: i,
-									optionIndex:   j,
+									choiceIndex:   j,
 									fileIndex:     k,
 									field:         "Content",
 								}
@@ -178,34 +178,34 @@ type (
 	ErrCanSkip struct {
 		index int
 	}
-	ErrEmptyOption struct {
+	ErrEmptyChoice struct {
 		questionIndex int
-		optionIndex   int
+		choiceIndex   int
 		field         string
 	}
 	ErrEmptyFileAndDependency struct {
 		questionIndex int
-		optionIndex   int
+		choiceIndex   int
 	}
 	ErrEmptyUrlAndContent struct {
 		questionIndex int
-		optionIndex   int
+		choiceIndex   int
 		fileIndex     int
 	}
 	ErrMultipleFieldUrlAndContent struct {
 		questionIndex int
-		optionIndex   int
+		choiceIndex   int
 		fileIndex     int
 	}
 	ErrEmptyFileField struct {
 		questionIndex int
-		optionIndex   int
+		choiceIndex   int
 		fileIndex     int
 		field         string
 	}
 	ErrInvalidURLFile struct {
 		questionIndex int
-		optionIndex   int
+		choiceIndex   int
 		fileIndex     int
 	}
 )
@@ -215,33 +215,33 @@ func (e ErrEmptyQuestionField) Error() string {
 }
 
 func (e ErrCanSelectMultiple) Error() string {
-	return fmt.Sprintf("%d. question 'CanSelectMultiple' field is 'true'. This field can not be true if there are less than two options", e.index+1)
+	return fmt.Sprintf("%d. question 'CanSelectMultiple' field is 'true'. This field can not be true if there are less than two choices", e.index+1)
 }
 
 func (e ErrCanSkip) Error() string {
-	return fmt.Sprintf("%d. question 'CanSkip' field is 'false'. This field can not be false if there is only one option", e.index+1)
+	return fmt.Sprintf("%d. question 'CanSkip' field is 'false'. This field can not be false if there is only one choice", e.index+1)
 }
 
-func (e ErrEmptyOption) Error() string {
-	return fmt.Sprintf("%d. question, %d. option %s is empty. %s can not be empty", e.questionIndex+1, e.optionIndex+1, e.field, e.field)
+func (e ErrEmptyChoice) Error() string {
+	return fmt.Sprintf("%d. question, %d. choice %s is empty. %s can not be empty", e.questionIndex+1, e.choiceIndex+1, e.field, e.field)
 }
 
 func (e ErrEmptyFileAndDependency) Error() string {
-	return fmt.Sprintf("%d. question %d. option do not have both file and dependency. Option must have at least one file or dependency", e.questionIndex+1, e.optionIndex+1)
+	return fmt.Sprintf("%d. question %d. choice do not have both file and dependency. Choice must have at least one file or dependency", e.questionIndex+1, e.choiceIndex+1)
 }
 
 func (e ErrEmptyUrlAndContent) Error() string {
-	return fmt.Sprintf("%d. question %d. option %d. file do not have both URL and Content. File must have at least one URL or Content", e.questionIndex+1, e.optionIndex+1, e.fileIndex+1)
+	return fmt.Sprintf("%d. question %d. choice %d. file do not have both URL and Content. File must have at least one URL or Content", e.questionIndex+1, e.choiceIndex+1, e.fileIndex+1)
 }
 
 func (e ErrMultipleFieldUrlAndContent) Error() string {
-	return fmt.Sprintf("%d. question %d. option %d. file have both URL and Content. File can not have both URL and Content at the same time", e.questionIndex+1, e.optionIndex+1, e.fileIndex+1)
+	return fmt.Sprintf("%d. question %d. choice %d. file have both URL and Content. File can not have both URL and Content at the same time", e.questionIndex+1, e.choiceIndex+1, e.fileIndex+1)
 }
 
 func (e ErrEmptyFileField) Error() string {
-	return fmt.Sprintf("%d. question, %d. option, %d. file %s is empty. %s can not be empty", e.questionIndex+1, e.optionIndex+1, e.fileIndex+1, e.field, e.field)
+	return fmt.Sprintf("%d. question, %d. choice, %d. file %s is empty. %s can not be empty", e.questionIndex+1, e.choiceIndex+1, e.fileIndex+1, e.field, e.field)
 }
 
 func (e ErrInvalidURLFile) Error() string {
-	return fmt.Sprintf("%d. question, %d. option, %d. file URL is invalid.", e.questionIndex+1, e.optionIndex+1, e.fileIndex+1)
+	return fmt.Sprintf("%d. question, %d. choice, %d. file URL is invalid.", e.questionIndex+1, e.choiceIndex+1, e.fileIndex+1)
 }

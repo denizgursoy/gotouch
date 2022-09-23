@@ -23,13 +23,13 @@ var (
 			Direction:         "question 1",
 			CanSkip:           false,
 			CanSelectMultiple: false,
-			Options:           nil,
+			Choices:           nil,
 		},
 		{
 			Direction:         "question 2",
 			CanSkip:           false,
 			CanSelectMultiple: false,
-			Options:           nil,
+			Choices:           nil,
 		},
 	}
 	projectStructure1 = model.ProjectStructureData{

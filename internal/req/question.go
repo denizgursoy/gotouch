@@ -23,11 +23,11 @@ type (
 		Store    store.Store       `validate:"required"`
 	}
 
-	NoneOfAboveOption struct{}
+	NoneOfAboveChoice struct{}
 )
 
 var (
-	noneOfAboveOption = NoneOfAboveOption{}
+	noneOfAboveChoice = NoneOfAboveChoice{}
 )
 
 func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
@@ -37,16 +37,16 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 
 	question := q.Question
 
-	options := make([]fmt.Stringer, 0)
-	for _, option := range question.Options {
-		options = append(options, option)
+	choices := make([]fmt.Stringer, 0)
+	for _, choice := range question.Choices {
+		choices = append(choices, choice)
 	}
-	var selection *model.Option
+	var selection *model.Choice
 
-	if question.CanSkip && len(question.Options) > 1 {
-		options = append(options, noneOfAboveOption)
+	if question.CanSkip && len(question.Choices) > 1 {
+		choices = append(choices, noneOfAboveChoice)
 	}
-	isYesNoQuestion := question.CanSkip && len(options) == 1
+	isYesNoQuestion := question.CanSkip && len(choices) == 1
 
 	if isYesNoQuestion {
 		userSelection, err := q.Prompter.AskForYesOrNo(question.Direction)
@@ -54,15 +54,15 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 			return nil, nil, err
 		}
 		if userSelection {
-			selection = question.Options[0]
+			selection = question.Choices[0]
 		}
 	} else {
-		userSelection, err := q.Prompter.AskForSelectionFromList(question.Direction, options)
+		userSelection, err := q.Prompter.AskForSelectionFromList(question.Direction, choices)
 		if err != nil {
 			return nil, nil, err
 		}
-		if userSelection != noneOfAboveOption {
-			selection = userSelection.(*model.Option)
+		if userSelection != noneOfAboveChoice {
+			selection = userSelection.(*model.Choice)
 		}
 	}
 
@@ -90,6 +90,6 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	return tasks, nil, nil
 }
 
-func (n NoneOfAboveOption) String() string {
+func (n NoneOfAboveChoice) String() string {
 	return "None of above"
 }

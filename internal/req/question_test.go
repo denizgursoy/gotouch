@@ -29,7 +29,7 @@ var (
 		Content:      "",
 		PathFromRoot: "",
 	}
-	option = model.Option{
+	choice = model.Choice{
 		Choice:       "112322",
 		Dependencies: []*string{&dependency1, &dependency2},
 		Files:        []*model.File{&file1, &file2},
@@ -42,21 +42,21 @@ var (
 		Direction:         "yes no question",
 		CanSkip:           true,
 		CanSelectMultiple: false,
-		Options:           []*model.Option{&option},
+		Choices:           []*model.Choice{&choice},
 	}
 
-	multipleOptionQuestion = model.Question{
+	multipleChoiceQuestion = model.Question{
 		Direction:         "yes no question",
 		CanSkip:           false,
 		CanSelectMultiple: false,
-		Options:           []*model.Option{&option, &option},
+		Choices:           []*model.Choice{&choice, &choice},
 	}
 
-	multipleOptionQuestionWithSkip = model.Question{
+	multipleChoiceQuestionWithSkip = model.Question{
 		Direction:         "yes no question",
 		CanSkip:           true,
 		CanSelectMultiple: false,
-		Options:           []*model.Option{&option, &option},
+		Choices:           []*model.Choice{&choice, &choice},
 	}
 	promptErr = errors.New("prompt-err")
 )
@@ -78,14 +78,14 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Store:    mockStore,
 		}
 
-		mockStore.EXPECT().StoreValues(gomock.Eq(yesNoQuestion.Options[0].Values))
+		mockStore.EXPECT().StoreValues(gomock.Eq(yesNoQuestion.Choices[0].Values))
 		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(true, nil).Times(1)
 
 		task, requirements, err := requirement.AskForInput()
 		require.Nil(t, err)
 		require.Nil(t, requirements)
 
-		require.Len(t, task, len(yesNoQuestion.Options[0].Dependencies)+len(yesNoQuestion.Options[0].Files))
+		require.Len(t, task, len(yesNoQuestion.Choices[0].Dependencies)+len(yesNoQuestion.Choices[0].Files))
 
 	})
 
@@ -138,7 +138,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		require.Nil(t, task)
 	})
 
-	t.Run("should select from list if there is more than 1 option", func(t *testing.T) {
+	t.Run("should select from list if there is more than 1 choice", func(t *testing.T) {
 		controller := gomock.NewController(t)
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
@@ -146,7 +146,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: multipleOptionQuestion,
+			Question: multipleChoiceQuestion,
 			Prompter: mockPrompter,
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
@@ -154,22 +154,22 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Store:    mockStore,
 		}
 
-		options := make([]fmt.Stringer, 0)
-		for _, option := range requirement.Question.Options {
-			options = append(options, option)
+		choices := make([]fmt.Stringer, 0)
+		for _, choice := range requirement.Question.Choices {
+			choices = append(choices, choice)
 		}
 
 		mockPrompter.
 			EXPECT().
-			AskForSelectionFromList(gomock.Eq(multipleOptionQuestion.Direction), gomock.Eq(options)).
-			Return(multipleOptionQuestion.Options[0], nil).
+			AskForSelectionFromList(gomock.Eq(multipleChoiceQuestion.Direction), gomock.Eq(choices)).
+			Return(multipleChoiceQuestion.Choices[0], nil).
 			Times(1)
 
-		mockStore.EXPECT().StoreValues(gomock.Eq(multipleOptionQuestion.Options[0].Values))
+		mockStore.EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
 		_, _, _ = requirement.AskForInput()
 	})
 
-	t.Run("should add none of above option if canskip is true", func(t *testing.T) {
+	t.Run("should add none of above choice if canskip is true", func(t *testing.T) {
 		controller := gomock.NewController(t)
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockPrompter := prompter.NewMockPrompter(controller)
@@ -177,7 +177,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: multipleOptionQuestionWithSkip,
+			Question: multipleChoiceQuestionWithSkip,
 			Prompter: mockPrompter,
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
@@ -185,19 +185,19 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Store:    mockStore,
 		}
 
-		options := make([]fmt.Stringer, 0)
-		for _, option := range requirement.Question.Options {
-			options = append(options, option)
+		choices := make([]fmt.Stringer, 0)
+		for _, choice := range requirement.Question.Choices {
+			choices = append(choices, choice)
 		}
-		options = append(options, noneOfAboveOption)
+		choices = append(choices, noneOfAboveChoice)
 
 		mockPrompter.
 			EXPECT().
-			AskForSelectionFromList(gomock.Eq(multipleOptionQuestionWithSkip.Direction), gomock.Eq(options)).
-			Return(multipleOptionQuestionWithSkip.Options[0], nil).
+			AskForSelectionFromList(gomock.Eq(multipleChoiceQuestionWithSkip.Direction), gomock.Eq(choices)).
+			Return(multipleChoiceQuestionWithSkip.Choices[0], nil).
 			Times(1)
 
-		mockStore.EXPECT().StoreValues(gomock.Eq(multipleOptionQuestion.Options[0].Values))
+		mockStore.EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
 		_, _, _ = requirement.AskForInput()
 	})
 
@@ -209,7 +209,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: multipleOptionQuestionWithSkip,
+			Question: multipleChoiceQuestionWithSkip,
 			Prompter: mockPrompter,
 			Logger:   logger.NewLogger(),
 			Executor: mockExecutor,
@@ -217,15 +217,15 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Store:    mockStore,
 		}
 
-		options := make([]fmt.Stringer, 0)
-		for _, option := range requirement.Question.Options {
-			options = append(options, option)
+		choices := make([]fmt.Stringer, 0)
+		for _, choice := range requirement.Question.Choices {
+			choices = append(choices, choice)
 		}
-		options = append(options, noneOfAboveOption)
+		choices = append(choices, noneOfAboveChoice)
 
 		mockPrompter.
 			EXPECT().
-			AskForSelectionFromList(gomock.Eq(multipleOptionQuestionWithSkip.Direction), gomock.Eq(options)).
+			AskForSelectionFromList(gomock.Eq(multipleChoiceQuestionWithSkip.Direction), gomock.Eq(choices)).
 			Return(nil, promptErr).
 			Times(1)
 

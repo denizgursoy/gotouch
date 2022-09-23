@@ -44,37 +44,37 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		PathFromRoot: "",
 	}
 
-	optionValidWithDependencies := &Option{
+	choiceValidWithDependencies := &Choice{
 		Choice:       "choice",
 		Dependencies: []*string{&choice1, &choice2},
 		Files:        nil,
 	}
 
-	optionValidWithFile := &Option{
+	choiceValidWithFile := &Choice{
 		Choice:       "choice2",
 		Dependencies: nil,
 		Files:        []*File{fileValid},
 	}
 
-	optionInvalidEmptyChoice := &Option{
+	choiceInvalidEmptyChoice := &Choice{
 		Choice:       "",
 		Dependencies: nil,
 		Files:        []*File{fileValid},
 	}
 
-	optionInvalidURL := &Option{
+	choiceInvalidURL := &Choice{
 		Choice:       "choice",
 		Dependencies: nil,
 		Files:        []*File{fileInvalidUrl},
 	}
 
-	optionEmptyPathFromRoot := &Option{
+	choiceEmptyPathFromRoot := &Choice{
 		Choice:       "choice",
 		Dependencies: nil,
 		Files:        []*File{fileInvalidEmptyPathFromRoot},
 	}
 
-	optionInvalid1 := &Option{
+	choiceInvalid1 := &Choice{
 		Choice:       "choice",
 		Dependencies: nil,
 		Files:        []*File{fileValid, fileInvalidHaveBothUrlAndContent},
@@ -84,63 +84,63 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Direction:         "Example Question",
 		CanSkip:           true,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionValidWithDependencies, optionValidWithFile},
+		Choices:           []*Choice{choiceValidWithDependencies, choiceValidWithFile},
 	}
 
 	questionInvalidEmptyChoice := &Question{
 		Direction:         "Example Question",
 		CanSkip:           false,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionValidWithDependencies, optionInvalidEmptyChoice},
+		Choices:           []*Choice{choiceValidWithDependencies, choiceInvalidEmptyChoice},
 	}
 
 	questionInvalidEmptyDirection := &Question{
 		Direction:         "",
 		CanSkip:           true,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionValidWithDependencies, optionValidWithFile},
+		Choices:           []*Choice{choiceValidWithDependencies, choiceValidWithFile},
 	}
 
-	questionInvalidEmptyOption := &Question{
+	questionInvalidEmptyChoiceStruct := &Question{
 		Direction:         "direction",
 		CanSkip:           false,
 		CanSelectMultiple: false,
-		Options:           nil,
+		Choices:           nil,
 	}
 
 	questionInvalidWhenCanSelectMultipleTrue := &Question{
 		Direction:         "Example Question",
 		CanSkip:           true,
 		CanSelectMultiple: true,
-		Options:           []*Option{optionValidWithFile},
+		Choices:           []*Choice{choiceValidWithFile},
 	}
 
 	questionInvalidWhenCanSkipFalse := &Question{
 		Direction:         "Example Question",
 		CanSkip:           false,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionValidWithFile},
+		Choices:           []*Choice{choiceValidWithFile},
 	}
 
 	questionInvalidURL := &Question{
 		Direction:         "Direction",
 		CanSkip:           false,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionInvalidURL, optionValidWithDependencies},
+		Choices:           []*Choice{choiceInvalidURL, choiceValidWithDependencies},
 	}
 
 	questionEmptyPathFromRoot := &Question{
 		Direction:         "direction",
 		CanSkip:           false,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionValidWithFile, optionValidWithDependencies, optionEmptyPathFromRoot},
+		Choices:           []*Choice{choiceValidWithFile, choiceValidWithDependencies, choiceEmptyPathFromRoot},
 	}
 
 	questionInvalid1 := &Question{
 		Direction:         "direction",
 		CanSkip:           true,
 		CanSelectMultiple: false,
-		Options:           []*Option{optionValidWithFile, optionValidWithDependencies, optionInvalid1},
+		Choices:           []*Choice{choiceValidWithFile, choiceValidWithDependencies, choiceInvalid1},
 	}
 
 	invalidProjectWithEmptyChoice := ProjectStructureData{
@@ -157,11 +157,11 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Questions: []*Question{questionInvalidEmptyDirection},
 	}
 
-	invalidProjectWithEmptyOption := ProjectStructureData{
+	invalidProjectWithEmptyChoiceStruct := ProjectStructureData{
 		Name:      "Example Project",
 		Reference: "",
 		URL:       validProjectURL,
-		Questions: []*Question{questionValid, questionInvalidEmptyOption},
+		Questions: []*Question{questionValid, questionInvalidEmptyChoiceStruct},
 	}
 
 	invalidProject1 := ProjectStructureData{
@@ -245,12 +245,12 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 	t.Run("should return error if choice is empty", func(t *testing.T) {
 		err := invalidProjectWithEmptyChoice.IsValid()
 
-		expectedError := &ErrEmptyOption{}
+		expectedError := &ErrEmptyChoice{}
 
 		require.NotNil(t, err)
 		require.ErrorAs(t, err, expectedError)
 		require.Equal(t, 0, expectedError.questionIndex)
-		require.Equal(t, 1, expectedError.optionIndex)
+		require.Equal(t, 1, expectedError.choiceIndex)
 		require.Equal(t, "Choice", expectedError.field)
 	})
 
@@ -265,18 +265,18 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.Equal(t, "Direction", expectedError.field)
 	})
 
-	t.Run("should return error if option is empty", func(t *testing.T) {
-		err := invalidProjectWithEmptyOption.IsValid()
+	t.Run("should return error if choice is empty", func(t *testing.T) {
+		err := invalidProjectWithEmptyChoiceStruct.IsValid()
 
 		expectedError := &ErrEmptyQuestionField{}
 
 		require.NotNil(t, err)
 		require.ErrorAs(t, err, expectedError)
 		require.Equal(t, 1, expectedError.index)
-		require.Equal(t, "Options", expectedError.field)
+		require.Equal(t, "Choices", expectedError.field)
 	})
 
-	t.Run("should return error if CanSelectMultiple is true when option length equal 1", func(t *testing.T) {
+	t.Run("should return error if CanSelectMultiple is true when choice length equal 1", func(t *testing.T) {
 		err := invalidProject1.IsValid()
 
 		expectedError := &ErrCanSelectMultiple{}
@@ -286,7 +286,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.Equal(t, 1, expectedError.index)
 	})
 
-	t.Run("should return error if CanSkip is false when option length equal 1", func(t *testing.T) {
+	t.Run("should return error if CanSkip is false when choice length equal 1", func(t *testing.T) {
 		err := invalidProject2.IsValid()
 
 		expectedError := &ErrCanSkip{}
@@ -304,7 +304,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.NotNil(t, err)
 		require.ErrorAs(t, err, expectedError)
 		require.Equal(t, 1, expectedError.questionIndex)
-		require.Equal(t, 0, expectedError.optionIndex)
+		require.Equal(t, 0, expectedError.choiceIndex)
 		require.Equal(t, 0, expectedError.fileIndex)
 	})
 
@@ -316,7 +316,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.NotNil(t, err)
 		require.ErrorAs(t, err, expectedError)
 		require.Equal(t, 1, expectedError.questionIndex)
-		require.Equal(t, 2, expectedError.optionIndex)
+		require.Equal(t, 2, expectedError.choiceIndex)
 		require.Equal(t, 0, expectedError.fileIndex)
 		require.Equal(t, "PathFromRoot", expectedError.field)
 	})
@@ -329,7 +329,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.NotNil(t, err)
 		require.ErrorAs(t, err, expectedError)
 		require.Equal(t, 1, expectedError.questionIndex)
-		require.Equal(t, 2, expectedError.optionIndex)
+		require.Equal(t, 2, expectedError.choiceIndex)
 		require.Equal(t, 1, expectedError.fileIndex)
 	})
 }
