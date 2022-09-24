@@ -37,7 +37,7 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	tasks := make([]model.Task, 0)
 	templateTsk := &templateTask{
 		Store:  t.Store,
-		Values: nil,
+		Values: t.Values,
 	}
 
 	if t.Values != nil {
