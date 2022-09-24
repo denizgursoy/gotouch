@@ -133,6 +133,10 @@ func addFiles(w *zip.Writer, basePath, baseInZip string) {
 
 	for _, file := range files {
 		fmt.Println(basePath + file.Name())
+		if shouldSkip(file.Name()) {
+			continue
+		}
+
 		if !file.IsDir() {
 			dat, err := ioutil.ReadFile(basePath + file.Name())
 			if err != nil {
@@ -170,4 +174,14 @@ func checkIsDirectory(path string) bool {
 		return false
 	}
 	return stat.IsDir()
+}
+
+func shouldSkip(fileName string) bool {
+	filesNotToZip := []string{"__MACOS", ".DS_Store"}
+	for _, file := range filesNotToZip {
+		if strings.TrimSpace(fileName) == file {
+			return true
+		}
+	}
+	return false
 }
