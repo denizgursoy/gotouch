@@ -45,7 +45,7 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 	if httpErr != nil {
 		return httpErr
 	}
-	pattern := fmt.Sprintf("*.%s", compressExtension)
+	pattern := fmt.Sprintf("*%s", compressExtension)
 	temp, tempFileErr := os.CreateTemp("", pattern)
 	if tempFileErr != nil {
 		return tempFileErr
