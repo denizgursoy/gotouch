@@ -24,10 +24,11 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 - Choose from go project templates
 - Easily install your dependencies and packages
 
-# How to use
+# How customize
 
 1. [Create your template project](#Create-your-template-project)
 2. [Write your yaml file](#Write-your-yaml-file)
+3. [Share your projects with the others](#Share-with-others)
 
 ## Create your template project
 
@@ -177,6 +178,11 @@ ProjectName: Project directory name
 WorkingDirectory: location where Gotouch command is executed
 ProjectFullPath: Projects full path which is actually WorkingDirectory / ProjectName
 ```
+
+## Share with others
+
+If you share your properties yaml with us, we can add it to [list](./List.md) so that other people can use it.
+
 
 # Commands
 
