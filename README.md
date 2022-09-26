@@ -25,6 +25,8 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 - Easily install your dependencies and packages
 
 # How customize
+Follow the steps below to create your own properties yaml. The suggested way to share files, your template project, and the properties yaml is to
+host them in Git repository and use the raw URL of the files in the properties yaml.
 
 1. [Create your template project](#Create-your-template-project)
 2. [Write your yaml file](#Write-your-yaml-file)
