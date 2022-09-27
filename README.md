@@ -124,13 +124,13 @@ questions:
     choices:
       - choice: Echo
         dependencies:
-          - github.com/labstack/echo/v4
+        - github.com/labstack/echo/v4
       - choice: Gorilla Mux
-          dependencies:
-            - github.com/gorilla/mux
+        dependencies:
+        - github.com/gorilla/mux
       - choice: Gin
-          dependencies:
-            - github.com/gin-gonic/gin
+        dependencies:
+        - github.com/gin-gonic/gin
 ```
 
 Select question will be displayed like:
