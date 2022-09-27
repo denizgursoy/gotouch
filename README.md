@@ -24,13 +24,13 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 - Choose from go project templates
 - Easily install your dependencies and packages
 
-# How customize
-Follow the steps below to create your own properties yaml. The suggested way to share files, your template project, and the properties yaml is to
-host them in Git repository and use the [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a.png?trim=1,1&bg-color=000&pad=1,1) of the files in the properties yaml.
+# How to customize
+Follow the steps below to create your properties yaml. The suggested way to share files, your template project, and the properties yaml is to
+host them in a git repository and use the [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a.png?trim=1,1&bg-color=000&pad=1,1) of the files in the properties yaml.
 
 1. [Create your template project](#Create-your-template-project)
-2. [Write your yaml file](#Write-your-yaml-file)
-3. [Share your projects with the others](#Share-with-others)
+2. [Write your properties yaml file](#Write-your-properties-yaml-file)
+3. [Share your properties yaml with the others](#Share-your-properties-yaml-with-others)
 
 ## Create your template project
 
@@ -62,7 +62,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 You can also use other go template library's capabilities such as conditions, iterating array values etc. For more
 information see [go template library](https://pkg.go.dev/text/template).
 
-## Write your yaml file
+## Write your properties yaml file
 
 Properties yaml is a **list** of what we call `Project Structure` as it can be seen below:
 
@@ -181,7 +181,7 @@ WorkingDirectory: location where Gotouch command is executed
 ProjectFullPath: Projects full path which is actually WorkingDirectory / ProjectName
 ```
 
-## Share with others
+## Share your properties yaml with others
 
 If you share your properties yaml with us, we can add it to [list](./List.md) so that other people can use it.
 
