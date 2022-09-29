@@ -3,3 +3,4 @@ g.c/dg/testapp
 1
 0
 0
+0
