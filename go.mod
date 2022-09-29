@@ -4,7 +4,6 @@ go 1.16
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.5
-	github.com/artdarek/go-unzip v1.0.0
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/golang/mock v1.6.0
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966

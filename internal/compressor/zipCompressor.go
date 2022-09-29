@@ -1,41 +1,36 @@
 package compressor
 
 import (
-	"archive/zip"
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/artdarek/go-unzip"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
 )
 
-const (
-	compressExtension = ".zip"
-)
-
 type (
-	zipCompressor struct {
-		Manager manager.Manager `validate:"required"`
-		Store   store.Store     `validate:"required"`
+	compressor struct {
+		Manager  manager.Manager `validate:"required"`
+		Store    store.Store     `validate:"required"`
+		Strategy ZipStrategy     `validate:"required"`
 	}
 )
 
-func newZipCompressor() Compressor {
-	return &zipCompressor{
-		Manager: manager.GetInstance(),
-		Store:   store.GetInstance(),
+func newCompressor() Compressor {
+	return &compressor{
+		Manager:  manager.GetInstance(),
+		Store:    store.GetInstance(),
+		Strategy: newTarStrategy(),
 	}
 }
 
-func (z *zipCompressor) UncompressFromUrl(url string) error {
+func (z *compressor) UncompressFromUrl(url string) error {
 	if err := validator.New().Struct(z); err != nil {
 		return err
 	}
@@ -45,7 +40,7 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 	if httpErr != nil {
 		return httpErr
 	}
-	pattern := fmt.Sprintf("*%s", compressExtension)
+	pattern := fmt.Sprintf("*%s", z.Strategy.GetExtension())
 	temp, tempFileErr := os.CreateTemp("", pattern)
 	if tempFileErr != nil {
 		return tempFileErr
@@ -61,16 +56,11 @@ func (z *zipCompressor) UncompressFromUrl(url string) error {
 
 	projectName := z.Store.GetValue(store.ProjectName)
 	target := fmt.Sprintf("%s/%s", z.Manager.GetExtractLocation(), projectName)
-	uz := unzip.New(temp.Name(), target)
 
-	if extractErr := uz.Extract(); extractErr != nil {
-		return extractErr
-	}
-
-	return nil
+	return z.Strategy.UnCompressDirectory(temp.Name(), target)
 }
 
-func (z *zipCompressor) CompressDirectory(source, target string) error {
+func (z *compressor) CompressDirectory(source, target string) error {
 	if !filepath.IsAbs(source) {
 		absoluteSource, err := filepath.Abs(source)
 		if err != nil {
@@ -97,71 +87,10 @@ func (z *zipCompressor) CompressDirectory(source, target string) error {
 		source = fmt.Sprintf("%s%s", source, string(os.PathSeparator))
 	}
 
-	filename := fmt.Sprintf("%s%s", filepath.Base(source), compressExtension)
+	filename := fmt.Sprintf("%s%s", filepath.Base(source), z.Strategy.GetExtension())
 	target = filepath.Join(target, string(os.PathSeparator), filename)
 
-	return zipDirectory(source, target)
-}
-
-func zipDirectory(sourceFolder, targetFilePath string) error {
-	outFile, err := os.Create(targetFilePath)
-	if err != nil {
-		return err
-	}
-	defer outFile.Close()
-
-	// Create a new zip archive.
-	w := zip.NewWriter(outFile)
-
-	// Add some files to the archive.
-	addFiles(w, sourceFolder, "")
-
-	// Make sure to check the error on Close.
-	err = w.Close()
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func addFiles(w *zip.Writer, basePath, baseInZip string) {
-	// Open the Directory
-	files, err := ioutil.ReadDir(basePath)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	for _, file := range files {
-		fmt.Println(basePath + file.Name())
-		if shouldSkip(file.Name()) {
-			continue
-		}
-
-		if !file.IsDir() {
-			dat, err := ioutil.ReadFile(basePath + file.Name())
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			// Add some files to the archive.
-			f, err := w.Create(baseInZip + file.Name())
-			if err != nil {
-				fmt.Println(err)
-			}
-			_, err = f.Write(dat)
-			if err != nil {
-				fmt.Println(err)
-			}
-		} else if file.IsDir() {
-
-			// Recurse
-			newBase := basePath + file.Name() + "/"
-			//	fmt.Println("Recursing and Adding SubDir: " + file.Name())
-			//		fmt.Println("Recursing and Adding SubDir: " + newBase)
-
-			addFiles(w, newBase, baseInZip+file.Name()+"/")
-		}
-	}
+	return z.Strategy.CompressDirectory(source, target)
 }
 
 func checkIsDirectory(path string) bool {

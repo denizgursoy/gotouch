@@ -11,16 +11,22 @@ type (
 		UncompressFromUrl(url string) error
 		CompressDirectory(source, target string) error
 	}
+
+	ZipStrategy interface {
+		UnCompressDirectory(source, target string) error
+		CompressDirectory(source, target string) error
+		GetExtension() string
+	}
 )
 
 var (
-	compressor Compressor
-	once       sync.Once
+	compressorInstance Compressor
+	once               sync.Once
 )
 
 func GetInstance() Compressor {
 	once.Do(func() {
-		compressor = newZipCompressor()
+		compressorInstance = newCompressor()
 	})
-	return compressor
+	return compressorInstance
 }
