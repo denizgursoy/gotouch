@@ -16,7 +16,7 @@ Install, run on CLI, make your selections and start development.
 ## Installation
 
 ```bash
-go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
+go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 ```
 
 ### Features
@@ -24,9 +24,26 @@ go install -v github.com/denizgursoy/gotouch/cmd/gotouch@latest
 - Choose from go project templates
 - Easily install your dependencies and packages
 
+# How Gotouch works
+
+1. Asks for module name
+2. Asks for user to select a project structure in properties yaml
+3. Asks for a choice of every question under the selected project structure in order and saves the choices
+4. Asks for changing the values of the selected project structure if any
+5. Creates a new directory with module name's last part after last /
+6. Uncompress the template project of the selected project structure into the created directory
+7. Updates the module's name in the go.mod with the value user entered, if there is no go.mod file, it creates the go.mod
+   file
+8. Creates files, and add dependencies of the selected choices
+9. Merges values under the selected project structure with the values of all selected choices and default values
+10. Walks through the newly created directories content and templates every file with the merged values
+
 # How to customize
-Follow the steps below to create your properties yaml. The suggested way to share files, your template project, and the properties yaml is to
-host them in a git repository and use the [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a.png?trim=1,1&bg-color=000&pad=1,1) of the files in the properties yaml.
+
+Follow the steps below to create your properties yaml. The suggested way to share files, your template project, and the
+properties yaml is to host them in a git repository and use
+the [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a.png?trim=1,1&bg-color=000&pad=1,1) of
+the files in the properties yaml.
 
 1. [Create your template project](#Create-your-template-project)
 2. [Write your properties yaml file](#Write-your-properties-yaml-file)
@@ -124,13 +141,13 @@ questions:
     choices:
       - choice: Echo
         dependencies:
-        - github.com/labstack/echo/v4
+          - github.com/labstack/echo/v4
       - choice: Gorilla Mux
         dependencies:
-        - github.com/gorilla/mux
+          - github.com/gorilla/mux
       - choice: Gin
         dependencies:
-        - github.com/gin-gonic/gin
+          - github.com/gin-gonic/gin
 ```
 
 Select question will be displayed like:
@@ -139,13 +156,13 @@ Select question will be displayed like:
 
 #### Choice
 
-If selected, a choice can create files, add dependencies and introduce new values. 
+If selected, a choice can create files, add dependencies and introduce new values.
 
-Dependencies are list of string. If version of a dependency is not written Gotouch will append `@latest` and execute `go get`. 
+Dependencies are list of string. If version of a dependency is not written Gotouch will append `@latest` and
+execute `go get`.
 
-A choice can create files
-with address of source file, or content. A file entry must have `pathFromRoot` value is the location of the file inside
-project.
+A choice can create files with address of source file, or content. A file entry must have `pathFromRoot` value is the
+location of the file inside project.
 
 Creator of this yaml might want to customize project if a specific choice is selected, so values written under a choice
 will be appended to general [value](#values). Values of choice cannot be changed by the user.
@@ -167,8 +184,9 @@ A choice can be written like:
 
 ### Values
 
-If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`.
-The most common cases can be port numbers, service addresses, and some configuration values etc. Gotouch will ask user to change the values if he/she wants.
+If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`
+. The most common cases can be port numbers, service addresses, and some configuration values etc. Gotouch will ask user
+to change the values if he/she wants.
 
 Values under Project Structure will be merged with selected choices' values.
 
@@ -184,7 +202,6 @@ ProjectFullPath: Projects full path which is actually WorkingDirectory / Project
 ## Share your properties yaml with others
 
 If you share your properties yaml with us, we can add it to [list](./List.md) so that other people can use it.
-
 
 # Commands
 
