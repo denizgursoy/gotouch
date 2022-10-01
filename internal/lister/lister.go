@@ -35,7 +35,6 @@ type (
 var (
 	lister                Lister
 	once                  sync.Once
-	PropertiesUrl         = "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml"
 	ProjectDataParseError = errors.New("data could not be parsed properly")
 	NoProjectError        = errors.New("data cannot be empty")
 )
