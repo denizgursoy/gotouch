@@ -38,6 +38,9 @@ type (
 )
 
 func (p *ProjectStructureData) String() string {
+	if len(strings.TrimSpace(p.Reference)) == 0 {
+		return fmt.Sprintf("%s", p.Name)
+	}
 	return fmt.Sprintf("%s (%s)", p.Name, p.Reference)
 }
 

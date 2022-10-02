@@ -1,10 +1,12 @@
+//go:build unit
 // +build unit
 
 package model
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestProjectStructureData_IsValid(t *testing.T) {
@@ -331,5 +333,25 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.Equal(t, 1, expectedError.questionIndex)
 		require.Equal(t, 2, expectedError.choiceIndex)
 		require.Equal(t, 1, expectedError.fileIndex)
+	})
+}
+
+func TestProjectStructureText(t *testing.T) {
+	t.Run("should display reference it exists", func(t *testing.T) {
+		data := ProjectStructureData{
+			Name:      "x",
+			Reference: "y",
+		}
+		expected := data.Name + " (" + data.Reference + ")"
+		require.Equal(t, expected, data.String())
+	})
+
+	t.Run("should not display if reference does not exist", func(t *testing.T) {
+		data := ProjectStructureData{
+			Name:      "x",
+			Reference: "   ",
+		}
+		expected := data.Name
+		require.Equal(t, expected, data.String())
 	})
 }
