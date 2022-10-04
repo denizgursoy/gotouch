@@ -1,4 +1,5 @@
-//+build integration_test
+//go:build integration_test
+// +build integration_test
 
 package util
 
