@@ -110,6 +110,7 @@ func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	files = append(files, "cmd/main.go", "go.mod", "Dockerfile")
 	z.checkFilesExist(files)
 	z.checkFileContent("Dockerfile", "Dockerfile")
+	z.checkFileContent("test.txt", "test.txt")
 }
 
 func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
