@@ -3,6 +3,9 @@ LINUX_BUILD := env GOOS=linux GARCH=amd64 go build
 build:
 	go build -o gotouch-mac -v ./cmd/gotouch/
 
+fmt:
+	go fmt ./...
+
 build-test:
 	 $(LINUX_BUILD) -v -o gotouch-linux-test -tags=integration ./cmd/gotouch/
 
