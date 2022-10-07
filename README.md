@@ -32,8 +32,8 @@ go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 4. Asks for changing the values of the selected project structure if any
 5. Creates a new directory with module name's last part after last /
 6. Uncompress the template project of the selected project structure into the created directory
-7. Updates the module's name in the go.mod with the value user entered, if there is no go.mod file, it creates the go.mod
-   file
+7. Updates the module's name in the go.mod with the value user entered, if there is no go.mod file, it creates the
+   go.mod file
 8. Creates files, and adds dependencies of all selected choices
 9. Merges values under the selected project structure with the values of all selected choices and default values
 10. Walks through the newly created directory's content and templates every file with the merged [values](#values),
