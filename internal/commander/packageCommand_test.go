@@ -1,11 +1,12 @@
 package commander
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func Test_cmdExecutor_CompressDirectory(t *testing.T) {

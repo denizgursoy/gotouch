@@ -19,13 +19,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	project1 = model.ProjectStructureData{
-		Name:      "sds",
-		Reference: "sds",
-		URL:       "sds",
-	}
-)
+var project1 = model.ProjectStructureData{
+	Name:      "sds",
+	Reference: "sds",
+	URL:       "sds",
+}
 
 func TestCreateNewProject(t *testing.T) {
 	t.Run("should call Commander with all requirements", func(t *testing.T) {
@@ -222,7 +220,6 @@ func Test_isValid(t *testing.T) {
 }
 
 func Test_isValid_PathTest(t *testing.T) {
-
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 
@@ -275,5 +272,4 @@ func Test_isValid_PathTest(t *testing.T) {
 		require.NotNil(t, err)
 		require.ErrorIs(t, err, ErrNotValidUrlOrFilePath)
 	})
-
 }

@@ -5,11 +5,12 @@ package req
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 var (
@@ -62,7 +63,6 @@ func Test_dependencyTask_Complete(t *testing.T) {
 			err := task.Complete()
 			require.Nil(t, err)
 		}
-
 	})
 
 	t.Run("should return error if dependency is not installed ", func(t *testing.T) {

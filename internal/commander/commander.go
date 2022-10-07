@@ -12,8 +12,7 @@ type (
 		CompressDirectory(opts *PackageCommandOptions) error
 		ValidateYaml(opts *ValidateCommandOptions) error
 	}
-	cmdExecutor struct {
-	}
+	cmdExecutor struct{}
 )
 
 var (

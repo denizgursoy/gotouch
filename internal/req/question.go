@@ -26,9 +26,7 @@ type (
 	NoneOfAboveChoice struct{}
 )
 
-var (
-	noneOfAboveChoice = NoneOfAboveChoice{}
-)
+var noneOfAboveChoice = NoneOfAboveChoice{}
 
 func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	if err := validator.New().Struct(q); err != nil {

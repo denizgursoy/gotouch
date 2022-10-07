@@ -5,9 +5,10 @@ package executor
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 type (
@@ -153,5 +154,4 @@ func getRequirementReturningTwoRequirements() *testRequirement {
 			},
 		},
 	}
-
 }

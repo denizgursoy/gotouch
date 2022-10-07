@@ -2,10 +2,11 @@ package executor
 
 import (
 	"errors"
-	"github.com/denizgursoy/gotouch/internal/store"
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/denizgursoy/gotouch/internal/store"
 )
 
 type (
@@ -14,9 +15,7 @@ type (
 	}
 )
 
-var (
-	EmptyRequirementError = errors.New("requirements cannot be empty")
-)
+var EmptyRequirementError = errors.New("requirements cannot be empty")
 
 func newExecutor() Executor {
 	return &executor{

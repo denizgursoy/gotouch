@@ -1,6 +1,8 @@
 package root
 
 import (
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -10,7 +12,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 const (

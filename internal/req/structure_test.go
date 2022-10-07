@@ -152,7 +152,6 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		require.Len(t, requirements, 1)
 		require.IsType(t, requirements[0], &templateRequirement{})
-
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {
@@ -188,7 +187,6 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		require.Empty(t, tasks)
 	})
-
 }
 
 func TestStructure_Complete(t *testing.T) {
@@ -235,6 +233,5 @@ func TestStructure_Complete(t *testing.T) {
 			err := p.Complete()
 			require.Nil(t, err)
 		}
-
 	})
 }

@@ -1,11 +1,12 @@
 package root
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 type (

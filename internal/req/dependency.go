@@ -3,11 +3,12 @@ package req
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/go-playground/validator/v10"
-	"strings"
 )
 
 type (

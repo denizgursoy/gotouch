@@ -37,7 +37,6 @@ func (s srv) AskForString(direction string, validator Validator) (string, error)
 		return "", err
 	}
 	return string(all), nil
-
 }
 
 func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {

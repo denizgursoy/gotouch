@@ -5,6 +5,10 @@ build:
 
 fmt:
 	go fmt ./...
+	gofumpt -l -w  -extra .
+
+lint:
+	golangci-lint run
 
 build-test:
 	 $(LINUX_BUILD) -v -o gotouch-linux-test -tags=integration ./cmd/gotouch/

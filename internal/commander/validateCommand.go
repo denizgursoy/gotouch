@@ -6,9 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-var (
-	yamlValidSuccessMsg = "YAML file is valid"
-)
+var yamlValidSuccessMsg = "YAML file is valid"
 
 type (
 	ValidateCommandOptions struct {

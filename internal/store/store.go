@@ -21,8 +21,7 @@ type (
 		GetStoreValues() map[string]interface{}
 	}
 
-	storeImpl struct {
-	}
+	storeImpl struct{}
 )
 
 var (
@@ -33,7 +32,6 @@ var (
 )
 
 func init() {
-
 }
 
 func GetInstance() Store {

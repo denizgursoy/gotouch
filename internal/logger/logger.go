@@ -7,8 +7,7 @@ type (
 		LogErrorIfExists(err error)
 		LogInfo(msg string)
 	}
-	logger struct {
-	}
+	logger struct{}
 )
 
 var (

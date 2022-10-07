@@ -3,14 +3,15 @@ package req
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
+	"regexp"
+
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
-	"path/filepath"
-	"regexp"
 )
 
 type (
@@ -39,7 +40,6 @@ func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requiremen
 	}
 
 	moduleName, err := p.Prompter.AskForString(ModuleNameDirection, validateModuleName)
-
 	if err != nil {
 		return nil, nil, err
 	}

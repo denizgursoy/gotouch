@@ -6,16 +6,17 @@ package req
 import (
 	"bytes"
 	"errors"
-	"github.com/denizgursoy/gotouch/internal/logger"
-	"github.com/denizgursoy/gotouch/internal/manager"
-	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"reflect"
 	"testing"
+
+	"github.com/denizgursoy/gotouch/internal/logger"
+	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/model"
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 )
 
 type RoundTripFunction func(req *http.Request) (*http.Response, error)
@@ -29,7 +30,6 @@ func NewTestClient(fn RoundTripFunction) *http.Client {
 	return &http.Client{
 		Transport: fn,
 	}
-
 }
 
 var (
@@ -38,7 +38,6 @@ var (
 )
 
 func Test_fileTask_Complete(t *testing.T) {
-
 	t.Run("should call create file with the content bytes if url is empty ", func(t *testing.T) {
 		type args struct {
 			file          model.File
@@ -106,7 +105,6 @@ func Test_fileTask_Complete(t *testing.T) {
 			err := task.Complete()
 			require.NoError(t, err)
 		}
-
 	})
 
 	unexpectedError := errors.New("unexpected error")
@@ -152,5 +150,4 @@ func Test_fileTask_Complete(t *testing.T) {
 		require.Error(t, err)
 		require.ErrorIs(t, unexpectedError, err)
 	})
-
 }

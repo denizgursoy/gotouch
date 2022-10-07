@@ -86,7 +86,6 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		require.Nil(t, requirements)
 
 		require.Len(t, task, len(yesNoQuestion.Choices[0].Dependencies)+len(yesNoQuestion.Choices[0].Files))
-
 	})
 
 	t.Run("should return no task if no is selected", func(t *testing.T) {

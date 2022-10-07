@@ -49,7 +49,6 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	}
 
 	selected, err := p.Prompter.AskForSelectionFromList(SelectProjectTypeDirection, options)
-
 	if err != nil {
 		return nil, nil, err
 	}

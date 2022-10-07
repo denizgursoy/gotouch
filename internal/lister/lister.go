@@ -71,7 +71,6 @@ func (m *mainLister) getProjectsFromStrategy(strategy ReadStrategy) ([]*model.Pr
 	}
 
 	data, err := ParseToProjectStructureData(structures)
-
 	if err != nil {
 		return nil, err
 	}

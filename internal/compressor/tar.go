@@ -15,8 +15,7 @@ const (
 )
 
 type (
-	tarStrategy struct {
-	}
+	tarStrategy struct{}
 )
 
 func newTarStrategy() ZipStrategy {
@@ -48,7 +47,6 @@ func (t tarStrategy) CompressDirectory(source, target string) error {
 // found to the tar writer; the purpose for accepting multiple writers is to allow
 // for multiple outputs (for example a file, or md5 hash)
 func Tar(src string, writers ...io.Writer) error {
-
 	// ensure the src actually exists before trying to tar it
 	if _, err := os.Stat(src); err != nil {
 		return fmt.Errorf("Unable to tar files - %v", err.Error())
@@ -64,7 +62,6 @@ func Tar(src string, writers ...io.Writer) error {
 
 	// walk path
 	return filepath.Walk(src, func(file string, fi os.FileInfo, err error) error {
-
 		// return on any error
 		if err != nil {
 			return err
@@ -111,7 +108,6 @@ func Tar(src string, writers ...io.Writer) error {
 // Untar takes a destination path and a reader; a tar reader loops over the tarfile
 // creating the file structure at 'dst' along the way, and writing any files
 func Untar(dst string, r io.Reader) error {
-
 	gzr, err := gzip.NewReader(r)
 	if err != nil {
 		return err
@@ -145,7 +141,7 @@ func Untar(dst string, r io.Reader) error {
 		// a benefit of using one vs. the other.
 		// fi := header.FileInfo()
 
-		if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
 			return err
 		}
 
@@ -155,7 +151,6 @@ func Untar(dst string, r io.Reader) error {
 		// if its a dir and it doesn't exist create it
 		case tar.TypeDir:
 			if _, err := os.Stat(target); err != nil {
-
 			}
 
 		// if it's a file create it

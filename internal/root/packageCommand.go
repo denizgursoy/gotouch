@@ -1,11 +1,12 @@
 package root
 
 import (
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 const (

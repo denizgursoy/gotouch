@@ -5,13 +5,14 @@ package req
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 var (
@@ -202,7 +203,6 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		require.Nil(t, requirements)
 		require.ErrorIs(t, inputErr, err)
 	})
-
 }
 
 func Test_projectNameTask_Complete(t *testing.T) {

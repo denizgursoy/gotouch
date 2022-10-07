@@ -54,7 +54,6 @@ func (c *cmdExecutor) CreateNewProject(opts *CreateCommandOptions) error {
 	})
 
 	projects, err := opts.Lister.GetProjectList(opts.Path)
-
 	if err != nil {
 		return err
 	}

@@ -116,7 +116,7 @@ func (t *templateTask) AddSimpleTemplate(path string) {
 		log.Fatal(err)
 	}
 
-	f, err := os.OpenFile(path, os.O_RDWR|os.O_TRUNC, 0755)
+	f, err := os.OpenFile(path, os.O_RDWR|os.O_TRUNC, 0o755)
 	if err != nil {
 		log.Fatal(err)
 	}

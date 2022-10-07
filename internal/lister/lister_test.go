@@ -5,10 +5,11 @@ package lister
 
 import (
 	"bytes"
-	"github.com/stretchr/testify/require"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v2"
 )
 
 func TestParseToProjectStructureData(t *testing.T) {
@@ -39,7 +40,7 @@ func Test_determineReadStrategy(t *testing.T) {
 	strategy := determineReadStrategy("")
 	require.IsType(t, &urlReader{}, strategy)
 
-	//TODO add file stragety test
+	// TODO add file stragety test
 
 	strategy = determineReadStrategy(PropertiesUrl)
 	require.IsType(t, &urlReader{}, strategy)

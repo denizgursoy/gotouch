@@ -7,9 +7,7 @@ import (
 	"net/url"
 )
 
-var (
-	ConnectionError = errors.New("could not fetch project from remote server")
-)
+var ConnectionError = errors.New("could not fetch project from remote server")
 
 type (
 	urlReader struct {
@@ -27,7 +25,6 @@ func NewUrlReader(url *url.URL, client *http.Client) ReadStrategy {
 
 func (u *urlReader) ReadProjectStructures() (io.ReadCloser, error) {
 	response, err := u.client.Get(u.url.String())
-
 	if err != nil {
 		return nil, ConnectionError
 	}

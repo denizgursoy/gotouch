@@ -5,13 +5,14 @@ package lister
 
 import (
 	"bytes"
-	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/stretchr/testify/require"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/denizgursoy/gotouch/internal/model"
+	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -41,7 +42,6 @@ func NewTestClient(fn RoundTripFunction) *http.Client {
 	return &http.Client{
 		Transport: fn,
 	}
-
 }
 
 func init() {
@@ -50,7 +50,6 @@ func init() {
 
 func Test_urlReader_ReadProjectStructures(t *testing.T) {
 	t.Run("should return successfully", func(t *testing.T) {
-
 		client := NewTestClient(func(req *http.Request) *http.Response {
 			marshal, _ := yaml.Marshal(testProjectStructures)
 			return &http.Response{

@@ -1,6 +1,8 @@
 package root
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -11,12 +13,10 @@ import (
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestGetCreateCommandHandler(t *testing.T) {
 	t.Run("should create successfully", func(t *testing.T) {
-
 		type arg struct {
 			flag    string
 			pointer *string
@@ -57,10 +57,9 @@ func TestGetCreateCommandHandler(t *testing.T) {
 			err := command.Execute()
 			require.Nil(t, err)
 		}
-
 	})
-
 }
+
 func getCreateTestArguments(filePath string) []string {
 	return []string{"-f", filePath}
 }
