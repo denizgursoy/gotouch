@@ -17,13 +17,13 @@ type (
 )
 
 var (
-	exec Commander
+	exc  Commander
 	once sync.Once
 )
 
 func GetInstance() Commander {
 	once.Do(func() {
-		exec = &cmdExecutor{}
+		exc = &cmdExecutor{}
 	})
-	return exec
+	return exc
 }

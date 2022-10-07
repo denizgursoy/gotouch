@@ -106,7 +106,7 @@ func checkIsDirectory(path string) bool {
 }
 
 func shouldSkip(fileName string) bool {
-	filesNotToZip := []string{"__MACOS", ".DS_Store"}
+	filesNotToZip := []string{"__MACOS", ".DS_Store", ".idea", ".vscode", ".git"}
 	for _, file := range filesNotToZip {
 		if strings.TrimSpace(fileName) == file {
 			return true
