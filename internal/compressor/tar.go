@@ -78,6 +78,10 @@ func Tar(src string, writers ...io.Writer) error {
 			return err
 		}
 
+		if filepath.Dir(file) != src && shouldSkip(filepath.Base(filepath.Dir(file))) || shouldSkip(fi.Name()) {
+			return nil
+		}
+
 		// update the name to correctly reflect the desired destination when untaring
 		header.Name = strings.TrimPrefix(strings.Replace(file, src, "", -1), string(filepath.Separator))
 
