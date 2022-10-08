@@ -99,7 +99,7 @@ func (t *templateTask) Complete() error {
 			if err != nil {
 				return err
 			}
-			if !info.IsDir() && info.Name() != ".keep" {
+			if !info.IsDir() {
 				t.AddSimpleTemplate(path)
 			}
 			return nil
