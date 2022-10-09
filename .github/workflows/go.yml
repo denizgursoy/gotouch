@@ -19,7 +19,7 @@ jobs:
         run: make
 
       - name: Unit Test
-        run: make unit-test
+        run: make unit
 
       - name: Integraton Test
-        run: make integration-test
+        run: make integration
