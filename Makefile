@@ -16,10 +16,10 @@ build-test:
 build-mac-test:
 	go build -v -o gotouch-mac-test ./cmd/gotouch/
 
-unit-test:
+unit:
 	go test -v --tags=unit ./...
 
-integration-test: build-test
+integration: build-test
 	go test -v --tags=integration_test ./...
 
 generate-mocks:

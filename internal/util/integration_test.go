@@ -103,11 +103,11 @@ func (z *ZippingTestSuite) TestGithub() {
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	directories := make([]string, 0)
 	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
-	directories = append(directories, "init", "internal", "pkg", "configs", "test", "vendor")
+	directories = append(directories, "init", "internal", "pkg", "configs", "test", "vendor", "cmd/testapp/")
 	z.checkDirectoriesExist(directories)
 
 	files := make([]string, 0)
-	files = append(files, "cmd/main.go", "go.mod", "Dockerfile")
+	files = append(files, "cmd/testapp/main.go", "go.mod", "Dockerfile")
 	z.checkFilesExist(files)
 	z.checkFileContent("Dockerfile", "Dockerfile")
 	z.checkFileContent("test.txt", "test.txt")
