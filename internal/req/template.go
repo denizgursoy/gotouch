@@ -1,12 +1,15 @@
 package req
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
@@ -94,20 +97,25 @@ func (t *templateTask) Complete() error {
 	path := t.Store.GetValue(store.ProjectFullPath)
 	t.combineWithDefaultValues()
 
+	folders := make([]string, 0)
+
 	err := filepath.Walk(path,
-		func(path string, info os.FileInfo, err error) error {
+		func(filePath string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
 			if !info.IsDir() {
-				t.AddSimpleTemplate(path)
+				t.AddSimpleTemplate(filePath)
+			} else {
+				folders = append(folders, filePath)
 			}
 			return nil
 		})
-	if err != nil {
+
+	if err = t.templateDirectoryNames(folders); err != nil {
 		return err
 	}
-	return nil
+	return err
 }
 
 func (t *templateTask) AddSimpleTemplate(path string) {
@@ -126,6 +134,46 @@ func (t *templateTask) AddSimpleTemplate(path string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func (t *templateTask) templateDirectoryNames(folders []string) error {
+	sort.Slice(folders, func(i, j int) bool {
+		countI := strings.Count(folders[i], string(os.PathSeparator))
+		countJ := strings.Count(folders[j], string(os.PathSeparator))
+		return countI < countJ
+	})
+
+	for len(folders) > 0 {
+		oldName := folders[0]
+		t2 := template.New("directory")
+		parse, parseError := t2.Parse(oldName)
+		if parseError != nil {
+			return parseError
+		}
+		bufferString := bytes.NewBufferString("")
+		executeError := parse.Execute(bufferString, t.Values)
+
+		if executeError != nil {
+			return parseError
+		}
+		newName := bufferString.String()
+
+		folders = append(folders[:0], folders[0+1:]...)
+
+		if _, err := os.Stat(newName); os.IsNotExist(err) {
+			err = os.Rename(oldName, newName)
+			if err != nil {
+				return err
+			}
+			for i, _ := range folders {
+				if strings.HasPrefix(folders[i], oldName) {
+					folders[i] = strings.ReplaceAll(folders[i], oldName, newName)
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 func (t *templateTask) combineWithDefaultValues() {
