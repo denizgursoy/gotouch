@@ -34,6 +34,21 @@ func (m *MockPrompter) EXPECT() *MockPrompterMockRecorder {
 	return m.recorder
 }
 
+// AskForMultilineString mocks base method.
+func (m *MockPrompter) AskForMultilineString(direction, defaultValue, pattern string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AskForMultilineString", direction, defaultValue, pattern)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AskForMultilineString indicates an expected call of AskForMultilineString.
+func (mr *MockPrompterMockRecorder) AskForMultilineString(direction, defaultValue, pattern interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForMultilineString", reflect.TypeOf((*MockPrompter)(nil).AskForMultilineString), direction, defaultValue, pattern)
+}
+
 // AskForSelectionFromList mocks base method.
 func (m *MockPrompter) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {
 	m.ctrl.T.Helper()

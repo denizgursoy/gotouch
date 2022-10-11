@@ -60,3 +60,68 @@ func (mr *MockCompressorMockRecorder) UncompressFromUrl(url interface{}) *gomock
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromUrl", reflect.TypeOf((*MockCompressor)(nil).UncompressFromUrl), url)
 }
+
+// MockZipStrategy is a mock of ZipStrategy interface.
+type MockZipStrategy struct {
+	ctrl     *gomock.Controller
+	recorder *MockZipStrategyMockRecorder
+}
+
+// MockZipStrategyMockRecorder is the mock recorder for MockZipStrategy.
+type MockZipStrategyMockRecorder struct {
+	mock *MockZipStrategy
+}
+
+// NewMockZipStrategy creates a new mock instance.
+func NewMockZipStrategy(ctrl *gomock.Controller) *MockZipStrategy {
+	mock := &MockZipStrategy{ctrl: ctrl}
+	mock.recorder = &MockZipStrategyMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockZipStrategy) EXPECT() *MockZipStrategyMockRecorder {
+	return m.recorder
+}
+
+// CompressDirectory mocks base method.
+func (m *MockZipStrategy) CompressDirectory(source, target string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CompressDirectory", source, target)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CompressDirectory indicates an expected call of CompressDirectory.
+func (mr *MockZipStrategyMockRecorder) CompressDirectory(source, target interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompressDirectory", reflect.TypeOf((*MockZipStrategy)(nil).CompressDirectory), source, target)
+}
+
+// GetExtension mocks base method.
+func (m *MockZipStrategy) GetExtension() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetExtension")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// GetExtension indicates an expected call of GetExtension.
+func (mr *MockZipStrategyMockRecorder) GetExtension() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetExtension", reflect.TypeOf((*MockZipStrategy)(nil).GetExtension))
+}
+
+// UnCompressDirectory mocks base method.
+func (m *MockZipStrategy) UnCompressDirectory(source, target string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UnCompressDirectory", source, target)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UnCompressDirectory indicates an expected call of UnCompressDirectory.
+func (mr *MockZipStrategyMockRecorder) UnCompressDirectory(source, target interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnCompressDirectory", reflect.TypeOf((*MockZipStrategy)(nil).UnCompressDirectory), source, target)
+}
