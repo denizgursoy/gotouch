@@ -54,3 +54,17 @@ func (s srv) AskForYesOrNo(direction string) (bool, error) {
 	err := survey.AskOne(prompt, &name)
 	return name, err
 }
+
+func (s srv) AskForMultilineString(direction, defaultValue, pattern string) (string, error) {
+	prompt := &survey.Editor{
+		Message:       direction,
+		Default:       defaultValue,
+		HideDefault:   true,
+		AppendDefault: true,
+		FileName:      pattern,
+	}
+
+	result := ""
+	err := survey.AskOne(prompt, &result)
+	return result, err
+}

@@ -2,9 +2,7 @@ package req
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -14,13 +12,14 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/skratchdot/open-golang/open"
 	"gopkg.in/yaml.v2"
 )
 
 const (
-	EnterValues = "Do you want to edit values?"
-	Ready       = "Is file ready?"
+	ChangeValues = "Do you want to edit values?"
+	EditValues   = "Press Enter to change. Values will be saved when you exit"
+	//Ready        = "Is file ready?"
+	YamLPattern = "*.yaml"
 )
 
 type (
@@ -44,47 +43,27 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	}
 
 	if t.Values != nil {
-		yes, err2 := t.Prompter.AskForYesOrNo(EnterValues)
-		if err2 != nil {
-			return nil, nil, err2
+		yes, promptError := t.Prompter.AskForYesOrNo(ChangeValues)
+		if promptError != nil {
+			return nil, nil, promptError
 		}
 
 		if yes {
-			marshal, err2 := yaml.Marshal(t.Values)
-			if err2 != nil {
-				return nil, nil, err2
+			marshal, marshallError := yaml.Marshal(t.Values)
+			if marshallError != nil {
+				return nil, nil, marshallError
 			}
 
-			temp, err2 := os.CreateTemp("", "*.yaml")
-			if err2 != nil {
-				return nil, nil, err2
+			multilineString, multilineError := t.Prompter.AskForMultilineString(EditValues, string(marshal), YamLPattern)
+			if multilineError != nil {
+				return nil, nil, multilineError
 			}
 
-			_, err2 = temp.Write(marshal)
-			if err2 != nil {
-				return nil, nil, err2
-			}
-
-			err2 = open.Run(temp.Name())
-			defer func() {
-				err2 := os.Remove(temp.Name())
-				if err2 != nil {
-					log.Fatal(err2)
-				}
-			}()
-
-			if err2 != nil {
-				return nil, nil, err2
-			}
-
-			yes, err2 := t.Prompter.AskForYesOrNo(fmt.Sprintf("%s (%s)", Ready, temp.Name()))
-			if yes == false || err2 != nil {
-				return nil, nil, err2
-			}
-
-			all, err2 := ioutil.ReadFile(temp.Name())
 			var output interface{}
-			err2 = yaml.Unmarshal(all, &output)
+			if unmarshallError := yaml.Unmarshal([]byte(multilineString), &output); unmarshallError != nil {
+				return nil, nil, unmarshallError
+			}
+
 			templateTsk.Values = output
 		}
 	}
@@ -202,3 +181,43 @@ func (t *templateTask) getDefaultValues() map[interface{}]interface{} {
 
 	return defaultValues
 }
+
+//func (t *templateRequirement) createFile() (interface{}, error) {
+//
+//	marshal, err2 := yaml.Marshal(t.Values)
+//	if err2 != nil {
+//		return nil, err2
+//	}
+//
+//	temp, err2 := os.CreateTemp("", "*.yaml")
+//	if err2 != nil {
+//		return nil, err2
+//	}
+//
+//	_, err2 = temp.Write(marshal)
+//	if err2 != nil {
+//		return nil, err2
+//	}
+//
+//	err2 = open.Run(temp.Name())
+//	defer func() {
+//		err2 := os.Remove(temp.Name())
+//		if err2 != nil {
+//			log.Fatal(err2)
+//		}
+//	}()
+//
+//	if err2 != nil {
+//		return nil, err2
+//	}
+//
+//	yes, err2 := t.Prompter.AskForYesOrNo(fmt.Sprintf("%s (%s)", Ready, temp.Name()))
+//	if yes == false || err2 != nil {
+//		return nil, err2
+//	}
+//
+//	all, err2 := ioutil.ReadFile(temp.Name())
+//	var output interface{}
+//	err2 = yaml.Unmarshal(all, &output)
+//	return output, nil
+//}

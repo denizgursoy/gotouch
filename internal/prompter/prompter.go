@@ -21,6 +21,7 @@ type (
 		AskForString(direction string, validator Validator) (string, error)
 		AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error)
 		AskForYesOrNo(direction string) (bool, error)
+		AskForMultilineString(direction, defaultValue, pattern string) (string, error)
 	}
 
 	ListOption struct {
