@@ -59,6 +59,10 @@ func (s srv) AskForYesOrNo(direction string) (bool, error) {
 	return atoi == 1, nil
 }
 
+func (s srv) AskForMultilineString(direction, defaultValue, pattern string) (string, error) {
+	return "", nil
+}
+
 func getStream() io.ReadCloser {
 	nopCloser := io.NopCloser(strings.NewReader(urls[index]))
 	index++
