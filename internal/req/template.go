@@ -18,8 +18,7 @@ import (
 const (
 	ChangeValues = "Do you want to edit values?"
 	EditValues   = "Press Enter to change. Values will be saved when you exit"
-	//Ready        = "Is file ready?"
-	YamLPattern = "*.yaml"
+	YamLPattern  = "*.yaml"
 )
 
 type (
@@ -181,43 +180,3 @@ func (t *templateTask) getDefaultValues() map[interface{}]interface{} {
 
 	return defaultValues
 }
-
-//func (t *templateRequirement) createFile() (interface{}, error) {
-//
-//	marshal, err2 := yaml.Marshal(t.Values)
-//	if err2 != nil {
-//		return nil, err2
-//	}
-//
-//	temp, err2 := os.CreateTemp("", "*.yaml")
-//	if err2 != nil {
-//		return nil, err2
-//	}
-//
-//	_, err2 = temp.Write(marshal)
-//	if err2 != nil {
-//		return nil, err2
-//	}
-//
-//	err2 = open.Run(temp.Name())
-//	defer func() {
-//		err2 := os.Remove(temp.Name())
-//		if err2 != nil {
-//			log.Fatal(err2)
-//		}
-//	}()
-//
-//	if err2 != nil {
-//		return nil, err2
-//	}
-//
-//	yes, err2 := t.Prompter.AskForYesOrNo(fmt.Sprintf("%s (%s)", Ready, temp.Name()))
-//	if yes == false || err2 != nil {
-//		return nil, err2
-//	}
-//
-//	all, err2 := ioutil.ReadFile(temp.Name())
-//	var output interface{}
-//	err2 = yaml.Unmarshal(all, &output)
-//	return output, nil
-//}
