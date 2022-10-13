@@ -83,6 +83,12 @@ func TestStructure_AskForInput(t *testing.T) {
 			Return(testProjectData[0], nil).
 			Times(1)
 
+		mockPrompter.
+			EXPECT().
+			AskForString(gomock.Eq(ModuleNameDirection), gomock.Any()).
+			Return("", nil).
+			Times(1)
+
 		p := &ProjectStructureRequirement{
 			ProjectsData: testProjectData,
 			Prompter:     mockPrompter,
@@ -98,9 +104,11 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
 
-		require.Len(t, tasks, 1)
-		require.IsType(t, &projectStructureTask{}, tasks[0])
-		require.IsType(t, testProjectData[0], tasks[0].(*projectStructureTask).ProjectStructure)
+		require.Len(t, tasks, 2)
+		require.IsType(t, (*projectNameTask)(nil), tasks[0])
+
+		require.IsType(t, &projectStructureTask{}, tasks[1])
+		require.IsType(t, testProjectData[1], tasks[1].(*projectStructureTask).ProjectStructure)
 
 		actualQuestions := make([]*model.Question, 0)
 
@@ -112,46 +120,6 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		require.IsType(t, &templateRequirement{}, requirements[2])
 		require.IsType(t, testProjectData[0].Values, requirements[2].(*templateRequirement).Values)
-	})
-
-	t.Run("should add template requirement if value is not nil", func(t *testing.T) {
-		controller := gomock.NewController(t)
-		defer controller.Finish()
-
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockUncompressor := compressor.NewMockCompressor(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockStore := store.GetInstance()
-
-		options := make([]fmt.Stringer, 0)
-		for _, datum := range testProjectData {
-			options = append(options, datum)
-		}
-
-		mockPrompter.
-			EXPECT().
-			AskForSelectionFromList(gomock.Eq(SelectProjectTypeDirection), gomock.Eq(options)).
-			Return(testProjectDataWithValuesField[0], nil).
-			Times(1)
-
-		p := &ProjectStructureRequirement{
-			ProjectsData: testProjectData,
-			Prompter:     mockPrompter,
-			Compressor:   mockUncompressor,
-			Logger:       logger.NewLogger(),
-			Executor:     mockExecutor,
-			Manager:      mockManager,
-			Store:        mockStore,
-		}
-
-		_, requirements, err := p.AskForInput()
-
-		require.NoError(t, err)
-		require.NotNil(t, requirements)
-
-		require.Len(t, requirements, 1)
-		require.IsType(t, requirements[0], &templateRequirement{})
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {

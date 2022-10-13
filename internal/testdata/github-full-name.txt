@@ -1,5 +1,5 @@
-g.c/dg/testapp
 1
+g.c/dg/testapp
 1
 0
 0

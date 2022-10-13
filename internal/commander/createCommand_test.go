@@ -50,18 +50,13 @@ func TestCreateNewProject(t *testing.T) {
 			Execute(gomock.Any()).
 			Do(func(arg interface{}) {
 				requirements := arg.(executor.Requirements)
-				require.Len(t, requirements, 2)
-				name := requirements[0].(*req.ProjectNameRequirement)
-				structure := requirements[1].(*req.ProjectStructureRequirement)
-
-				require.NotNil(t, name.Prompter)
-				require.NotNil(t, name.Manager)
+				require.Len(t, requirements, 1)
+				structure := requirements[0].(*req.ProjectStructureRequirement)
 
 				require.NotNil(t, structure.Compressor)
 				require.NotNil(t, structure.Manager)
 				require.NotNil(t, structure.Prompter)
 
-				require.IsType(t, (*req.ProjectNameRequirement)(nil), name)
 				require.IsType(t, (*req.ProjectStructureRequirement)(nil), structure)
 				require.EqualValues(t, expectedProjectData, structure.ProjectsData)
 			})

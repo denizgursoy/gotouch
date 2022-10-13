@@ -46,13 +46,6 @@ func (c *cmdExecutor) CreateNewProject(opts *CreateCommandOptions) error {
 
 	requirements := make(executor.Requirements, 0)
 
-	requirements = append(requirements, &req.ProjectNameRequirement{
-		Prompter: opts.Prompter,
-		Manager:  opts.Manager,
-		Logger:   opts.Logger,
-		Store:    opts.Store,
-	})
-
 	projects, err := opts.Lister.GetProjectList(opts.Path)
 	if err != nil {
 		return err

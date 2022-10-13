@@ -53,6 +53,29 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
+	p2 := &ProjectNameRequirement{
+		Prompter: p.Prompter,
+		Manager:  p.Manager,
+		Logger:   p.Logger,
+		Store:    p.Store,
+	}
+
+	nameTasks, nameRequirements, err := p2.AskForInput()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	tasks := make([]model.Task, 0)
+	requirements := make([]model.Requirement, 0)
+
+	for _, task := range nameTasks {
+		tasks = append(tasks, task)
+	}
+
+	for _, requirement := range nameRequirements {
+		requirements = append(requirements, requirement)
+	}
+
 	task := projectStructureTask{
 		ProjectStructure: selected.(*model.ProjectStructureData),
 		Compressor:       p.Compressor,
@@ -62,10 +85,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		Store:            p.Store,
 	}
 
-	tasks := make([]model.Task, 0)
 	tasks = append(tasks, &task)
-
-	requirements := make([]model.Requirement, 0)
 
 	for _, question := range task.ProjectStructure.Questions {
 		requirements = append(requirements, &QuestionRequirement{
