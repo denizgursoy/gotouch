@@ -26,8 +26,8 @@ go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 
 # How Gotouch works
 
-1. Asks for module name
-2. Asks for user to select a project structure in [properties yaml](#Write-your-properties-yaml-file)
+1. Asks for user to select a project structure in [properties yaml](#Write-your-properties-yaml-file)
+2. Asks for module name
 3. Asks for a choice of every [question](#Question) under the selected project structure in order and saves the choices
 4. Asks for changing the values of the selected project structure if any
 5. Creates a new directory with module name's last part after last /
