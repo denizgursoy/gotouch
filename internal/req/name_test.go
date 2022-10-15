@@ -73,7 +73,7 @@ func Test_validateProjectName(t *testing.T) {
 		{
 			name:    "error test 3",
 			args:    args{projectName: ".exe"},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "error test 4",
@@ -83,12 +83,12 @@ func Test_validateProjectName(t *testing.T) {
 		{
 			name:    "error test 5",
 			args:    args{projectName: "123test"},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "error test 6",
 			args:    args{projectName: "error.com/123"},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "error test 7",
@@ -103,22 +103,22 @@ func Test_validateProjectName(t *testing.T) {
 		{
 			name:    "error test 9",
 			args:    args{projectName: "error.com/test123/blabla.exe"},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "error test 10",
 			args:    args{projectName: "error.com/test123.com"},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "error test 11",
 			args:    args{projectName: "error.111/test"},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "error test 12",
 			args:    args{projectName: "error.111"},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name:    "error test 13",
@@ -129,7 +129,7 @@ func Test_validateProjectName(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := validateModuleName(tt.args.projectName); (err != nil) != tt.wantErr {
-				t.Errorf("validateModuleName() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("validateModuleName() error = %v, wantErr %v, values %s", err, tt.wantErr, tt.args.projectName)
 			}
 		})
 	}

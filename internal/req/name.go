@@ -1,10 +1,9 @@
 package req
 
 import (
-	"errors"
 	"fmt"
 	"path/filepath"
-	"regexp"
+	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
@@ -12,6 +11,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
+	"golang.org/x/mod/module"
 )
 
 type (
@@ -83,13 +83,9 @@ func (p *projectNameTask) Complete() error {
 }
 
 func validateModuleName(name interface{}) error {
-	projectName := name.(string)
-	compile, err := regexp.Compile("^([a-zA-Z]+(((\\w|(\\.[a-z]+))*)\\/)+[a-zA-Z]+(\\w)*)$|^([a-zA-Z]+\\w*)$")
-	if err != nil {
-		return errors.New("regex error")
+	path := name.(string)
+	if !strings.Contains(path, "/") {
+		return module.CheckImportPath(path)
 	}
-	if compile.MatchString(projectName) {
-		return nil
-	}
-	return errors.New("invalid project name")
+	return module.CheckPath(path)
 }
