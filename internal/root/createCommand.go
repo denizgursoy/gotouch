@@ -3,7 +3,8 @@ package root
 import (
 	"strings"
 
-	"github.com/denizgursoy/gotouch/internal/commander"
+	"github.com/denizgursoy/gotouch/internal/operator"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -22,7 +23,7 @@ type (
 	CommandHandler func(cmd *cobra.Command, args []string)
 )
 
-func GetCreateCommandHandler(cmdr commander.Commander) CommandHandler {
+func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 	return func(cmd *cobra.Command, args []string) {
 		flags := cmd.Flags()
 		newLogger := logger.NewLogger()
@@ -38,7 +39,7 @@ func GetCreateCommandHandler(cmdr commander.Commander) CommandHandler {
 			pointer = nil
 		}
 
-		options := commander.CreateCommandOptions{
+		options := operator.CreateNewProjectOptions{
 			Lister:     lister.GetInstance(),
 			Prompter:   prompter.GetInstance(),
 			Manager:    manager.GetInstance(),

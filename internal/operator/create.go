@@ -1,4 +1,4 @@
-package commander
+package operator
 
 import (
 	"errors"
@@ -23,7 +23,7 @@ var (
 )
 
 type (
-	CreateCommandOptions struct {
+	CreateNewProjectOptions struct {
 		Lister     lister.Lister         `validate:"required"`
 		Prompter   prompter.Prompter     `validate:"required"`
 		Manager    manager.Manager       `validate:"required"`
@@ -35,7 +35,7 @@ type (
 	}
 )
 
-func (c *cmdExecutor) CreateNewProject(opts *CreateCommandOptions) error {
+func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 	if installationError := isGoInstalled(); installationError != nil {
 		return installationError
 	}
@@ -64,7 +64,7 @@ func (c *cmdExecutor) CreateNewProject(opts *CreateCommandOptions) error {
 	return opts.Executor.Execute(requirements)
 }
 
-func isValid(opts *CreateCommandOptions) error {
+func isValid(opts *CreateNewProjectOptions) error {
 	err := validator.New().Struct(opts)
 	if err != nil {
 		fieldErrors := err.(validator.ValidationErrors)

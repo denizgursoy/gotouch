@@ -1,4 +1,4 @@
-package commander
+package operator
 
 import (
 	"testing"
@@ -18,7 +18,7 @@ func Test_cmdExecutor_CompressDirectory(t *testing.T) {
 
 		sourceDirectory := "sourcedir"
 
-		opts := &PackageCommandOptions{
+		opts := &CompressDirectoryOptions{
 			SourceDirectory: &sourceDirectory,
 			TargetDirectory: nil,
 			Compressor:      mockCompressor,
@@ -39,7 +39,7 @@ func Test_cmdExecutor_CompressDirectory(t *testing.T) {
 		sourceDirectory := "sourcedir"
 		targetDirectory := "targetdir"
 
-		opts := &PackageCommandOptions{
+		opts := &CompressDirectoryOptions{
 			SourceDirectory: &sourceDirectory,
 			TargetDirectory: &targetDirectory,
 			Compressor:      mockCompressor,

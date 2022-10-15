@@ -3,9 +3,9 @@ package root
 import (
 	"strings"
 
-	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/logger"
+	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ const (
 	TargetDirectoryFlagName = "target"
 )
 
-func GetPackageCommandHandler(cmdr commander.Commander) CommandHandler {
+func GetPackageCommandHandler(cmdr operator.Operator) CommandHandler {
 	return func(cmd *cobra.Command, args []string) {
 		lgr := logger.NewLogger()
 
@@ -37,7 +37,7 @@ func GetPackageCommandHandler(cmdr commander.Commander) CommandHandler {
 			sourcePointer = nil
 		}
 
-		options := commander.PackageCommandOptions{
+		options := operator.CompressDirectoryOptions{
 			Compressor:      compressor.GetInstance(),
 			Logger:          lgr,
 			SourceDirectory: sourcePointer,

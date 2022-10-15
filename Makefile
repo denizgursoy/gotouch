@@ -22,5 +22,5 @@ unit:
 integration: build-test
 	go test -v --tags=integration_test ./...
 
-generate-mocks:
+mock:
 	go generate -v ./...

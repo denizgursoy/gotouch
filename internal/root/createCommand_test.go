@@ -3,12 +3,12 @@ package root
 import (
 	"testing"
 
-	"github.com/denizgursoy/gotouch/internal/commander"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
+	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
@@ -36,9 +36,9 @@ func TestGetCreateCommandHandler(t *testing.T) {
 
 		for _, argument := range arguments {
 			controller := gomock.NewController(t)
-			mockCommander := commander.NewMockCommander(controller)
+			mockCommander := operator.NewMockOperator(controller)
 
-			expectedCall := &commander.CreateCommandOptions{
+			expectedCall := &operator.CreateNewProjectOptions{
 				Lister:     lister.GetInstance(),
 				Prompter:   prompter.GetInstance(),
 				Manager:    manager.GetInstance(),

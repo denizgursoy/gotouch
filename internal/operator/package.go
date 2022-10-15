@@ -1,4 +1,4 @@
-package commander
+package operator
 
 import (
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -6,7 +6,7 @@ import (
 )
 
 type (
-	PackageCommandOptions struct {
+	CompressDirectoryOptions struct {
 		SourceDirectory *string               `validate:"required,dir"`
 		TargetDirectory *string               `validate:"omitempty,dir"`
 		Compressor      compressor.Compressor `validate:"required"`
@@ -14,7 +14,7 @@ type (
 	}
 )
 
-func (c *cmdExecutor) CompressDirectory(opts *PackageCommandOptions) error {
+func (c *operator) CompressDirectory(opts *CompressDirectoryOptions) error {
 	targetDirectory := ""
 	if opts.TargetDirectory != nil {
 		targetDirectory = *opts.TargetDirectory

@@ -26,9 +26,9 @@ func TestGetPackageCommandHandler(t *testing.T) {
 	//
 	//	for _, argument := range arguments {
 	//		controller := gomock.NewController(t)
-	//		mockCommander := commander.NewMockCommander(controller)
+	//		mockCommander := operator.NewMockCommander(controller)
 	//
-	//		expectedCall := &commander.CreateCommandOptions{
+	//		expectedCall := &operator.CreateCommandOptions{
 	//			Lister:     lister.GetInstance(),
 	//			Prompter:   prompter.GetInstance(),
 	//			Manager:    manager.GetInstance(),

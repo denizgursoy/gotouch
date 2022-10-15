@@ -3,19 +3,19 @@ package root
 import (
 	"os"
 
-	"github.com/denizgursoy/gotouch/internal/commander"
+	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/spf13/cobra"
 )
 
 func Execute() {
-	rootCommand := CreateRootCommand(commander.GetInstance())
+	rootCommand := CreateRootCommand(operator.GetInstance())
 	err := rootCommand.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
-func CreateRootCommand(cmdr commander.Commander) *cobra.Command {
+func CreateRootCommand(cmdr operator.Operator) *cobra.Command {
 	createCommand := &cobra.Command{
 		Use:   "gotouch",
 		Short: "Helps you create new Go Projects",
@@ -30,7 +30,7 @@ func CreateRootCommand(cmdr commander.Commander) *cobra.Command {
 	return createCommand
 }
 
-func CreatePackageCommand(cmdr commander.Commander) *cobra.Command {
+func CreatePackageCommand(cmdr operator.Operator) *cobra.Command {
 	packageCommand := &cobra.Command{
 		Use:   "package",
 		Short: "createYourZip",
@@ -44,7 +44,7 @@ func CreatePackageCommand(cmdr commander.Commander) *cobra.Command {
 	return packageCommand
 }
 
-func CreateValidateCommand(cmdr commander.Commander) *cobra.Command {
+func CreateValidateCommand(cmdr operator.Operator) *cobra.Command {
 	validateCommand := &cobra.Command{
 		Use:   "validate",
 		Short: "Validation Check for YAML files",

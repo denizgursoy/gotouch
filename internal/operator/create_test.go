@@ -1,7 +1,7 @@
 //go:build unit
 // +build unit
 
-package commander
+package operator
 
 import (
 	"testing"
@@ -26,7 +26,7 @@ var project1 = model.ProjectStructureData{
 }
 
 func TestCreateNewProject(t *testing.T) {
-	t.Run("should call Commander with all requirements", func(t *testing.T) {
+	t.Run("should call Operator with all requirements", func(t *testing.T) {
 		controller := gomock.NewController(t)
 		defer controller.Finish()
 
@@ -61,7 +61,7 @@ func TestCreateNewProject(t *testing.T) {
 				require.EqualValues(t, expectedProjectData, structure.ProjectsData)
 			})
 
-		opts := &CreateCommandOptions{
+		opts := &CreateNewProjectOptions{
 			Lister:     mockLister,
 			Prompter:   mockPrompter,
 			Manager:    newMockManager,
@@ -89,7 +89,7 @@ func Test_isValid(t *testing.T) {
 	mockLogger := logger.NewLogger()
 
 	type args struct {
-		opts *CreateCommandOptions
+		opts *CreateNewProjectOptions
 	}
 
 	tests := []struct {
@@ -100,7 +100,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "all present",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Lister:     mockLister,
 					Prompter:   mockPrompter,
 					Manager:    newMockManager,
@@ -114,7 +114,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "missing mockExecutor",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Lister:     mockLister,
 					Prompter:   mockPrompter,
 					Manager:    newMockManager,
@@ -127,7 +127,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "missing mockCompressor",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Lister:   mockLister,
 					Prompter: mockPrompter,
 					Manager:  newMockManager,
@@ -140,7 +140,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "missing newMockManager",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Lister:     mockLister,
 					Prompter:   mockPrompter,
 					Compressor: mockCompressor,
@@ -153,7 +153,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "missing mockPrompter",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Lister:     mockLister,
 					Manager:    newMockManager,
 					Compressor: mockCompressor,
@@ -166,7 +166,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "missing mockLister",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Prompter:   mockPrompter,
 					Manager:    newMockManager,
 					Compressor: mockCompressor,
@@ -179,7 +179,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "missing logger",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Prompter:   mockPrompter,
 					Manager:    newMockManager,
 					Compressor: mockCompressor,
@@ -192,7 +192,7 @@ func Test_isValid(t *testing.T) {
 		{
 			name: "should validate if path is nil",
 			args: args{
-				opts: &CreateCommandOptions{
+				opts: &CreateNewProjectOptions{
 					Lister:     mockLister,
 					Prompter:   mockPrompter,
 					Manager:    newMockManager,
@@ -226,7 +226,7 @@ func Test_isValid_PathTest(t *testing.T) {
 	mockLogger := logger.NewLogger()
 	mockStore := store.GetInstance()
 
-	options := CreateCommandOptions{
+	options := CreateNewProjectOptions{
 		Lister:     mockLister,
 		Prompter:   mockPrompter,
 		Manager:    newMockManager,

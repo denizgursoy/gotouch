@@ -3,7 +3,7 @@ package root
 import (
 	"testing"
 
-	"github.com/denizgursoy/gotouch/internal/commander"
+	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/require"
@@ -22,7 +22,7 @@ type (
 
 func TestCreateRootCommand(t *testing.T) {
 	t.Run("should have gotouch command", func(t *testing.T) {
-		instance := commander.GetInstance()
+		instance := operator.GetInstance()
 		expectedCommand := goTouchCommand{
 			commandName: "gotouch",
 			flags: []flag{
@@ -38,7 +38,7 @@ func TestCreateRootCommand(t *testing.T) {
 	})
 
 	t.Run("should have package command", func(t *testing.T) {
-		instance := commander.GetInstance()
+		instance := operator.GetInstance()
 		expectedCommand := goTouchCommand{
 			commandName: "package",
 			flags: []flag{

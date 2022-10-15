@@ -1,4 +1,4 @@
-package commander
+package operator
 
 import (
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -9,14 +9,14 @@ import (
 var yamlValidSuccessMsg = "YAML file is valid"
 
 type (
-	ValidateCommandOptions struct {
+	ValidateYamlOptions struct {
 		Lister lister.Lister `validate:"required"`
 		Logger logger.Logger `validate:"required"`
 		Path   *string       `validate:"required,endswith=.yaml,url|file"`
 	}
 )
 
-func (c *cmdExecutor) ValidateYaml(opts *ValidateCommandOptions) error {
+func (c *operator) ValidateYaml(opts *ValidateYamlOptions) error {
 	if validationError := isValidYaml(opts); validationError != nil {
 		return validationError
 	}
@@ -31,7 +31,7 @@ func (c *cmdExecutor) ValidateYaml(opts *ValidateCommandOptions) error {
 	return nil
 }
 
-func isValidYaml(opts *ValidateCommandOptions) error {
+func isValidYaml(opts *ValidateYamlOptions) error {
 	err := validator.New().Struct(opts)
 	if err != nil {
 		fieldErrors := err.(validator.ValidationErrors)

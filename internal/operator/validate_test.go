@@ -1,4 +1,4 @@
-package commander
+package operator
 
 import (
 	"testing"
@@ -10,7 +10,7 @@ import (
 
 func Test_cmdExecutor_ValidateYaml(t *testing.T) {
 	type args struct {
-		opts *ValidateCommandOptions
+		opts *ValidateYamlOptions
 	}
 	tests := []struct {
 		name    string
@@ -21,7 +21,7 @@ func Test_cmdExecutor_ValidateYaml(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &cmdExecutor{}
+			c := &operator{}
 			if err := c.ValidateYaml(tt.args.opts); (err != nil) != tt.wantErr {
 				t.Errorf("ValidateYaml() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -39,7 +39,7 @@ func Test_isValidYaml(t *testing.T) {
 	failPath := "../testdata/xxx.yaml"
 
 	type args struct {
-		opts *ValidateCommandOptions
+		opts *ValidateYamlOptions
 	}
 	tests := []struct {
 		name    string
@@ -49,7 +49,7 @@ func Test_isValidYaml(t *testing.T) {
 		{
 			name: "successfully",
 			args: args{
-				opts: &ValidateCommandOptions{
+				opts: &ValidateYamlOptions{
 					Lister: mockLister,
 					Logger: mockLogger,
 					Path:   &path,
@@ -60,7 +60,7 @@ func Test_isValidYaml(t *testing.T) {
 		{
 			name: "missing invalid path",
 			args: args{
-				opts: &ValidateCommandOptions{
+				opts: &ValidateYamlOptions{
 					Lister: mockLister,
 					Logger: mockLogger,
 					Path:   &failPath,
