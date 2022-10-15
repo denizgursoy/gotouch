@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./commander.go -destination=mockCommander.go -package=operator
+//go:generate mockgen -source=./operator.go -destination=mockoperator.go -package=operator
 
 package operator
 
