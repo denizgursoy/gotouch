@@ -5,6 +5,7 @@ package req
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -57,8 +58,7 @@ var (
 		},
 	}
 
-	testProjectData                = []*model.ProjectStructureData{&projectStructure1, &projectStructure2}
-	testProjectDataWithValuesField = []*model.ProjectStructureData{&projectStructureWithValues, &projectStructure2}
+	testProjectData = []*model.ProjectStructureData{&projectStructure1, &projectStructure2}
 )
 
 func TestStructure_AskForInput(t *testing.T) {
@@ -202,4 +202,19 @@ func TestStructure_Complete(t *testing.T) {
 			require.Nil(t, err)
 		}
 	})
+}
+
+func Test_setLanguageChecker(t *testing.T) {
+	controller := gomock.NewController(t)
+
+	defer controller.Finish()
+
+	mockStore := store.NewMockStore(controller)
+	mockStore.EXPECT().SetLanguageChecker(gomock.Eq(langs.NewGolangSetupChecker())).Times(1)
+
+	p := &ProjectStructureRequirement{
+		Store: mockStore,
+	}
+
+	p.setLanguageChecker(&projectStructure1)
 }

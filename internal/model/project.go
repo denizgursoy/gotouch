@@ -14,6 +14,7 @@ type (
 		URL       string      `yaml:"url"`
 		Questions []*Question `yaml:"questions"`
 		Values    interface{} `yaml:"values"`
+		Language  string      `yaml:"language"`
 	}
 
 	Question struct {

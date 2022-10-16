@@ -3,6 +3,7 @@
 package store
 
 import (
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"sync"
 )
 
@@ -19,16 +20,19 @@ type (
 		GetValue(key string) string
 		StoreValues(key map[string]interface{})
 		GetStoreValues() map[string]interface{}
+		GetLanguageChecker() langs.LanguageChecker
+		SetLanguageChecker(langs.LanguageChecker)
 	}
 
 	storeImpl struct{}
 )
 
 var (
-	store          = map[string]string{}
-	QuestionValues = map[string]interface{}{}
-	keyValueStore  Store
-	once           = sync.Once{}
+	store           = map[string]string{}
+	QuestionValues  = map[string]interface{}{}
+	keyValueStore   Store
+	languageChecker langs.LanguageChecker
+	once            = sync.Once{}
 )
 
 func init() {
@@ -63,4 +67,12 @@ func (s *storeImpl) StoreValues(key map[string]interface{}) {
 
 func (s *storeImpl) GetStoreValues() map[string]interface{} {
 	return QuestionValues
+}
+
+func (s *storeImpl) GetLanguageChecker() langs.LanguageChecker {
+	return languageChecker
+}
+
+func (s *storeImpl) SetLanguageChecker(checker langs.LanguageChecker) {
+	languageChecker = checker
 }

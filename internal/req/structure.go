@@ -2,6 +2,7 @@ package req
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/langs"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -76,8 +77,16 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		requirements = append(requirements, requirement)
 	}
 
+	projectStructureData := selected.(*model.ProjectStructureData)
+
+	p.setLanguageChecker(projectStructureData)
+
+	if setupError := p.Store.GetLanguageChecker().CheckSetup(); setupError != nil {
+		return nil, nil, setupError
+	}
+
 	task := projectStructureTask{
-		ProjectStructure: selected.(*model.ProjectStructureData),
+		ProjectStructure: projectStructureData,
 		Compressor:       p.Compressor,
 		Manager:          p.Manager,
 		Logger:           p.Logger,
@@ -105,6 +114,11 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	})
 
 	return tasks, requirements, nil
+}
+
+func (p *ProjectStructureRequirement) setLanguageChecker(projectStructureData *model.ProjectStructureData) {
+	checker := langs.NewLanguageChecker(projectStructureData)
+	p.Store.SetLanguageChecker(checker)
 }
 
 func (p *projectStructureTask) Complete() error {

@@ -2,9 +2,6 @@ package operator
 
 import (
 	"errors"
-	"fmt"
-	"os/exec"
-
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -36,10 +33,6 @@ type (
 )
 
 func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
-	if installationError := isGoInstalled(); installationError != nil {
-		return installationError
-	}
-
 	if validationError := isValid(opts); validationError != nil {
 		return validationError
 	}
@@ -77,14 +70,6 @@ func isValid(opts *CreateNewProjectOptions) error {
 		}
 
 		return ErrAllFieldsAreRequired
-	}
-	return nil
-}
-
-func isGoInstalled() error {
-	_, err := exec.LookPath("go")
-	if err != nil {
-		return fmt.Errorf("could not find %s in PATH. make sure that %s installed", "go", "go")
 	}
 	return nil
 }
