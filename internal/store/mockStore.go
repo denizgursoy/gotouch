@@ -7,7 +7,6 @@ package store
 import (
 	reflect "reflect"
 
-	langs "github.com/denizgursoy/gotouch/internal/langs"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -32,20 +31,6 @@ func NewMockStore(ctrl *gomock.Controller) *MockStore {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
-}
-
-// GetLanguageChecker mocks base method.
-func (m *MockStore) GetLanguageChecker() langs.LanguageChecker {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLanguageChecker")
-	ret0, _ := ret[0].(langs.LanguageChecker)
-	return ret0
-}
-
-// GetLanguageChecker indicates an expected call of GetLanguageChecker.
-func (mr *MockStoreMockRecorder) GetLanguageChecker() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLanguageChecker", reflect.TypeOf((*MockStore)(nil).GetLanguageChecker))
 }
 
 // GetStoreValues mocks base method.
@@ -74,18 +59,6 @@ func (m *MockStore) GetValue(key string) string {
 func (mr *MockStoreMockRecorder) GetValue(key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetValue", reflect.TypeOf((*MockStore)(nil).GetValue), key)
-}
-
-// SetLanguageChecker mocks base method.
-func (m *MockStore) SetLanguageChecker(arg0 langs.LanguageChecker) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "SetLanguageChecker", arg0)
-}
-
-// SetLanguageChecker indicates an expected call of SetLanguageChecker.
-func (mr *MockStoreMockRecorder) SetLanguageChecker(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLanguageChecker", reflect.TypeOf((*MockStore)(nil).SetLanguageChecker), arg0)
 }
 
 // SetValue mocks base method.

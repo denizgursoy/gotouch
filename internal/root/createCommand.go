@@ -1,6 +1,7 @@
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
@@ -40,14 +41,15 @@ func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 		}
 
 		options := operator.CreateNewProjectOptions{
-			Lister:     lister.GetInstance(),
-			Prompter:   prompter.GetInstance(),
-			Manager:    manager.GetInstance(),
-			Compressor: compressor.GetInstance(),
-			Executor:   executor.GetInstance(),
-			Logger:     newLogger,
-			Path:       pointer,
-			Store:      store.GetInstance(),
+			Lister:          lister.GetInstance(),
+			Prompter:        prompter.GetInstance(),
+			Manager:         manager.GetInstance(),
+			Compressor:      compressor.GetInstance(),
+			Executor:        executor.GetInstance(),
+			Logger:          newLogger,
+			Path:            pointer,
+			Store:           store.GetInstance(),
+			LanguageChecker: langs.GetInstance(),
 		}
 
 		err := cmdr.CreateNewProject(&options)

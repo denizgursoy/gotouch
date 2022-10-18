@@ -62,20 +62,6 @@ func (mr *MockManagerMockRecorder) CreateFile(reader, path interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateFile", reflect.TypeOf((*MockManager)(nil).CreateFile), reader, path)
 }
 
-// EditGoModule mocks base method.
-func (m *MockManager) EditGoModule() error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EditGoModule")
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// EditGoModule indicates an expected call of EditGoModule.
-func (mr *MockManagerMockRecorder) EditGoModule() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditGoModule", reflect.TypeOf((*MockManager)(nil).EditGoModule))
-}
-
 // GetExtractLocation mocks base method.
 func (m *MockManager) GetExtractLocation() string {
 	m.ctrl.T.Helper()

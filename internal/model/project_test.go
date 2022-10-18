@@ -9,15 +9,18 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestProjectStructureData_IsValid(t *testing.T) {
-	projectName := "test-Project"
-	validProjectURL := "https://github.com/denizgursoy/gotouch/graphs/traffic"
+var (
+	projectName     = "test-Project"
+	validProjectURL = "https://github.com/denizgursoy/gotouch/graphs/traffic"
 
-	validProjectWithNoCustom := ProjectStructureData{
+	validProjectWithNoCustom = ProjectStructureData{
 		Name:      projectName,
 		Reference: "",
 		URL:       validProjectURL,
 	}
+)
+
+func TestProjectStructureData_IsValid(t *testing.T) {
 
 	choice1 := "1"
 	choice2 := "2"
@@ -48,7 +51,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 
 	choiceValidWithDependencies := &Choice{
 		Choice:       "choice",
-		Dependencies: []*string{&choice1, &choice2},
+		Dependencies: []interface{}{choice1, choice2},
 		Files:        nil,
 	}
 
@@ -353,5 +356,66 @@ func TestProjectStructureText(t *testing.T) {
 		}
 		expected := data.Name
 		require.Equal(t, expected, data.String())
+	})
+}
+
+func TestDependencyTest(t *testing.T) {
+	t.Run("should validate go dependency", func(t *testing.T) {
+		custom := validProjectWithNoCustom
+		choices := make([]*Choice, 0)
+
+		goDependencyChoice := &Choice{
+			Choice:       "asdsd",
+			Dependencies: []interface{}{"asdsad"},
+		}
+
+		choices = append(choices, goDependencyChoice)
+
+		custom.Questions = append(custom.Questions, &Question{
+			Direction: "asdasdas",
+			CanSkip:   true,
+			Choices:   choices,
+		})
+
+		err := custom.IsValid()
+		require.Nil(t, err)
+	})
+
+	t.Run("should return false if not go dependency", func(t *testing.T) {
+		custom := validProjectWithNoCustom
+		choices := make([]*Choice, 0)
+
+		type wrongType struct {
+			name    string
+			version string
+		}
+
+		wrongGoDependencyChoice := &Choice{
+			Choice: "asdsd",
+			Dependencies: []interface{}{
+				"asdsa",
+				wrongType{
+					name:    "x",
+					version: "y",
+				}},
+		}
+
+		choices = append(choices, wrongGoDependencyChoice)
+
+		custom.Questions = append(custom.Questions, &Question{
+			Direction: "asdasdas",
+			CanSkip:   true,
+			Choices:   choices,
+		})
+
+		err := custom.IsValid()
+		require.NotNil(t, err)
+
+		expectedError := &ErrWrongDependencyFormat{}
+
+		require.ErrorAs(t, err, expectedError)
+		require.Equal(t, 0, expectedError.questionIndex)
+		require.Equal(t, 0, expectedError.choiceIndex)
+		require.Equal(t, 1, expectedError.dependencyIndex)
 	})
 }

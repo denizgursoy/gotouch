@@ -2,10 +2,6 @@ package executor
 
 import (
 	"errors"
-	"log"
-	"os"
-	"os/exec"
-
 	"github.com/denizgursoy/gotouch/internal/store"
 )
 
@@ -46,23 +42,5 @@ func (e executor) Execute(requirements Requirements) error {
 		}
 	}
 
-	return nil
-}
-
-func (e *executor) RunCommand(data *CommandData) error {
-	if data.WorkingDir == nil {
-		projectFullPath := e.Store.GetValue(store.ProjectFullPath)
-		err := os.Chdir(projectFullPath)
-		if err != nil {
-			return err
-		}
-	}
-	cmd := exec.Command(data.Command, data.Args...)
-
-	err := cmd.Run()
-	if err != nil {
-		log.Printf("Command finished with error: %v", err)
-		return err
-	}
 	return nil
 }

@@ -46,17 +46,3 @@ func (mr *MockExecutorMockRecorder) Execute(requirements interface{}) *gomock.Ca
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Execute", reflect.TypeOf((*MockExecutor)(nil).Execute), requirements)
 }
-
-// RunCommand mocks base method.
-func (m *MockExecutor) RunCommand(data *CommandData) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RunCommand", data)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// RunCommand indicates an expected call of RunCommand.
-func (mr *MockExecutorMockRecorder) RunCommand(data interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunCommand", reflect.TypeOf((*MockExecutor)(nil).RunCommand), data)
-}

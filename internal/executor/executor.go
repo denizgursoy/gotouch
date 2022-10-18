@@ -13,15 +13,8 @@ type (
 
 	Requirements []model.Requirement
 
-	CommandData struct {
-		WorkingDir *string
-		Command    string
-		Args       []string
-	}
-
 	Executor interface {
 		Execute(requirements Requirements) error
-		RunCommand(data *CommandData) error
 	}
 )
 

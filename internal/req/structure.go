@@ -16,13 +16,14 @@ import (
 
 type (
 	ProjectStructureRequirement struct {
-		ProjectsData []*model.ProjectStructureData
-		Prompter     prompter.Prompter     `validate:"required"`
-		Compressor   compressor.Compressor `validate:"required"`
-		Manager      manager.Manager       `validate:"required"`
-		Logger       logger.Logger         `validate:"required"`
-		Executor     executor.Executor     `validate:"required"`
-		Store        store.Store           `validate:"required"`
+		ProjectsData    []*model.ProjectStructureData
+		Prompter        prompter.Prompter     `validate:"required"`
+		Compressor      compressor.Compressor `validate:"required"`
+		Manager         manager.Manager       `validate:"required"`
+		Logger          logger.Logger         `validate:"required"`
+		Executor        executor.Executor     `validate:"required"`
+		Store           store.Store           `validate:"required"`
+		LanguageChecker langs.Checker         `validate:"required"`
 	}
 
 	projectStructureTask struct {
@@ -32,6 +33,7 @@ type (
 		Executor         executor.Executor           `validate:"required"`
 		Logger           logger.Logger               `validate:"required"`
 		Store            store.Store                 `validate:"required"`
+		LanguageChecker  langs.Checker               `validate:"required"`
 	}
 )
 
@@ -79,9 +81,9 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 
 	projectStructureData := selected.(*model.ProjectStructureData)
 
-	p.setLanguageChecker(projectStructureData)
-
-	if setupError := p.Store.GetLanguageChecker().CheckSetup(); setupError != nil {
+	//TODO: test
+	p.LanguageChecker.Init(projectStructureData.Language, p.Logger, p.Store)
+	if setupError := p.LanguageChecker.GetLangChecker().CheckSetup(); setupError != nil {
 		return nil, nil, setupError
 	}
 
@@ -92,18 +94,20 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		Logger:           p.Logger,
 		Executor:         p.Executor,
 		Store:            p.Store,
+		LanguageChecker:  p.LanguageChecker,
 	}
 
 	tasks = append(tasks, &task)
 
 	for _, question := range task.ProjectStructure.Questions {
 		requirements = append(requirements, &QuestionRequirement{
-			Question: *question,
-			Prompter: p.Prompter,
-			Logger:   p.Logger,
-			Executor: p.Executor,
-			Manager:  p.Manager,
-			Store:    p.Store,
+			Question:        *question,
+			Prompter:        p.Prompter,
+			Logger:          p.Logger,
+			Executor:        p.Executor,
+			Manager:         p.Manager,
+			Store:           p.Store,
+			LanguageChecker: p.LanguageChecker,
 		})
 	}
 
@@ -116,17 +120,10 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	return tasks, requirements, nil
 }
 
-func (p *ProjectStructureRequirement) setLanguageChecker(projectStructureData *model.ProjectStructureData) {
-	checker := langs.NewLanguageChecker(projectStructureData)
-	p.Store.SetLanguageChecker(checker)
-}
-
 func (p *projectStructureTask) Complete() error {
 	if err := validator.New().Struct(p); err != nil {
 		return err
 	}
-
-	moduleName := p.Store.GetValue(store.ModuleName)
 
 	p.Logger.LogInfo("Extracting files...")
 	if err := p.Compressor.UncompressFromUrl(p.ProjectStructure.URL); err != nil {
@@ -134,12 +131,9 @@ func (p *projectStructureTask) Complete() error {
 	}
 	p.Logger.LogInfo("Zip is extracted successfully")
 
-	p.Logger.LogInfo(fmt.Sprintf("module name will be -> %s", moduleName))
-	err := p.Manager.EditGoModule()
-	if err != nil {
-		return err
+	if preTaskError := p.LanguageChecker.GetLangChecker().CompletePreTask(); preTaskError != nil {
+		return preTaskError
 	}
-	p.Logger.LogInfo(fmt.Sprintf("module name was changed to -> %s", moduleName))
 
 	return nil
 }

@@ -2,6 +2,7 @@ package req
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"net/http"
 
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -15,12 +16,13 @@ import (
 
 type (
 	QuestionRequirement struct {
-		Question model.Question    `validate:"required"`
-		Prompter prompter.Prompter `validate:"required"`
-		Logger   logger.Logger     `validate:"required"`
-		Executor executor.Executor `validate:"required"`
-		Manager  manager.Manager   `validate:"required"`
-		Store    store.Store       `validate:"required"`
+		Question        model.Question    `validate:"required"`
+		Prompter        prompter.Prompter `validate:"required"`
+		Logger          logger.Logger     `validate:"required"`
+		Executor        executor.Executor `validate:"required"`
+		Manager         manager.Manager   `validate:"required"`
+		Store           store.Store       `validate:"required"`
+		LanguageChecker langs.Checker     `validate:"required"`
 	}
 
 	NoneOfAboveChoice struct{}
@@ -69,9 +71,11 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	if selection != nil {
 		for _, dependency := range selection.Dependencies {
 			tasks = append(tasks, &dependencyTask{
-				Dependency: *dependency,
-				Logger:     q.Logger,
-				Executor:   q.Executor,
+				Dependency:      dependency,
+				Logger:          q.Logger,
+				Executor:        q.Executor,
+				Store:           q.Store,
+				LanguageChecker: q.LanguageChecker,
 			})
 		}
 

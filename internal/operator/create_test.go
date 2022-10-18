@@ -4,6 +4,7 @@
 package operator
 
 import (
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -61,14 +62,17 @@ func TestCreateNewProject(t *testing.T) {
 				require.EqualValues(t, expectedProjectData, structure.ProjectsData)
 			})
 
+		checker := langs.GetInstance()
+
 		opts := &CreateNewProjectOptions{
-			Lister:     mockLister,
-			Prompter:   mockPrompter,
-			Manager:    newMockManager,
-			Compressor: mockCompressor,
-			Executor:   mockExecutor,
-			Logger:     mockLogger,
-			Store:      mockStore,
+			Lister:          mockLister,
+			Prompter:        mockPrompter,
+			Manager:         newMockManager,
+			Compressor:      mockCompressor,
+			Executor:        mockExecutor,
+			Logger:          mockLogger,
+			Store:           mockStore,
+			LanguageChecker: checker,
 		}
 
 		err := GetInstance().CreateNewProject(opts)
@@ -227,14 +231,15 @@ func Test_isValid_PathTest(t *testing.T) {
 	mockStore := store.GetInstance()
 
 	options := CreateNewProjectOptions{
-		Lister:     mockLister,
-		Prompter:   mockPrompter,
-		Manager:    newMockManager,
-		Compressor: mockCompressor,
-		Executor:   mockExecutor,
-		Logger:     mockLogger,
-		Store:      mockStore,
-		Path:       nil,
+		Lister:          mockLister,
+		Prompter:        mockPrompter,
+		Manager:         newMockManager,
+		Compressor:      mockCompressor,
+		Executor:        mockExecutor,
+		Logger:          mockLogger,
+		Store:           mockStore,
+		Path:            nil,
+		LanguageChecker: langs.GetInstance(),
 	}
 	t.Run("should return no error if path is nil", func(t *testing.T) {
 		arg := options

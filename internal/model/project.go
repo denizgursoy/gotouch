@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"net/url"
 	"strings"
 )
@@ -26,7 +27,7 @@ type (
 
 	Choice struct {
 		Choice       string                 `yaml:"choice"`
-		Dependencies []*string              `yaml:"dependencies"`
+		Dependencies []interface{}          `yaml:"dependencies"`
 		Files        []*File                `yaml:"files"`
 		Values       map[string]interface{} `yaml:"values"`
 	}
@@ -70,36 +71,36 @@ func (p *ProjectStructureData) IsValid() error {
 	}
 
 	if len(p.Questions) > 0 {
-		for i, q := range p.Questions {
+		for questionIndex, q := range p.Questions {
 			if len(strings.TrimSpace(q.Direction)) == 0 {
 				return ErrEmptyQuestionField{
-					index: i,
+					index: questionIndex,
 					field: "Direction",
 				}
 			}
 			if len(q.Choices) == 0 {
 				return ErrEmptyQuestionField{
-					index: i,
+					index: questionIndex,
 					field: "Choices",
 				}
 			} else if len(q.Choices) == 1 && q.CanSelectMultiple == true {
-				return ErrCanSelectMultiple{index: i}
+				return ErrCanSelectMultiple{index: questionIndex}
 			} else if len(q.Choices) == 1 && q.CanSkip == false {
-				return ErrCanSkip{index: i}
+				return ErrCanSkip{index: questionIndex}
 			}
-			for j, choice := range q.Choices {
+			for choiceIndex, choice := range q.Choices {
 				if len(strings.TrimSpace(choice.Choice)) == 0 {
 					return ErrEmptyChoice{
-						questionIndex: i,
-						choiceIndex:   j,
+						questionIndex: questionIndex,
+						choiceIndex:   choiceIndex,
 						field:         "Choice",
 					}
 				}
 
 				if len(choice.Files) == 0 && len(choice.Dependencies) == 0 {
 					return ErrEmptyFileAndDependency{
-						questionIndex: i,
-						choiceIndex:   j,
+						questionIndex: questionIndex,
+						choiceIndex:   choiceIndex,
 					}
 				}
 
@@ -108,8 +109,8 @@ func (p *ProjectStructureData) IsValid() error {
 
 						if len(strings.TrimSpace(file.PathFromRoot)) == 0 {
 							return ErrEmptyFileField{
-								questionIndex: i,
-								choiceIndex:   j,
+								questionIndex: questionIndex,
+								choiceIndex:   choiceIndex,
 								fileIndex:     k,
 								field:         "PathFromRoot",
 							}
@@ -117,16 +118,16 @@ func (p *ProjectStructureData) IsValid() error {
 
 						if len(strings.TrimSpace(file.Url)) == 0 && len(strings.TrimSpace(file.Content)) == 0 {
 							return ErrEmptyUrlAndContent{
-								questionIndex: i,
-								choiceIndex:   j,
+								questionIndex: questionIndex,
+								choiceIndex:   choiceIndex,
 								fileIndex:     k,
 							}
 						}
 
 						if len(strings.TrimSpace(file.Url)) > 0 && len(strings.TrimSpace(file.Content)) > 0 {
 							return ErrMultipleFieldUrlAndContent{
-								questionIndex: i,
-								choiceIndex:   j,
+								questionIndex: questionIndex,
+								choiceIndex:   choiceIndex,
 								fileIndex:     k,
 							}
 						}
@@ -136,8 +137,8 @@ func (p *ProjectStructureData) IsValid() error {
 
 							if len(fileUrl) == 0 {
 								return ErrEmptyFileField{
-									questionIndex: i,
-									choiceIndex:   j,
+									questionIndex: questionIndex,
+									choiceIndex:   choiceIndex,
 									fileIndex:     k,
 									field:         "URL",
 								}
@@ -145,8 +146,8 @@ func (p *ProjectStructureData) IsValid() error {
 
 							if _, err := url.ParseRequestURI(fileUrl); err != nil {
 								return ErrInvalidURLFile{
-									questionIndex: i,
-									choiceIndex:   j,
+									questionIndex: questionIndex,
+									choiceIndex:   choiceIndex,
 									fileIndex:     k,
 								}
 							}
@@ -155,8 +156,8 @@ func (p *ProjectStructureData) IsValid() error {
 
 							if len(content) == 0 {
 								return ErrEmptyFileField{
-									questionIndex: i,
-									choiceIndex:   j,
+									questionIndex: questionIndex,
+									choiceIndex:   choiceIndex,
 									fileIndex:     k,
 									field:         "Content",
 								}
@@ -164,6 +165,22 @@ func (p *ProjectStructureData) IsValid() error {
 						}
 					}
 				}
+
+				if len(choice.Dependencies) > 0 {
+					checker := langs.GetInstance()
+					checker.Init(p.Language, nil, nil)
+
+					for dependencyIndex, dependency := range choice.Dependencies {
+						if err := checker.GetLangChecker().CheckDependency(dependency); err != nil {
+							return ErrWrongDependencyFormat{
+								questionIndex:   questionIndex,
+								choiceIndex:     choiceIndex,
+								dependencyIndex: dependencyIndex,
+							}
+						}
+					}
+				}
+
 			}
 		}
 	}
@@ -201,6 +218,11 @@ type (
 		choiceIndex   int
 		fileIndex     int
 	}
+	ErrWrongDependencyFormat struct {
+		questionIndex   int
+		choiceIndex     int
+		dependencyIndex int
+	}
 	ErrEmptyFileField struct {
 		questionIndex int
 		choiceIndex   int
@@ -236,6 +258,10 @@ func (e ErrEmptyFileAndDependency) Error() string {
 
 func (e ErrEmptyUrlAndContent) Error() string {
 	return fmt.Sprintf("%d. question %d. choice %d. file do not have both URL and Content. File must have at least one URL or Content", e.questionIndex+1, e.choiceIndex+1, e.fileIndex+1)
+}
+
+func (e ErrWrongDependencyFormat) Error() string {
+	return fmt.Sprintf("%d. question %d. choice %d. dependecies' format is not correct", e.questionIndex+1, e.choiceIndex+1, e.dependencyIndex+1)
 }
 
 func (e ErrMultipleFieldUrlAndContent) Error() string {

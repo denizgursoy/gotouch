@@ -3,6 +3,7 @@ package req
 import (
 	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/store"
@@ -31,7 +32,7 @@ var (
 	}
 	choice = model.Choice{
 		Choice:       "112322",
-		Dependencies: []*string{&dependency1, &dependency2},
+		Dependencies: []interface{}{dependency1, dependency2},
 		Files:        []*model.File{&file1, &file2},
 		Values: map[string]interface{}{
 			"X": "sds",
@@ -70,12 +71,13 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: yesNoQuestion,
-			Prompter: mockPrompter,
-			Logger:   logger.NewLogger(),
-			Executor: mockExecutor,
-			Manager:  mockManager,
-			Store:    mockStore,
+			Question:        yesNoQuestion,
+			Prompter:        mockPrompter,
+			Logger:          logger.NewLogger(),
+			Executor:        mockExecutor,
+			Manager:         mockManager,
+			Store:           mockStore,
+			LanguageChecker: langs.GetInstance(),
 		}
 
 		mockStore.EXPECT().StoreValues(gomock.Eq(yesNoQuestion.Choices[0].Values))
@@ -96,12 +98,13 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: yesNoQuestion,
-			Prompter: mockPrompter,
-			Logger:   logger.NewLogger(),
-			Executor: mockExecutor,
-			Manager:  mockManager,
-			Store:    mockStore,
+			Question:        yesNoQuestion,
+			Prompter:        mockPrompter,
+			Logger:          logger.NewLogger(),
+			Executor:        mockExecutor,
+			Manager:         mockManager,
+			Store:           mockStore,
+			LanguageChecker: langs.GetInstance(),
 		}
 
 		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, nil).Times(1)
@@ -121,12 +124,13 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: yesNoQuestion,
-			Prompter: mockPrompter,
-			Logger:   logger.NewLogger(),
-			Executor: mockExecutor,
-			Manager:  mockManager,
-			Store:    mockStore,
+			Question:        yesNoQuestion,
+			Prompter:        mockPrompter,
+			Logger:          logger.NewLogger(),
+			Executor:        mockExecutor,
+			Manager:         mockManager,
+			Store:           mockStore,
+			LanguageChecker: langs.GetInstance(),
 		}
 
 		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, promptErr).Times(1)
@@ -145,12 +149,13 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: multipleChoiceQuestion,
-			Prompter: mockPrompter,
-			Logger:   logger.NewLogger(),
-			Executor: mockExecutor,
-			Manager:  mockManager,
-			Store:    mockStore,
+			Question:        multipleChoiceQuestion,
+			Prompter:        mockPrompter,
+			Logger:          logger.NewLogger(),
+			Executor:        mockExecutor,
+			Manager:         mockManager,
+			Store:           mockStore,
+			LanguageChecker: langs.GetInstance(),
 		}
 
 		choices := make([]fmt.Stringer, 0)
@@ -176,12 +181,13 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: multipleChoiceQuestionWithSkip,
-			Prompter: mockPrompter,
-			Logger:   logger.NewLogger(),
-			Executor: mockExecutor,
-			Manager:  mockManager,
-			Store:    mockStore,
+			Question:        multipleChoiceQuestionWithSkip,
+			Prompter:        mockPrompter,
+			Logger:          logger.NewLogger(),
+			Executor:        mockExecutor,
+			Manager:         mockManager,
+			Store:           mockStore,
+			LanguageChecker: langs.GetInstance(),
 		}
 
 		choices := make([]fmt.Stringer, 0)
@@ -208,12 +214,13 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		requirement := QuestionRequirement{
-			Question: multipleChoiceQuestionWithSkip,
-			Prompter: mockPrompter,
-			Logger:   logger.NewLogger(),
-			Executor: mockExecutor,
-			Manager:  mockManager,
-			Store:    mockStore,
+			Question:        multipleChoiceQuestionWithSkip,
+			Prompter:        mockPrompter,
+			Logger:          logger.NewLogger(),
+			Executor:        mockExecutor,
+			Manager:         mockManager,
+			Store:           mockStore,
+			LanguageChecker: langs.GetInstance(),
 		}
 
 		choices := make([]fmt.Stringer, 0)

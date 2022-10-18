@@ -1,7 +1,6 @@
 package manager
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -39,35 +38,6 @@ func (f *fManager) CreateDirectoryIfNotExists(directoryName string) error {
 
 func (f *fManager) GetExtractLocation() string {
 	return GetExtractLocation()
-}
-
-func (f *fManager) EditGoModule() error {
-	projectFullPath := f.Store.GetValue(store.ProjectFullPath)
-	moduleName := f.Store.GetValue(store.ModuleName)
-
-	args := make([]string, 0)
-
-	if f.hasGoModule(projectFullPath) {
-		args = append(args, "mod", "edit", "-module", moduleName)
-	} else {
-		args = append(args, "mod", "init", moduleName)
-	}
-
-	data := &executor.CommandData{
-		Command: "go",
-		Args:    args,
-	}
-
-	return f.Executor.RunCommand(data)
-}
-
-func (f *fManager) hasGoModule(projectDirectory string) bool {
-	path := fmt.Sprintf("%s/go.mod", projectDirectory)
-	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
-		return false
-	}
-
-	return true
 }
 
 func (f *fManager) CreateFile(reader io.ReadCloser, path string) error {

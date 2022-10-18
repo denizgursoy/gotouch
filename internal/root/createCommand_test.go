@@ -1,6 +1,7 @@
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -39,14 +40,15 @@ func TestGetCreateCommandHandler(t *testing.T) {
 			mockCommander := operator.NewMockOperator(controller)
 
 			expectedCall := &operator.CreateNewProjectOptions{
-				Lister:     lister.GetInstance(),
-				Prompter:   prompter.GetInstance(),
-				Manager:    manager.GetInstance(),
-				Compressor: compressor.GetInstance(),
-				Executor:   executor.GetInstance(),
-				Logger:     logger.NewLogger(),
-				Path:       argument.pointer,
-				Store:      store.GetInstance(),
+				Lister:          lister.GetInstance(),
+				Prompter:        prompter.GetInstance(),
+				Manager:         manager.GetInstance(),
+				Compressor:      compressor.GetInstance(),
+				Executor:        executor.GetInstance(),
+				Logger:          logger.NewLogger(),
+				Path:            argument.pointer,
+				Store:           store.GetInstance(),
+				LanguageChecker: langs.GetInstance(),
 			}
 
 			mockCommander.EXPECT().CreateNewProject(gomock.Eq(expectedCall))
