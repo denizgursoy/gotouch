@@ -221,6 +221,13 @@ command asks for project name. Project name is written to go module and used for
 Package command compresses the source directory with the zip extension and moves the zip file to target directory.
 `source` and `target` flags are optional. Default values for `source` and `target` are `./`, `../` respectively.
 
+Package command ignores following files/directories:
+1. __MACOS
+2. .DS_Store
+3. .idea", 
+4. .vscode 
+5. .git
+
 ### validate subcommand
 
 `gotouch validate --file path-to-yaml`
