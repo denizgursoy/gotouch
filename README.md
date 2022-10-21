@@ -224,7 +224,7 @@ Package command compresses the source directory with the zip extension and moves
 Package command ignores following files/directories:
 1. __MACOS
 2. .DS_Store
-3. .idea", 
+3. .idea
 4. .vscode 
 5. .git
 
