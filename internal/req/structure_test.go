@@ -170,10 +170,18 @@ func TestStructure_Complete(t *testing.T) {
 		mockLogger := logger.NewLogger()
 		mockExecutor := executor.NewMockExecutor(controller)
 		mockStore := store.NewMockStore(controller)
+		mockChecker := langs.NewMockChecker(controller)
 
 		mockUncompressor.
 			EXPECT().
-			UncompressFromUrl(gomock.Eq(projectStructure1.URL))
+			UncompressFromUrl(gomock.Eq(projectStructure1.URL)).
+			Return(nil)
+
+		mockChecker.
+			EXPECT().
+			GetLangChecker().
+			Return(langs.NewEmptySetupChecker()).
+			Times(1)
 
 		p := &projectStructureTask{
 			ProjectStructure: &projectStructure1,
@@ -182,7 +190,7 @@ func TestStructure_Complete(t *testing.T) {
 			Logger:           mockLogger,
 			Executor:         mockExecutor,
 			Store:            mockStore,
-			LanguageChecker:  langs.GetInstance(),
+			LanguageChecker:  mockChecker,
 		}
 
 		err := p.Complete()
