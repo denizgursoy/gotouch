@@ -16,6 +16,15 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 )
 
+const echoWithVersion = "github.com/labstack/echo/v4 v4.9.1"
+
+var (
+	dependencies = []string{
+		echoWithVersion,
+		"github.com/spf13/viper",
+	}
+)
+
 type ZippingTestSuite struct {
 	suite.Suite
 	c                   testcontainers.Container
@@ -89,7 +98,7 @@ func (z *ZippingTestSuite) TestUnzipping() {
 
 	z.checkDefaultProjectStructure()
 
-	z.checkModuleName("module testapp")
+	z.checkModuleName("module testapp", dependencies)
 }
 
 func (z *ZippingTestSuite) TestGithub() {
@@ -97,7 +106,7 @@ func (z *ZippingTestSuite) TestGithub() {
 	z.executeCommand()
 
 	z.checkDefaultProjectStructure()
-	z.checkModuleName("module g.c/dg/testapp")
+	z.checkModuleName("module g.c/dg/testapp", dependencies)
 }
 
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
@@ -125,12 +134,19 @@ func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
 	z.EqualValues(expectedFileContent, actualFileContent)
 }
 
-func (z *ZippingTestSuite) checkModuleName(expectedModuleName string) {
+func (z *ZippingTestSuite) checkModuleName(expectedModuleName string, dependencies []string) {
 	open, err := os.ReadFile(fmt.Sprintf("%s/%s/go.mod", z.mountPath, z.folderName))
 	z.Nil(err, "go module file not found")
 
-	split := strings.Split(string(open), "\n")
+	moduleContent := string(open)
+	split := strings.Split(moduleContent, "\n")
+
 	z.EqualValues(expectedModuleName, split[0], "Module name did not change: expected: %s, actual: %s", expectedModuleName, split[0])
+
+	for _, dependency := range dependencies {
+		z.True(strings.Contains(moduleContent, dependency))
+	}
+
 }
 
 func (z *ZippingTestSuite) checkDirectoriesExist(directories []string) {
