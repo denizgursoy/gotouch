@@ -1,54 +1,63 @@
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/compressor"
+	"github.com/denizgursoy/gotouch/internal/logger"
+	"github.com/denizgursoy/gotouch/internal/operator"
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func TestGetPackageCommandHandler(t *testing.T) {
-	//t.Run("should package successfully", func(t *testing.T) {
-	//
-	//	type arg struct {
-	//		flag    string
-	//		pointer *string
-	//	}
-	//
-	//	flag := "./test-input.yaml"
-	//	arguments := []arg{
-	//		{
-	//			flag:    flag,
-	//			pointer: &flag,
-	//		},
-	//		{
-	//			flag:    "",
-	//			pointer: nil,
-	//		},
-	//	}
-	//
-	//	for _, argument := range arguments {
-	//		controller := gomock.NewController(t)
-	//		mockCommander := operator.NewMockCommander(controller)
-	//
-	//		expectedCall := &operator.CreateCommandOptions{
-	//			Lister:     lister.GetInstance(),
-	//			Prompter:   prompter.GetInstance(),
-	//			Manager:    manager.GetInstance(),
-	//			Compressor: compressor.GetInstance(),
-	//			Executor:   executor.GetInstance(),
-	//			Logger:     logger.NewLogger(),
-	//			Path:       argument.pointer,
-	//			Store:      store.GetInstance(),
-	//		}
-	//
-	//		mockCommander.EXPECT().CreateNewProject(gomock.Eq(expectedCall))
-	//
-	//		command := CreateRootCommand(mockCommander)
-	//		command.SetArgs(getPackageTestArguments("".""))
-	//
-	//		err := command.Execute()
-	//		require.Nil(t, err)
-	//	}
-	//
-	//})
+	t.Run("should package successfully", func(t *testing.T) {
+
+		type arg struct {
+			source         *string
+			target         *string
+			expectedSource string
+			expectedTarget string
+		}
+
+		folder := "/x"
+		arguments := []arg{
+			{
+				source:         &folder,
+				target:         &folder,
+				expectedSource: folder,
+				expectedTarget: folder,
+			},
+			{
+				source:         nil,
+				target:         nil,
+				expectedSource: ".",
+				expectedTarget: "..",
+			},
+		}
+
+		for _, argument := range arguments {
+			controller := gomock.NewController(t)
+			mockCommander := operator.NewMockOperator(controller)
+
+			expectedCall := &operator.CompressDirectoryOptions{
+				SourceDirectory: &argument.expectedSource,
+				TargetDirectory: &argument.expectedTarget,
+				Compressor:      compressor.GetInstance(),
+				Logger:          logger.NewLogger(),
+			}
+
+			mockCommander.EXPECT().CompressDirectory(gomock.Eq(expectedCall))
+
+			command := CreatePackageCommand(mockCommander)
+
+			if argument.source != nil || argument.target != nil {
+				command.SetArgs(getPackageTestArguments(*argument.source, *argument.target))
+			}
+
+			err := command.Execute()
+			require.Nil(t, err)
+		}
+	})
 }
 
 func getPackageTestArguments(source, target string) []string {
