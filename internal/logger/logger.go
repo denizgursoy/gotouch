@@ -1,6 +1,10 @@
 package logger
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/sirupsen/logrus"
+	"runtime"
+)
 
 type (
 	Logger interface {
@@ -34,10 +38,18 @@ func NewLogger() Logger {
 
 func (l *logger) LogErrorIfExists(err error) {
 	if err != nil {
-		fmt.Println(Fata(err.Error()))
+		if runtime.GOOS == "windows" {
+			logrus.Error(err.Error())
+		} else {
+			fmt.Println(Fata(err.Error()))
+		}
 	}
 }
 
 func (l *logger) LogInfo(msg string) {
-	fmt.Println(Info(msg))
+	if runtime.GOOS == "windows" {
+		logrus.Info(msg)
+	} else {
+		fmt.Println(Info(msg))
+	}
 }
