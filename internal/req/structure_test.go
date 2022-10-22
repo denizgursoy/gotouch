@@ -159,34 +159,33 @@ func TestStructure_AskForInput(t *testing.T) {
 	})
 }
 
-// TODO open
-//func TestStructure_Complete(t *testing.T) {
-//	t.Run("should call uncompress with the URL", func(t *testing.T) {
-//		controller := gomock.NewController(t)
-//
-//		defer controller.Finish()
-//
-//		mockUncompressor := compressor.NewMockCompressor(controller)
-//		mockManager := manager.NewMockManager(controller)
-//		mockLogger := logger.NewLogger()
-//		mockExecutor := executor.NewMockExecutor(controller)
-//		mockStore := store.NewMockStore(controller)
-//
-//		mockUncompressor.
-//			EXPECT().
-//			UncompressFromUrl(gomock.Eq(projectStructure1.URL))
-//
-//		p := &projectStructureTask{
-//			ProjectStructure: &projectStructure1,
-//			Compressor:       mockUncompressor,
-//			Manager:          mockManager,
-//			Logger:           mockLogger,
-//			Executor:         mockExecutor,
-//			Store:            mockStore,
-//			LanguageChecker:  langs.GetInstance(),
-//		}
-//
-//		err := p.Complete()
-//		require.Nil(t, err)
-//	})
-//}
+func TestStructure_Complete(t *testing.T) {
+	t.Run("should call uncompress with the URL", func(t *testing.T) {
+		controller := gomock.NewController(t)
+
+		defer controller.Finish()
+
+		mockUncompressor := compressor.NewMockCompressor(controller)
+		mockManager := manager.NewMockManager(controller)
+		mockLogger := logger.NewLogger()
+		mockExecutor := executor.NewMockExecutor(controller)
+		mockStore := store.NewMockStore(controller)
+
+		mockUncompressor.
+			EXPECT().
+			UncompressFromUrl(gomock.Eq(projectStructure1.URL))
+
+		p := &projectStructureTask{
+			ProjectStructure: &projectStructure1,
+			Compressor:       mockUncompressor,
+			Manager:          mockManager,
+			Logger:           mockLogger,
+			Executor:         mockExecutor,
+			Store:            mockStore,
+			LanguageChecker:  langs.GetInstance(),
+		}
+
+		err := p.Complete()
+		require.Nil(t, err)
+	})
+}
