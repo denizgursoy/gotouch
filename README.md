@@ -14,19 +14,27 @@ Install, run on CLI, make your selections and start development.
 </p>
 
 ## Installation
+
 ```bash
 go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 ```
 
 ## Usage
-Execute 
+
+Execute
+
 ```bash
 gotouch
 ```
-Gotouch will use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml) if -f/--file argument is not provided. If you have custom properties yaml, execute 
+
+Gotouch will
+use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml) if
+-f/--file argument is not provided. If you have custom properties yaml, execute
+
 ```bash
 gotouch -f path-to-properties-yaml
 ```
+
 # How Gotouch works
 
 1. Asks for user to select a project structure in [properties yaml](#Write-your-properties-yaml-file)
@@ -214,8 +222,8 @@ If you share your properties yaml with us, we can add it to [list](./List.md) so
 
 gotouch command uses [properties yaml](#Write-your-yaml-file) file for prompting user to enter name and select project
 structure. If file flag value is not provided, it is going to
-use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml). Firstly,The
-command asks for project name. Project name is written to go module and used for directory name.
+use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml).
+Firstly,The command asks for project name. Project name is written to go module and used for directory name.
 
 ### package subcommand
 
@@ -225,11 +233,12 @@ Package command compresses the source directory with the zip extension and moves
 `source` and `target` flags are optional. Default values for `source` and `target` are `./`, `../` respectively.
 
 Package command ignores following files/directories:
-1. __MACOS
-2. .DS_Store
-3. .idea
-4. .vscode 
-5. .git
+
+1. ***__MACOS***
+2. ***.DS_Store***
+3. ***.idea***
+4. ***.vscode***
+5. ***.git***
 
 ### validate subcommand
 
