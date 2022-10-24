@@ -24,3 +24,6 @@ integration: build-test
 
 mock:
 	go generate -v ./...
+
+release:
+	goreleaser release --snapshot --rm-dist
