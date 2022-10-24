@@ -1,14 +1,26 @@
 // go:build windows
+//go:build windows
 // +build windows
 
 package logger
 
-import "github.com/sirupsen/logrus"
+import (
+	"github.com/mattn/go-colorable"
+	"io"
+)
+
+var (
+	colorableStdout io.Writer
+)
+
+func init() {
+	colorableStdout = colorable.NewColorableStdout()
+}
 
 func logError(msg string) {
-	logrus.Error(msg)
+	colorableStdout.Write([]byte(msg))
 }
 
 func logInfo(msg string) {
-	logrus.Info(msg)
+	colorableStdout.Write([]byte(msg))
 }
