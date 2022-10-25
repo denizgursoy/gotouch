@@ -98,6 +98,7 @@ Properties yaml is a **list** of what we call `Project Structure` as it can be s
 - name: Empty Project Layout #mandatory - used for displaying project in listing
   reference: https://go.dev/ #optional - is appended to name while prompting project name
   url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory - url of template project
+  language: go # go, golang 
   values: # optional
     Port: 8080
   questions: #optional
