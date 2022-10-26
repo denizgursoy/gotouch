@@ -23,7 +23,7 @@ type (
 		Logger          logger.Logger         `validate:"required"`
 		Executor        executor.Executor     `validate:"required"`
 		Store           store.Store           `validate:"required"`
-		LanguageChecker langs.Checker         `validate:"required"`
+		LanguageChecker langs.Checker
 	}
 
 	projectStructureTask struct {
@@ -56,14 +56,14 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
-	p2 := &ProjectNameRequirement{
+	nameRequirement := &ProjectNameRequirement{
 		Prompter: p.Prompter,
 		Manager:  p.Manager,
 		Logger:   p.Logger,
 		Store:    p.Store,
 	}
 
-	nameTasks, nameRequirements, err := p2.AskForInput()
+	nameTasks, nameRequirements, err := nameRequirement.AskForInput()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -82,8 +82,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	projectStructureData := selected.(*model.ProjectStructureData)
 
 	//TODO: test
-	p.LanguageChecker.Init(projectStructureData.Language, p.Logger, p.Store)
-	if setupError := p.LanguageChecker.GetLangChecker().CheckSetup(); setupError != nil {
+	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
+	if setupError := p.LanguageChecker.CheckSetup(); setupError != nil {
 		return nil, nil, setupError
 	}
 
@@ -131,7 +131,7 @@ func (p *projectStructureTask) Complete() error {
 	}
 	p.Logger.LogInfo("Zip is extracted successfully")
 
-	if preTaskError := p.LanguageChecker.GetLangChecker().CompletePreTask(); preTaskError != nil {
+	if preTaskError := p.LanguageChecker.CompletePreTask(); preTaskError != nil {
 		return preTaskError
 	}
 

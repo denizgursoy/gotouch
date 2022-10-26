@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
-	"github.com/denizgursoy/gotouch/internal/langs"
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
@@ -22,15 +21,14 @@ var (
 
 type (
 	CreateNewProjectOptions struct {
-		Lister          lister.Lister         `validate:"required"`
-		Prompter        prompter.Prompter     `validate:"required"`
-		Manager         manager.Manager       `validate:"required"`
-		Compressor      compressor.Compressor `validate:"required"`
-		Executor        executor.Executor     `validate:"required"`
-		Logger          logger.Logger         `validate:"required"`
-		Path            *string               `validate:"omitempty,endswith=.yaml,url|file"`
-		Store           store.Store           `validate:"required"`
-		LanguageChecker langs.Checker         `validate:"required"`
+		Lister     lister.Lister         `validate:"required"`
+		Prompter   prompter.Prompter     `validate:"required"`
+		Manager    manager.Manager       `validate:"required"`
+		Compressor compressor.Compressor `validate:"required"`
+		Executor   executor.Executor     `validate:"required"`
+		Logger     logger.Logger         `validate:"required"`
+		Path       *string               `validate:"omitempty,endswith=.yaml,url|file"`
+		Store      store.Store           `validate:"required"`
 	}
 )
 
@@ -47,14 +45,13 @@ func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 	}
 
 	requirements = append(requirements, &req.ProjectStructureRequirement{
-		ProjectsData:    projects,
-		Prompter:        opts.Prompter,
-		Compressor:      opts.Compressor,
-		Manager:         opts.Manager,
-		Logger:          opts.Logger,
-		Executor:        opts.Executor,
-		Store:           opts.Store,
-		LanguageChecker: opts.LanguageChecker,
+		ProjectsData: projects,
+		Prompter:     opts.Prompter,
+		Compressor:   opts.Compressor,
+		Manager:      opts.Manager,
+		Logger:       opts.Logger,
+		Executor:     opts.Executor,
+		Store:        opts.Store,
 	})
 
 	return opts.Executor.Execute(requirements)

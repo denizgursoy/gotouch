@@ -7,61 +7,10 @@ package langs
 import (
 	reflect "reflect"
 
-	logger "github.com/denizgursoy/gotouch/internal/logger"
-	store "github.com/denizgursoy/gotouch/internal/store"
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockChecker is a mock of Checker interface.
-type MockChecker struct {
-	ctrl     *gomock.Controller
-	recorder *MockCheckerMockRecorder
-}
-
-// MockCheckerMockRecorder is the mock recorder for MockChecker.
-type MockCheckerMockRecorder struct {
-	mock *MockChecker
-}
-
-// NewMockChecker creates a new mock instance.
-func NewMockChecker(ctrl *gomock.Controller) *MockChecker {
-	mock := &MockChecker{ctrl: ctrl}
-	mock.recorder = &MockCheckerMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockChecker) EXPECT() *MockCheckerMockRecorder {
-	return m.recorder
-}
-
-// GetLangChecker mocks base method.
-func (m *MockChecker) GetLangChecker() LanguageChecker {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetLangChecker")
-	ret0, _ := ret[0].(LanguageChecker)
-	return ret0
-}
-
-// GetLangChecker indicates an expected call of GetLangChecker.
-func (mr *MockCheckerMockRecorder) GetLangChecker() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLangChecker", reflect.TypeOf((*MockChecker)(nil).GetLangChecker))
-}
-
-// Init mocks base method.
-func (m *MockChecker) Init(language string, Logger logger.Logger, str store.Store) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Init", language, Logger, str)
-}
-
-// Init indicates an expected call of Init.
-func (mr *MockCheckerMockRecorder) Init(language, Logger, str interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Init", reflect.TypeOf((*MockChecker)(nil).Init), language, Logger, str)
-}
-
-// MockLanguageChecker is a mock of LanguageChecker interface.
+// MockLanguageChecker is a mock of Checker interface.
 type MockLanguageChecker struct {
 	ctrl     *gomock.Controller
 	recorder *MockLanguageCheckerMockRecorder

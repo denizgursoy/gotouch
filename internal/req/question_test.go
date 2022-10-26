@@ -64,24 +64,11 @@ var (
 
 func TestQuestionRequirement_AskForInput(t *testing.T) {
 	t.Run("should call yes/no question and return 4 tasks if canskip is true and there is only one choice", func(t *testing.T) {
-		controller := gomock.NewController(t)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockStore := store.NewMockStore(controller)
+		requirement, controller := getTestQuestionRequirement(t, yesNoQuestion)
+		defer controller.Finish()
 
-		requirement := QuestionRequirement{
-			Question:        yesNoQuestion,
-			Prompter:        mockPrompter,
-			Logger:          logger.NewLogger(),
-			Executor:        mockExecutor,
-			Manager:         mockManager,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
-
-		mockStore.EXPECT().StoreValues(gomock.Eq(yesNoQuestion.Choices[0].Values))
-		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(true, nil).Times(1)
+		requirement.Store.(*store.MockStore).EXPECT().StoreValues(gomock.Eq(yesNoQuestion.Choices[0].Values))
+		requirement.Prompter.(*prompter.MockPrompter).EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(true, nil).Times(1)
 
 		task, requirements, err := requirement.AskForInput()
 		require.Nil(t, err)
@@ -91,23 +78,10 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 	})
 
 	t.Run("should return no task if no is selected", func(t *testing.T) {
-		controller := gomock.NewController(t)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockStore := store.NewMockStore(controller)
+		requirement, controller := getTestQuestionRequirement(t, yesNoQuestion)
+		defer controller.Finish()
 
-		requirement := QuestionRequirement{
-			Question:        yesNoQuestion,
-			Prompter:        mockPrompter,
-			Logger:          logger.NewLogger(),
-			Executor:        mockExecutor,
-			Manager:         mockManager,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
-
-		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, nil).Times(1)
+		requirement.Prompter.(*prompter.MockPrompter).EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, nil).Times(1)
 
 		task, requirements, err := requirement.AskForInput()
 		require.Nil(t, err)
@@ -117,23 +91,10 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 	})
 
 	t.Run("should return error if prompt returns error", func(t *testing.T) {
-		controller := gomock.NewController(t)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockStore := store.NewMockStore(controller)
+		requirement, controller := getTestQuestionRequirement(t, yesNoQuestion)
+		defer controller.Finish()
 
-		requirement := QuestionRequirement{
-			Question:        yesNoQuestion,
-			Prompter:        mockPrompter,
-			Logger:          logger.NewLogger(),
-			Executor:        mockExecutor,
-			Manager:         mockManager,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
-
-		mockPrompter.EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, promptErr).Times(1)
+		requirement.Prompter.(*prompter.MockPrompter).EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(false, promptErr).Times(1)
 
 		task, requirements, err := requirement.AskForInput()
 		require.ErrorIs(t, promptErr, err)
@@ -142,53 +103,27 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 	})
 
 	t.Run("should select from list if there is more than 1 choice", func(t *testing.T) {
-		controller := gomock.NewController(t)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockStore := store.NewMockStore(controller)
-
-		requirement := QuestionRequirement{
-			Question:        multipleChoiceQuestion,
-			Prompter:        mockPrompter,
-			Logger:          logger.NewLogger(),
-			Executor:        mockExecutor,
-			Manager:         mockManager,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
+		requirement, controller := getTestQuestionRequirement(t, multipleChoiceQuestion)
+		defer controller.Finish()
 
 		choices := make([]fmt.Stringer, 0)
 		for _, choice := range requirement.Question.Choices {
 			choices = append(choices, choice)
 		}
 
-		mockPrompter.
+		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
 			AskForSelectionFromList(gomock.Eq(multipleChoiceQuestion.Direction), gomock.Eq(choices)).
 			Return(multipleChoiceQuestion.Choices[0], nil).
 			Times(1)
 
-		mockStore.EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
 		_, _, _ = requirement.AskForInput()
 	})
 
 	t.Run("should add none of above choice if canskip is true", func(t *testing.T) {
-		controller := gomock.NewController(t)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockStore := store.NewMockStore(controller)
-
-		requirement := QuestionRequirement{
-			Question:        multipleChoiceQuestionWithSkip,
-			Prompter:        mockPrompter,
-			Logger:          logger.NewLogger(),
-			Executor:        mockExecutor,
-			Manager:         mockManager,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
+		requirement, controller := getTestQuestionRequirement(t, multipleChoiceQuestionWithSkip)
+		defer controller.Finish()
 
 		choices := make([]fmt.Stringer, 0)
 		for _, choice := range requirement.Question.Choices {
@@ -196,32 +131,19 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		}
 		choices = append(choices, noneOfAboveChoice)
 
-		mockPrompter.
+		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
 			AskForSelectionFromList(gomock.Eq(multipleChoiceQuestionWithSkip.Direction), gomock.Eq(choices)).
 			Return(multipleChoiceQuestionWithSkip.Choices[0], nil).
 			Times(1)
 
-		mockStore.EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
 		_, _, _ = requirement.AskForInput()
 	})
 
 	t.Run("should return error if select from list returns errors", func(t *testing.T) {
-		controller := gomock.NewController(t)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockStore := store.NewMockStore(controller)
-
-		requirement := QuestionRequirement{
-			Question:        multipleChoiceQuestionWithSkip,
-			Prompter:        mockPrompter,
-			Logger:          logger.NewLogger(),
-			Executor:        mockExecutor,
-			Manager:         mockManager,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
+		requirement, controller := getTestQuestionRequirement(t, multipleChoiceQuestionWithSkip)
+		defer controller.Finish()
 
 		choices := make([]fmt.Stringer, 0)
 		for _, choice := range requirement.Question.Choices {
@@ -229,7 +151,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		}
 		choices = append(choices, noneOfAboveChoice)
 
-		mockPrompter.
+		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
 			AskForSelectionFromList(gomock.Eq(multipleChoiceQuestionWithSkip.Direction), gomock.Eq(choices)).
 			Return(nil, promptErr).
@@ -239,4 +161,23 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		require.NotNil(t, err)
 		require.ErrorIs(t, err, promptErr)
 	})
+}
+
+func getTestQuestionRequirement(t *testing.T, question model.Question) (*QuestionRequirement, *gomock.Controller) {
+	controller := gomock.NewController(t)
+	mockExecutor := executor.NewMockExecutor(controller)
+	mockPrompter := prompter.NewMockPrompter(controller)
+	mockManager := manager.NewMockManager(controller)
+	mockStore := store.NewMockStore(controller)
+	mockChecker := langs.NewMockLanguageChecker(controller)
+
+	return &QuestionRequirement{
+		Question:        question,
+		Prompter:        mockPrompter,
+		Logger:          logger.NewLogger(),
+		Executor:        mockExecutor,
+		Manager:         mockManager,
+		Store:           mockStore,
+		LanguageChecker: mockChecker,
+	}, controller
 }

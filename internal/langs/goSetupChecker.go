@@ -27,7 +27,7 @@ type CommandData struct {
 	Args       []string
 }
 
-func NewGolangSetupChecker(Logger logger.Logger, Store store.Store) LanguageChecker {
+func NewGolangSetupChecker(Logger logger.Logger, Store store.Store) Checker {
 	return &golangSetupChecker{
 		Logger: Logger,
 		Store:  Store,

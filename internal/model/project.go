@@ -167,11 +167,9 @@ func (p *ProjectStructureData) IsValid() error {
 				}
 
 				if len(choice.Dependencies) > 0 {
-					checker := langs.GetInstance()
-					checker.Init(p.Language, nil, nil)
 
 					for dependencyIndex, dependency := range choice.Dependencies {
-						if err := checker.GetLangChecker().CheckDependency(dependency); err != nil {
+						if err := langs.GetChecker(p.Language, nil, nil).CheckDependency(dependency); err != nil {
 							return ErrWrongDependencyFormat{
 								questionIndex:   questionIndex,
 								choiceIndex:     choiceIndex,

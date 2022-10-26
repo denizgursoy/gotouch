@@ -17,6 +17,7 @@ var (
 		Name:      projectName,
 		Reference: "",
 		URL:       validProjectURL,
+		Language:  "go",
 	}
 )
 

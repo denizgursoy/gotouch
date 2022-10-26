@@ -63,44 +63,27 @@ var (
 
 func TestStructure_AskForInput(t *testing.T) {
 	t.Run("should ask for selection for project", func(t *testing.T) {
-		controller := gomock.NewController(t)
+		requirement, controller := getTestProjectRequirement(t, testProjectData)
 		defer controller.Finish()
-
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockUncompressor := compressor.NewMockCompressor(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockStore := store.GetInstance()
 
 		options := make([]fmt.Stringer, 0)
 		for _, datum := range testProjectData {
 			options = append(options, datum)
 		}
 
-		mockPrompter.
+		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
 			AskForSelectionFromList(gomock.Eq(SelectProjectTypeDirection), gomock.Eq(options)).
 			Return(testProjectData[0], nil).
 			Times(1)
 
-		mockPrompter.
+		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
 			AskForString(gomock.Eq(ModuleNameDirection), gomock.Any()).
 			Return("", nil).
 			Times(1)
 
-		p := &ProjectStructureRequirement{
-			ProjectsData:    testProjectData,
-			Prompter:        mockPrompter,
-			Compressor:      mockUncompressor,
-			Logger:          logger.NewLogger(),
-			Executor:        mockExecutor,
-			Manager:         mockManager,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
-
-		tasks, requirements, err := p.AskForInput()
+		tasks, requirements, err := requirement.AskForInput()
 
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
@@ -124,33 +107,16 @@ func TestStructure_AskForInput(t *testing.T) {
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {
-		controller := gomock.NewController(t)
+		requirement, controller := getTestProjectRequirement(t, nil)
 		defer controller.Finish()
 
-		mockPrompter := prompter.NewMockPrompter(controller)
-		mockCompressor := compressor.NewMockCompressor(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockLogger := logger.NewLogger()
-		mockStore := store.GetInstance()
-
-		p := &ProjectStructureRequirement{
-			Prompter:        mockPrompter,
-			Compressor:      mockCompressor,
-			Manager:         mockManager,
-			Logger:          mockLogger,
-			Executor:        mockExecutor,
-			Store:           mockStore,
-			LanguageChecker: langs.GetInstance(),
-		}
-
-		mockPrompter.
+		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
 			AskForSelectionFromList(gomock.Any(), gomock.Any()).
 			Return(nil, prompter.EmptyList).
 			Times(1)
 
-		tasks, _, err := p.AskForInput()
+		tasks, _, err := requirement.AskForInput()
 
 		require.NotNil(t, err)
 		require.ErrorIs(t, err, prompter.EmptyList)
@@ -161,39 +127,62 @@ func TestStructure_AskForInput(t *testing.T) {
 
 func TestStructure_Complete(t *testing.T) {
 	t.Run("should call uncompress with the URL", func(t *testing.T) {
-		controller := gomock.NewController(t)
-
+		task, controller := getTestProjectTask(t)
 		defer controller.Finish()
 
-		mockUncompressor := compressor.NewMockCompressor(controller)
-		mockManager := manager.NewMockManager(controller)
-		mockLogger := logger.NewLogger()
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockStore := store.NewMockStore(controller)
-		mockChecker := langs.NewMockChecker(controller)
-
-		mockUncompressor.
+		task.Compressor.(*compressor.MockCompressor).
 			EXPECT().
 			UncompressFromUrl(gomock.Eq(projectStructure1.URL)).
 			Return(nil)
 
-		mockChecker.
-			EXPECT().
-			GetLangChecker().
-			Return(langs.NewEmptySetupChecker()).
-			Times(1)
+		task.LanguageChecker.(*langs.MockLanguageChecker).EXPECT().CompletePreTask().Times(1)
 
-		p := &projectStructureTask{
-			ProjectStructure: &projectStructure1,
-			Compressor:       mockUncompressor,
-			Manager:          mockManager,
-			Logger:           mockLogger,
-			Executor:         mockExecutor,
-			Store:            mockStore,
-			LanguageChecker:  mockChecker,
-		}
-
-		err := p.Complete()
+		err := task.Complete()
 		require.Nil(t, err)
 	})
+}
+
+func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructureData) (ProjectStructureRequirement, *gomock.Controller) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	mockPrompter := prompter.NewMockPrompter(controller)
+	mockCompressor := compressor.NewMockCompressor(controller)
+	mockManager := manager.NewMockManager(controller)
+	mockExecutor := executor.NewMockExecutor(controller)
+	mockLogger := logger.NewLogger()
+	mockStore := store.GetInstance()
+
+	return ProjectStructureRequirement{
+		ProjectsData:    projectData,
+		Prompter:        mockPrompter,
+		Compressor:      mockCompressor,
+		Manager:         mockManager,
+		Logger:          mockLogger,
+		Executor:        mockExecutor,
+		Store:           mockStore,
+		LanguageChecker: langs.NewMockLanguageChecker(controller),
+	}, controller
+
+}
+
+func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller) {
+	controller := gomock.NewController(t)
+
+	mockUncompressor := compressor.NewMockCompressor(controller)
+	mockManager := manager.NewMockManager(controller)
+	mockLogger := logger.NewLogger()
+	mockExecutor := executor.NewMockExecutor(controller)
+	mockStore := store.NewMockStore(controller)
+	mockChecker := langs.NewMockLanguageChecker(controller)
+
+	return projectStructureTask{
+		ProjectStructure: &projectStructure1,
+		Compressor:       mockUncompressor,
+		Manager:          mockManager,
+		Logger:           mockLogger,
+		Executor:         mockExecutor,
+		Store:            mockStore,
+		LanguageChecker:  mockChecker,
+	}, controller
 }

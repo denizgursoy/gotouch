@@ -4,7 +4,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/logger"
 )
 
-func NewEmptySetupChecker() LanguageChecker {
+func NewEmptySetupChecker() Checker {
 	return &emptySetupChecker{}
 }
 

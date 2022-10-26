@@ -72,9 +72,6 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 		for _, dependency := range selection.Dependencies {
 			tasks = append(tasks, &dependencyTask{
 				Dependency:      dependency,
-				Logger:          q.Logger,
-				Executor:        q.Executor,
-				Store:           q.Store,
 				LanguageChecker: q.LanguageChecker,
 			})
 		}
