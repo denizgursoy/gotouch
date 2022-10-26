@@ -4,6 +4,7 @@
 package operator
 
 import (
+	"github.com/denizgursoy/gotouch/internal/cloner"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -27,25 +28,17 @@ var project1 = model.ProjectStructureData{
 
 func TestCreateNewProject(t *testing.T) {
 	t.Run("should call Operator with all requirements", func(t *testing.T) {
-		controller := gomock.NewController(t)
+		options, controller := createTestNewProjectOptions(t, nil)
 		defer controller.Finish()
 
-		mockLister := lister.NewMockLister(controller)
-		mockPrompter := prompter.NewMockPrompter(controller)
-		newMockManager := manager.NewMockManager(controller)
-		mockCompressor := compressor.NewMockCompressor(controller)
-		mockExecutor := executor.NewMockExecutor(controller)
-		mockLogger := logger.NewLogger()
-		mockStore := store.GetInstance()
-
 		expectedProjectData := []*model.ProjectStructureData{&project1}
-		mockLister.
+		options.Lister.(*lister.MockLister).
 			EXPECT().
 			GetProjectList(nil).
 			Return(expectedProjectData, nil).
 			Times(1)
 
-		mockExecutor.
+		options.Executor.(*executor.MockExecutor).
 			EXPECT().
 			Execute(gomock.Any()).
 			Do(func(arg interface{}) {
@@ -61,181 +54,23 @@ func TestCreateNewProject(t *testing.T) {
 				require.EqualValues(t, expectedProjectData, structure.ProjectsData)
 			})
 
-		opts := &CreateNewProjectOptions{
-			Lister:     mockLister,
-			Prompter:   mockPrompter,
-			Manager:    newMockManager,
-			Compressor: mockCompressor,
-			Executor:   mockExecutor,
-			Logger:     mockLogger,
-			Store:      mockStore,
-		}
-
-		err := GetInstance().CreateNewProject(opts)
+		err := GetInstance().CreateNewProject(&options)
 
 		require.Nil(t, err)
 	})
 }
 
 func Test_isValid(t *testing.T) {
-	controller := gomock.NewController(t)
+	options, controller := createTestNewProjectOptions(t, nil)
 	defer controller.Finish()
 
-	mockLister := lister.NewMockLister(controller)
-	mockPrompter := prompter.NewMockPrompter(controller)
-	newMockManager := manager.NewMockManager(controller)
-	mockCompressor := compressor.NewMockCompressor(controller)
-	mockExecutor := executor.NewMockExecutor(controller)
-	mockLogger := logger.NewLogger()
-
-	type args struct {
-		opts *CreateNewProjectOptions
-	}
-
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{
-			name: "all present",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Lister:     mockLister,
-					Prompter:   mockPrompter,
-					Manager:    newMockManager,
-					Compressor: mockCompressor,
-					Executor:   mockExecutor,
-					Logger:     mockLogger,
-				},
-			},
-			want: true,
-		},
-		{
-			name: "missing mockExecutor",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Lister:     mockLister,
-					Prompter:   mockPrompter,
-					Manager:    newMockManager,
-					Compressor: mockCompressor,
-					Logger:     mockLogger,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "missing mockCompressor",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Lister:   mockLister,
-					Prompter: mockPrompter,
-					Manager:  newMockManager,
-					Executor: mockExecutor,
-					Logger:   mockLogger,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "missing newMockManager",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Lister:     mockLister,
-					Prompter:   mockPrompter,
-					Compressor: mockCompressor,
-					Executor:   mockExecutor,
-					Logger:     mockLogger,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "missing mockPrompter",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Lister:     mockLister,
-					Manager:    newMockManager,
-					Compressor: mockCompressor,
-					Executor:   mockExecutor,
-					Logger:     mockLogger,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "missing mockLister",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Prompter:   mockPrompter,
-					Manager:    newMockManager,
-					Compressor: mockCompressor,
-					Executor:   mockExecutor,
-					Logger:     mockLogger,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "missing logger",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Prompter:   mockPrompter,
-					Manager:    newMockManager,
-					Compressor: mockCompressor,
-					Executor:   mockExecutor,
-					Lister:     mockLister,
-				},
-			},
-			want: false,
-		},
-		{
-			name: "should validate if path is nil",
-			args: args{
-				opts: &CreateNewProjectOptions{
-					Lister:     mockLister,
-					Prompter:   mockPrompter,
-					Manager:    newMockManager,
-					Compressor: mockCompressor,
-					Executor:   mockExecutor,
-					Logger:     mockLogger,
-					Path:       nil,
-				},
-			},
-			want: true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := isValid(tt.args.opts); got == nil != tt.want {
-			}
-		})
-	}
+	got := isValid(&options)
+	require.Nil(t, got)
 }
 
 func Test_isValid_PathTest(t *testing.T) {
-	controller := gomock.NewController(t)
+	options, controller := createTestNewProjectOptions(t, nil)
 	defer controller.Finish()
-
-	mockLister := lister.NewMockLister(controller)
-	mockPrompter := prompter.NewMockPrompter(controller)
-	newMockManager := manager.NewMockManager(controller)
-	mockCompressor := compressor.NewMockCompressor(controller)
-	mockExecutor := executor.NewMockExecutor(controller)
-	mockLogger := logger.NewLogger()
-	mockStore := store.GetInstance()
-
-	options := CreateNewProjectOptions{
-		Lister:     mockLister,
-		Prompter:   mockPrompter,
-		Manager:    newMockManager,
-		Compressor: mockCompressor,
-		Executor:   mockExecutor,
-		Logger:     mockLogger,
-		Store:      mockStore,
-		Path:       nil,
-	}
 
 	t.Run("should return no error if path is nil", func(t *testing.T) {
 		arg := options
@@ -268,4 +103,30 @@ func Test_isValid_PathTest(t *testing.T) {
 		require.NotNil(t, err)
 		require.ErrorIs(t, err, ErrNotValidUrlOrFilePath)
 	})
+}
+
+func createTestNewProjectOptions(t *testing.T, path *string) (CreateNewProjectOptions, *gomock.Controller) {
+	controller := gomock.NewController(t)
+
+	mockLister := lister.NewMockLister(controller)
+	mockPrompter := prompter.NewMockPrompter(controller)
+	newMockManager := manager.NewMockManager(controller)
+	mockCompressor := compressor.NewMockCompressor(controller)
+	mockExecutor := executor.NewMockExecutor(controller)
+	mockLogger := logger.NewLogger()
+	mockStore := store.GetInstance()
+	mockCloner := cloner.NewMockCloner(controller)
+
+	return CreateNewProjectOptions{
+		Lister:     mockLister,
+		Prompter:   mockPrompter,
+		Manager:    newMockManager,
+		Compressor: mockCompressor,
+		Executor:   mockExecutor,
+		Logger:     mockLogger,
+		Store:      mockStore,
+		Path:       nil,
+		Cloner:     mockCloner,
+	}, controller
+
 }

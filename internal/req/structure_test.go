@@ -5,6 +5,7 @@ package req
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/langs"
 	"testing"
 
@@ -152,6 +153,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 	mockExecutor := executor.NewMockExecutor(controller)
 	mockLogger := logger.NewLogger()
 	mockStore := store.GetInstance()
+	mockCloner := cloner.NewMockCloner(controller)
 
 	return ProjectStructureRequirement{
 		ProjectsData:    projectData,
@@ -162,6 +164,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 		Executor:        mockExecutor,
 		Store:           mockStore,
 		LanguageChecker: langs.NewMockLanguageChecker(controller),
+		Cloner:          mockCloner,
 	}, controller
 
 }
@@ -175,6 +178,7 @@ func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller)
 	mockExecutor := executor.NewMockExecutor(controller)
 	mockStore := store.NewMockStore(controller)
 	mockChecker := langs.NewMockLanguageChecker(controller)
+	mockCloner := cloner.NewMockCloner(controller)
 
 	return projectStructureTask{
 		ProjectStructure: &projectStructure1,
@@ -184,5 +188,6 @@ func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller)
 		Executor:         mockExecutor,
 		Store:            mockStore,
 		LanguageChecker:  mockChecker,
+		Cloner:           mockCloner,
 	}, controller
 }

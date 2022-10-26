@@ -2,7 +2,9 @@ package req
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/langs"
+	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -24,6 +26,7 @@ type (
 		Executor        executor.Executor     `validate:"required"`
 		Store           store.Store           `validate:"required"`
 		LanguageChecker langs.Checker
+		Cloner          cloner.Cloner `validate:"required"`
 	}
 
 	projectStructureTask struct {
@@ -34,6 +37,7 @@ type (
 		Logger           logger.Logger               `validate:"required"`
 		Store            store.Store                 `validate:"required"`
 		LanguageChecker  langs.Checker               `validate:"required"`
+		Cloner           cloner.Cloner               `validate:"required"`
 	}
 )
 
@@ -95,6 +99,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		Executor:         p.Executor,
 		Store:            p.Store,
 		LanguageChecker:  p.LanguageChecker,
+		Cloner:           p.Cloner,
 	}
 
 	tasks = append(tasks, &task)
@@ -125,11 +130,21 @@ func (p *projectStructureTask) Complete() error {
 		return err
 	}
 
-	p.Logger.LogInfo("Extracting files...")
-	if err := p.Compressor.UncompressFromUrl(p.ProjectStructure.URL); err != nil {
-		return err
+	url := p.ProjectStructure.URL
+
+	if strings.HasSuffix(url, ".git") {
+		p.Logger.LogInfo("Cloning file  -> " + url)
+		if err := p.Cloner.CloneFromUrl(url); err != nil {
+			return err
+		}
+		p.Logger.LogInfo("Cloned successfully")
+	} else {
+		p.Logger.LogInfo("Extracting files...")
+		if err := p.Compressor.UncompressFromUrl(url); err != nil {
+			return err
+		}
+		p.Logger.LogInfo("Zip is extracted successfully")
 	}
-	p.Logger.LogInfo("Zip is extracted successfully")
 
 	if preTaskError := p.LanguageChecker.CompletePreTask(); preTaskError != nil {
 		return preTaskError

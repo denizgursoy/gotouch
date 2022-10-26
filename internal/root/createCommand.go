@@ -1,6 +1,7 @@
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/cloner"
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
@@ -48,6 +49,7 @@ func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 			Logger:     newLogger,
 			Path:       pointer,
 			Store:      store.GetInstance(),
+			Cloner:     cloner.GetInstance(),
 		}
 
 		err := cmdr.CreateNewProject(&options)

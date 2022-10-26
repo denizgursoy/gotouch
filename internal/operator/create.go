@@ -2,6 +2,7 @@ package operator
 
 import (
 	"errors"
+	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -29,6 +30,7 @@ type (
 		Logger     logger.Logger         `validate:"required"`
 		Path       *string               `validate:"omitempty,endswith=.yaml,url|file"`
 		Store      store.Store           `validate:"required"`
+		Cloner     cloner.Cloner         `validate:"required"`
 	}
 )
 
@@ -44,7 +46,7 @@ func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 		return err
 	}
 
-	requirements = append(requirements, &req.ProjectStructureRequirement{
+	requirement := req.ProjectStructureRequirement{
 		ProjectsData: projects,
 		Prompter:     opts.Prompter,
 		Compressor:   opts.Compressor,
@@ -52,7 +54,9 @@ func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 		Logger:       opts.Logger,
 		Executor:     opts.Executor,
 		Store:        opts.Store,
-	})
+		Cloner:       opts.Cloner,
+	}
+	requirements = append(requirements, &requirement)
 
 	return opts.Executor.Execute(requirements)
 }

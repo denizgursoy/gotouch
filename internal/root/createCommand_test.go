@@ -1,6 +1,7 @@
 package root
 
 import (
+	"github.com/denizgursoy/gotouch/internal/cloner"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -47,6 +48,7 @@ func TestGetCreateCommandHandler(t *testing.T) {
 				Logger:     logger.NewLogger(),
 				Path:       argument.pointer,
 				Store:      store.GetInstance(),
+				Cloner:     cloner.GetInstance(),
 			}
 
 			mockCommander.EXPECT().CreateNewProject(gomock.Eq(expectedCall))
