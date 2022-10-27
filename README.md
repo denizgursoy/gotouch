@@ -20,7 +20,7 @@ Install, run on CLI, make your selections and start development.
 go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 ```
 ### Installation on Unix
-The following will install pact binaries into `/opt/gotouch/bin`:
+The following will install gotouch into `/opt/gotouch/bin`:
 ```bash
 mkdir -p /opt/gotouch/bin && cd /opt/gotouch/bin
 curl -fsSL https://raw.githubusercontent.com/denizgursoy/gotouch/main/scripts/install.sh | bash
