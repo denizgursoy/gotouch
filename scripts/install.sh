@@ -26,7 +26,7 @@ filename="gotouch_${tag#v}_${os}_${arch}.tar.gz"
 
 curl -LO https://github.com/denizgursoy/gotouch/releases/download/${tag}/${filename}
 
-tar xzf ${filename}
+sudo tar -xzf  ${filename} --overwrite -C /usr/local/bin/
 
 rm ${filename}
 rm LICENSE.md
