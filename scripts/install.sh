@@ -29,5 +29,5 @@ curl -LO https://github.com/denizgursoy/gotouch/releases/download/${tag}/${filen
 tar -xzf  ${filename} --overwrite -C /usr/local/bin/
 
 rm ${filename}
-rm LICENSE.md
-rm README.md
+rm /usr/local/bin/LICENSE.md
+rm /usr/local/bin/README.md
