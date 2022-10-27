@@ -60,6 +60,14 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
+	projectStructureData := selected.(*model.ProjectStructureData)
+
+	//TODO: test
+	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
+	if setupError := p.LanguageChecker.CheckSetup(); setupError != nil {
+		return nil, nil, setupError
+	}
+
 	nameRequirement := &ProjectNameRequirement{
 		Prompter: p.Prompter,
 		Manager:  p.Manager,
@@ -81,14 +89,6 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 
 	for _, requirement := range nameRequirements {
 		requirements = append(requirements, requirement)
-	}
-
-	projectStructureData := selected.(*model.ProjectStructureData)
-
-	//TODO: test
-	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
-	if setupError := p.LanguageChecker.CheckSetup(); setupError != nil {
-		return nil, nil, setupError
 	}
 
 	task := projectStructureTask{
