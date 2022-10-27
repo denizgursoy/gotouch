@@ -1,0 +1,4 @@
+- name: Empty Project Layout
+  reference: https://go.dev/
+  url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip
+  language: go
