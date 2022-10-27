@@ -1,13 +1,10 @@
 #!/bin/bash -e
 #
 # Usage:
-#   $ curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/master/install.sh | bash
+#   $ curl -fsSL https://raw.githubusercontent.com/denizgursoy/gotouch/main/scripts/install.sh | bash
 # or
-#   $ wget -q https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/master/install.sh -O- | bash
+#   $ wget -q https://raw.githubusercontent.com/denizgursoy/gotouch/main/scripts/install.sh -O- | bash
 #
-
-#https://github.com/pact-foundation/pact-go#installation-on-nix
-#https://goreleaser.com/install/#bash-script_1
 
 case $(uname -sm) in
 'Linux x86_64') ;;
