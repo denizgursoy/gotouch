@@ -1,4 +1,4 @@
-package req
+package requirements
 
 import (
 	"github.com/denizgursoy/gotouch/internal/langs"

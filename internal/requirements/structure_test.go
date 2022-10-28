@@ -1,7 +1,7 @@
 //go:build unit
 // +build unit
 
-package req
+package requirements
 
 import (
 	"fmt"

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/denizgursoy/gotouch/internal/root"
+	"github.com/denizgursoy/gotouch/internal/commands"
 )
 
 func main() {
-	root.Execute()
+	commands.Execute()
 }

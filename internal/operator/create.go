@@ -9,7 +9,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
-	"github.com/denizgursoy/gotouch/internal/req"
+	"github.com/denizgursoy/gotouch/internal/requirements"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
 )
@@ -39,14 +39,14 @@ func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 		return validationError
 	}
 
-	requirements := make(executor.Requirements, 0)
+	newProjectRequirements := make(executor.Requirements, 0)
 
 	projects, err := opts.Lister.GetProjectList(opts.Path)
 	if err != nil {
 		return err
 	}
 
-	requirement := req.ProjectStructureRequirement{
+	requirement := requirements.ProjectStructureRequirement{
 		ProjectsData: projects,
 		Prompter:     opts.Prompter,
 		Compressor:   opts.Compressor,
@@ -56,9 +56,9 @@ func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 		Store:        opts.Store,
 		Cloner:       opts.Cloner,
 	}
-	requirements = append(requirements, &requirement)
+	newProjectRequirements = append(newProjectRequirements, &requirement)
 
-	return opts.Executor.Execute(requirements)
+	return opts.Executor.Execute(newProjectRequirements)
 }
 
 func isValid(opts *CreateNewProjectOptions) error {

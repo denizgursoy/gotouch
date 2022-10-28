@@ -1,4 +1,4 @@
-package root
+package commands
 
 import (
 	"github.com/denizgursoy/gotouch/internal/compressor"

@@ -14,7 +14,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
-	"github.com/denizgursoy/gotouch/internal/req"
+	"github.com/denizgursoy/gotouch/internal/requirements"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -44,13 +44,13 @@ func TestCreateNewProject(t *testing.T) {
 			Do(func(arg interface{}) {
 				requirements := arg.(executor.Requirements)
 				require.Len(t, requirements, 1)
-				structure := requirements[0].(*req.ProjectStructureRequirement)
+				structure := requirements[0].(*requirements.ProjectStructureRequirement)
 
 				require.NotNil(t, structure.Compressor)
 				require.NotNil(t, structure.Manager)
 				require.NotNil(t, structure.Prompter)
 
-				require.IsType(t, (*req.ProjectStructureRequirement)(nil), structure)
+				require.IsType(t, (*requirements.ProjectStructureRequirement)(nil), structure)
 				require.EqualValues(t, expectedProjectData, structure.ProjectsData)
 			})
 
