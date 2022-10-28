@@ -42,9 +42,9 @@ func TestCreateNewProject(t *testing.T) {
 			EXPECT().
 			Execute(gomock.Any()).
 			Do(func(arg interface{}) {
-				requirements := arg.(executor.Requirements)
-				require.Len(t, requirements, 1)
-				structure := requirements[0].(*requirements.ProjectStructureRequirement)
+				execRequirements := arg.(executor.Requirements)
+				require.Len(t, execRequirements, 1)
+				structure := execRequirements[0].(*requirements.ProjectStructureRequirement)
 
 				require.NotNil(t, structure.Compressor)
 				require.NotNil(t, structure.Manager)
