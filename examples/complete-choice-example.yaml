@@ -23,7 +23,7 @@
                 lorem ipsum
                 lorem ipsum
                 lorem ipsum
-              pathFromRoot: Dockerfile
+              pathFromRoot: my-dir/input.txt # my-dir will be created if does not exist
           # values for templating
           # can be any type array, object, number, boolean and string
           values:
