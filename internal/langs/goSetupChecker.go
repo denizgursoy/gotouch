@@ -102,12 +102,13 @@ func (g *golangSetupChecker) GetDependency(dependency interface{}) error {
 }
 
 func (g *golangSetupChecker) CleanUp() error {
-	g.Logger.LogInfo("Executing go mod tidy")
-	tidyTask := &CommandData{
-		Command: "go",
-		Args:    []string{"mod, tidy"},
-	}
-	return g.RunCommand(tidyTask)
+	return nil
+	//g.Logger.LogInfo("Executing go mod tidy")
+	//tidyTask := &CommandData{
+	//	Command: "go",
+	//	Args:    []string{"mod, tidy"},
+	//}
+	//return g.RunCommand(tidyTask)
 }
 
 func (g *golangSetupChecker) RunCommand(data *CommandData) error {
