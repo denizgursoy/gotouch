@@ -137,17 +137,13 @@ func (p *projectStructureTask) Complete() error {
 	url := p.ProjectStructure.URL
 
 	if strings.HasSuffix(url, ".git") {
-		p.Logger.LogInfo("Cloning file  -> " + url)
 		if err := p.Cloner.CloneFromUrl(url); err != nil {
 			return err
 		}
-		p.Logger.LogInfo("Cloned successfully")
 	} else {
-		p.Logger.LogInfo("Extracting files...")
 		if err := p.Compressor.UncompressFromUrl(url); err != nil {
 			return err
 		}
-		p.Logger.LogInfo("Zip is extracted successfully")
 	}
 
 	if preTaskError := p.LanguageChecker.Setup(); preTaskError != nil {

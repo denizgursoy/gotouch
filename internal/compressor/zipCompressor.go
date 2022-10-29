@@ -3,6 +3,7 @@ package compressor
 import (
 	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"io"
 	"net/http"
 	"os"
@@ -19,6 +20,7 @@ type (
 		Manager  manager.Manager `validate:"required"`
 		Store    store.Store     `validate:"required"`
 		Strategy ZipStrategy     `validate:"required"`
+		Logger   logger.Logger   `validate:"required"`
 	}
 )
 
@@ -27,6 +29,7 @@ func newCompressor() Compressor {
 		Manager:  manager.GetInstance(),
 		Store:    store.GetInstance(),
 		Strategy: newTarStrategy(),
+		Logger:   logger.NewLogger(),
 	}
 }
 
@@ -34,6 +37,8 @@ func (z *compressor) UncompressFromUrl(url string) error {
 	if err := validator.New().Struct(z); err != nil {
 		return err
 	}
+
+	z.Logger.LogInfo("Extracting files...")
 
 	client := http.Client{}
 	response, httpErr := client.Get(url)
@@ -57,7 +62,12 @@ func (z *compressor) UncompressFromUrl(url string) error {
 	projectName := z.Store.GetValue(store.ProjectName)
 	target := fmt.Sprintf("%s/%s", z.Manager.GetExtractLocation(), projectName)
 
-	return z.Strategy.UnCompressDirectory(temp.Name(), target)
+	if unCompressError := z.Strategy.UnCompressDirectory(temp.Name(), target); unCompressError != nil {
+		return unCompressError
+	}
+	z.Logger.LogInfo("Zip is extracted successfully")
+
+	return nil
 }
 
 func (z *compressor) CompressDirectory(source, target string) error {
