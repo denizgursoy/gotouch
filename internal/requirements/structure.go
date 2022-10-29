@@ -122,6 +122,10 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		Values:   task.ProjectStructure.Values,
 	})
 
+	tasks = append(tasks, &cleanupTask{
+		LanguageChecker: p.LanguageChecker,
+	})
+
 	return tasks, requirements, nil
 }
 
@@ -146,7 +150,7 @@ func (p *projectStructureTask) Complete() error {
 		p.Logger.LogInfo("Zip is extracted successfully")
 	}
 
-	if preTaskError := p.LanguageChecker.CompletePreTask(); preTaskError != nil {
+	if preTaskError := p.LanguageChecker.Setup(); preTaskError != nil {
 		return preTaskError
 	}
 

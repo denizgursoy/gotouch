@@ -15,7 +15,7 @@ func TestComplete(t *testing.T) {
 		controller := gomock.NewController(t)
 		defer controller.Finish()
 
-		checker := langs.NewMockLanguageChecker(controller)
+		checker := langs.NewMockChecker(controller)
 		dependency := "test-dependency"
 
 		checker.EXPECT().GetDependency(gomock.Eq(dependency))

@@ -89,11 +89,13 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
 
-		require.Len(t, tasks, 2)
+		require.Len(t, tasks, 3)
 		require.IsType(t, (*projectNameTask)(nil), tasks[0])
 
 		require.IsType(t, &projectStructureTask{}, tasks[1])
 		require.IsType(t, testProjectData[1], tasks[1].(*projectStructureTask).ProjectStructure)
+
+		require.IsType(t, (*cleanupTask)(nil), tasks[2])
 
 		actualQuestions := make([]*model.Question, 0)
 
@@ -136,7 +138,7 @@ func TestStructure_Complete(t *testing.T) {
 			UncompressFromUrl(gomock.Eq(projectStructure1.URL)).
 			Return(nil)
 
-		task.LanguageChecker.(*langs.MockLanguageChecker).EXPECT().CompletePreTask().Times(1)
+		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
 
 		err := task.Complete()
 		require.Nil(t, err)
@@ -163,7 +165,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 		Logger:          mockLogger,
 		Executor:        mockExecutor,
 		Store:           mockStore,
-		LanguageChecker: langs.NewMockLanguageChecker(controller),
+		LanguageChecker: langs.NewMockChecker(controller),
 		Cloner:          mockCloner,
 	}, controller
 
@@ -177,7 +179,7 @@ func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller)
 	mockLogger := logger.NewLogger()
 	mockExecutor := executor.NewMockExecutor(controller)
 	mockStore := store.NewMockStore(controller)
-	mockChecker := langs.NewMockLanguageChecker(controller)
+	mockChecker := langs.NewMockChecker(controller)
 	mockCloner := cloner.NewMockCloner(controller)
 
 	return projectStructureTask{

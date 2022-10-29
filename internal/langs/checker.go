@@ -12,7 +12,8 @@ type Checker interface {
 	CheckSetup() error
 	CheckDependency(dependency interface{}) error
 	GetDependency(dependency interface{}) error
-	CompletePreTask() error
+	Setup() error
+	CleanUp() error
 }
 
 func GetChecker(language string, Logger logger.Logger, str store.Store) Checker {

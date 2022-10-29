@@ -34,7 +34,7 @@ func NewGolangSetupChecker(Logger logger.Logger, Store store.Store) Checker {
 	}
 }
 
-func (g *golangSetupChecker) CompletePreTask() error {
+func (g *golangSetupChecker) Setup() error {
 	moduleName := g.Store.GetValue(store.ModuleName)
 
 	g.Logger.LogInfo(fmt.Sprintf("module name will be -> %s", moduleName))
@@ -101,9 +101,18 @@ func (g *golangSetupChecker) GetDependency(dependency interface{}) error {
 	return nil
 }
 
-func (f *golangSetupChecker) RunCommand(data *CommandData) error {
+func (g *golangSetupChecker) CleanUp() error {
+	g.Logger.LogInfo("Executing go mod tidy")
+	tidyTask := &CommandData{
+		Command: "go",
+		Args:    []string{"mod, tidy"},
+	}
+	return g.RunCommand(tidyTask)
+}
+
+func (g *golangSetupChecker) RunCommand(data *CommandData) error {
 	if data.WorkingDir == nil {
-		projectFullPath := f.Store.GetValue(store.ProjectFullPath)
+		projectFullPath := g.Store.GetValue(store.ProjectFullPath)
 		err := os.Chdir(projectFullPath)
 		if err != nil {
 			return err
@@ -130,13 +139,13 @@ func (d *Dependency) String() string {
 	return fmt.Sprintf("%s@%s", *d.Url, *d.Version)
 }
 
-func (f *golangSetupChecker) EditGoModule() error {
-	projectFullPath := f.Store.GetValue(store.ProjectFullPath)
-	moduleName := f.Store.GetValue(store.ModuleName)
+func (g *golangSetupChecker) EditGoModule() error {
+	projectFullPath := g.Store.GetValue(store.ProjectFullPath)
+	moduleName := g.Store.GetValue(store.ModuleName)
 
 	args := make([]string, 0)
 
-	if f.hasGoModule(projectFullPath) {
+	if g.hasGoModule(projectFullPath) {
 		args = append(args, "mod", "edit", "-module", moduleName)
 	} else {
 		args = append(args, "mod", "init", moduleName)
@@ -147,10 +156,10 @@ func (f *golangSetupChecker) EditGoModule() error {
 		Args:    args,
 	}
 
-	return f.RunCommand(data)
+	return g.RunCommand(data)
 }
 
-func (f *golangSetupChecker) hasGoModule(projectDirectory string) bool {
+func (g *golangSetupChecker) hasGoModule(projectDirectory string) bool {
 	path := fmt.Sprintf("%s/go.mod", projectDirectory)
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 		return false

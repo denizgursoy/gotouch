@@ -10,31 +10,31 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// MockLanguageChecker is a mock of Checker interface.
-type MockLanguageChecker struct {
+// MockChecker is a mock of Checker interface.
+type MockChecker struct {
 	ctrl     *gomock.Controller
-	recorder *MockLanguageCheckerMockRecorder
+	recorder *MockCheckerMockRecorder
 }
 
-// MockLanguageCheckerMockRecorder is the mock recorder for MockLanguageChecker.
-type MockLanguageCheckerMockRecorder struct {
-	mock *MockLanguageChecker
+// MockCheckerMockRecorder is the mock recorder for MockChecker.
+type MockCheckerMockRecorder struct {
+	mock *MockChecker
 }
 
-// NewMockLanguageChecker creates a new mock instance.
-func NewMockLanguageChecker(ctrl *gomock.Controller) *MockLanguageChecker {
-	mock := &MockLanguageChecker{ctrl: ctrl}
-	mock.recorder = &MockLanguageCheckerMockRecorder{mock}
+// NewMockChecker creates a new mock instance.
+func NewMockChecker(ctrl *gomock.Controller) *MockChecker {
+	mock := &MockChecker{ctrl: ctrl}
+	mock.recorder = &MockCheckerMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockLanguageChecker) EXPECT() *MockLanguageCheckerMockRecorder {
+func (m *MockChecker) EXPECT() *MockCheckerMockRecorder {
 	return m.recorder
 }
 
 // CheckDependency mocks base method.
-func (m *MockLanguageChecker) CheckDependency(dependency interface{}) error {
+func (m *MockChecker) CheckDependency(dependency interface{}) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CheckDependency", dependency)
 	ret0, _ := ret[0].(error)
@@ -42,13 +42,13 @@ func (m *MockLanguageChecker) CheckDependency(dependency interface{}) error {
 }
 
 // CheckDependency indicates an expected call of CheckDependency.
-func (mr *MockLanguageCheckerMockRecorder) CheckDependency(dependency interface{}) *gomock.Call {
+func (mr *MockCheckerMockRecorder) CheckDependency(dependency interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckDependency", reflect.TypeOf((*MockLanguageChecker)(nil).CheckDependency), dependency)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckDependency", reflect.TypeOf((*MockChecker)(nil).CheckDependency), dependency)
 }
 
 // CheckSetup mocks base method.
-func (m *MockLanguageChecker) CheckSetup() error {
+func (m *MockChecker) CheckSetup() error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CheckSetup")
 	ret0, _ := ret[0].(error)
@@ -56,27 +56,27 @@ func (m *MockLanguageChecker) CheckSetup() error {
 }
 
 // CheckSetup indicates an expected call of CheckSetup.
-func (mr *MockLanguageCheckerMockRecorder) CheckSetup() *gomock.Call {
+func (mr *MockCheckerMockRecorder) CheckSetup() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckSetup", reflect.TypeOf((*MockLanguageChecker)(nil).CheckSetup))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckSetup", reflect.TypeOf((*MockChecker)(nil).CheckSetup))
 }
 
-// CompletePreTask mocks base method.
-func (m *MockLanguageChecker) CompletePreTask() error {
+// CleanUp mocks base method.
+func (m *MockChecker) CleanUp() error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CompletePreTask")
+	ret := m.ctrl.Call(m, "CleanUp")
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CompletePreTask indicates an expected call of CompletePreTask.
-func (mr *MockLanguageCheckerMockRecorder) CompletePreTask() *gomock.Call {
+// CleanUp indicates an expected call of CleanUp.
+func (mr *MockCheckerMockRecorder) CleanUp() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompletePreTask", reflect.TypeOf((*MockLanguageChecker)(nil).CompletePreTask))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CleanUp", reflect.TypeOf((*MockChecker)(nil).CleanUp))
 }
 
 // GetDependency mocks base method.
-func (m *MockLanguageChecker) GetDependency(dependency interface{}) error {
+func (m *MockChecker) GetDependency(dependency interface{}) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDependency", dependency)
 	ret0, _ := ret[0].(error)
@@ -84,7 +84,21 @@ func (m *MockLanguageChecker) GetDependency(dependency interface{}) error {
 }
 
 // GetDependency indicates an expected call of GetDependency.
-func (mr *MockLanguageCheckerMockRecorder) GetDependency(dependency interface{}) *gomock.Call {
+func (mr *MockCheckerMockRecorder) GetDependency(dependency interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDependency", reflect.TypeOf((*MockLanguageChecker)(nil).GetDependency), dependency)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDependency", reflect.TypeOf((*MockChecker)(nil).GetDependency), dependency)
+}
+
+// Setup mocks base method.
+func (m *MockChecker) Setup() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Setup")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Setup indicates an expected call of Setup.
+func (mr *MockCheckerMockRecorder) Setup() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Setup", reflect.TypeOf((*MockChecker)(nil).Setup))
 }

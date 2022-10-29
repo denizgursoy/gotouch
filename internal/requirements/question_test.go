@@ -169,7 +169,7 @@ func getTestQuestionRequirement(t *testing.T, question model.Question) (*Questio
 	mockPrompter := prompter.NewMockPrompter(controller)
 	mockManager := manager.NewMockManager(controller)
 	mockStore := store.NewMockStore(controller)
-	mockChecker := langs.NewMockLanguageChecker(controller)
+	mockChecker := langs.NewMockChecker(controller)
 
 	return &QuestionRequirement{
 		Question:        question,
