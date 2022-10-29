@@ -26,7 +26,7 @@ curl -fsSL https://raw.githubusercontent.com/denizgursoy/gotouch/main/scripts/in
 ```
 Test the installation:
 ```bash
-gotouch help
+gotouch --help
 ```
 ## Usage
 

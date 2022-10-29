@@ -23,12 +23,12 @@ questions:
       - choice: Echo
         dependencies:
           - github.com/labstack/echo/v4
-          - choice: Gorilla Mux
-            dependencies:
-              - github.com/gorilla/mux
-          - choice: Gin
-            dependencies:
-              - github.com/gin-gonic/gin
+      - choice: Gorilla Mux
+        dependencies:
+          - github.com/gorilla/mux
+      - choice: Gin
+        dependencies:
+          - github.com/gin-gonic/gin
 
   - choice: Yes
       dependencies:
