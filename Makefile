@@ -17,7 +17,10 @@ build-mac-test:
 	go build -v -o gotouch-mac-test ./cmd/gotouch/
 
 unit:
-	go test -v --tags=unit ./...
+	go test -v -coverprofile coverage.out --tags=unit ./...
+
+coverage:
+	go tool cover -html=coverage.out
 
 integration: build-test
 	go test -v --tags=integration_test ./...
