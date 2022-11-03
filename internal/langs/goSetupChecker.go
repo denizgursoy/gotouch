@@ -50,7 +50,7 @@ func (g *golangSetupChecker) Setup() error {
 func (g *golangSetupChecker) CheckDependency(dependency interface{}) error {
 	val, ok := dependency.(string)
 	if !ok {
-		return fmt.Errorf("asdasd")
+		return fmt.Errorf("go dependecy must be string")
 	}
 
 	if len(strings.TrimSpace(val)) == 0 {
