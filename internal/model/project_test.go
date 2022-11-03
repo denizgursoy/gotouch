@@ -346,7 +346,7 @@ func TestProjectStructureText(t *testing.T) {
 			Name:      "x",
 			Reference: "y",
 		}
-		expected := data.Name + " (" + data.Reference + ")"
+		expected := data.Name + " ( " + data.Reference + " )"
 		require.Equal(t, expected, data.String())
 	})
 
