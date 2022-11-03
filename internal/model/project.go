@@ -40,10 +40,15 @@ type (
 )
 
 func (p *ProjectStructureData) String() string {
-	if len(strings.TrimSpace(p.Reference)) == 0 {
-		return fmt.Sprintf("%s", p.Name)
+	var language string
+	if len(strings.TrimSpace(p.Language)) != 0 {
+		language = fmt.Sprintf("( %s )", strings.Title(p.Language))
 	}
-	return fmt.Sprintf("%s (%s)", p.Name, p.Reference)
+	if len(strings.TrimSpace(p.Reference)) != 0 {
+		language = fmt.Sprintf("%s ( %s )", language, p.Reference)
+	}
+
+	return fmt.Sprintf("%s %s", p.Name, language)
 }
 
 var (

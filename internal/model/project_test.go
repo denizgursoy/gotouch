@@ -358,6 +358,26 @@ func TestProjectStructureText(t *testing.T) {
 		expected := data.Name
 		require.Equal(t, expected, data.String())
 	})
+
+	t.Run("should display if language exists", func(t *testing.T) {
+		data := ProjectStructureData{
+			Name:      "x",
+			Language:  "go",
+			Reference: "   ",
+		}
+		expected := data.Name + " ( Go )"
+		require.Equal(t, expected, data.String())
+	})
+
+	t.Run("should display all fields", func(t *testing.T) {
+		data := ProjectStructureData{
+			Name:      "x",
+			Language:  "go",
+			Reference: "github.com",
+		}
+		expected := data.Name + " ( Go ) ( github.com )"
+		require.Equal(t, expected, data.String())
+	})
 }
 
 func TestDependencyTest(t *testing.T) {
