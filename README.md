@@ -218,6 +218,7 @@ ModuleName: Module name user typed
 ProjectName: Project directory name
 WorkingDirectory: location where Gotouch command is executed
 ProjectFullPath: Projects full path which is actually WorkingDirectory / ProjectName
+Dependencies: Arrray of all dependencies of selected choices
 ```
 
 ## Share your properties yaml with others
@@ -230,7 +231,7 @@ If you share your properties yaml with us, we can add it to [list](./List.md) so
 
 `gotouch --file path-to-yaml`
 
-gotouch command uses [properties yaml](#Write-your-yaml-file) file for prompting user to enter name and select project
+gotouch command uses [properties yaml](#write-your-properties-yaml-file) file for prompting user to enter name and select project
 structure. If file flag value is not provided, it is going to
 use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml).
 Firstly,The command asks for project name. Project name is written to go module and used for directory name.
