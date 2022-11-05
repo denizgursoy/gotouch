@@ -74,6 +74,7 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 				Dependency:      dependency,
 				LanguageChecker: q.LanguageChecker,
 			})
+			q.Store.AddDependency(dependency)
 		}
 
 		for _, file := range selection.Files {
@@ -84,7 +85,8 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 				Client:  &http.Client{},
 			})
 		}
-		q.Store.StoreValues(selection.Values)
+		q.Store.AddValues(selection.Values)
+
 	}
 	return tasks, nil, nil
 }

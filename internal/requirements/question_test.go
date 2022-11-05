@@ -67,7 +67,9 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		requirement, controller := getTestQuestionRequirement(t, yesNoQuestion)
 		defer controller.Finish()
 
-		requirement.Store.(*store.MockStore).EXPECT().StoreValues(gomock.Eq(yesNoQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddValues(gomock.Eq(yesNoQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Eq(dependency1))
+		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Eq(dependency2))
 		requirement.Prompter.(*prompter.MockPrompter).EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(true, nil).Times(1)
 
 		task, requirements, err := requirement.AskForInput()
@@ -117,7 +119,9 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Return(multipleChoiceQuestion.Choices[0], nil).
 			Times(1)
 
-		requirement.Store.(*store.MockStore).EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Any()).AnyTimes()
+
 		_, _, _ = requirement.AskForInput()
 	})
 
@@ -137,7 +141,9 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Return(multipleChoiceQuestionWithSkip.Choices[0], nil).
 			Times(1)
 
-		requirement.Store.(*store.MockStore).EXPECT().StoreValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Any()).AnyTimes()
+
 		_, _, _ = requirement.AskForInput()
 	})
 

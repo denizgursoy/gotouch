@@ -164,7 +164,7 @@ func (t *templateTask) combineWithDefaultValues() {
 		combinedValues[key] = value
 	}
 
-	for key, value := range t.Store.GetStoreValues() {
+	for key, value := range t.Store.GetValues() {
 		combinedValues[key] = value
 	}
 	t.Values = combinedValues
