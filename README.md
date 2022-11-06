@@ -209,7 +209,16 @@ If you want some part of the source code not to be hardcoded, you can define cus
 . The most common cases can be port numbers, service addresses, and some configuration values etc. Gotouch will ask user
 to change the values if he/she wants.
 
-Values under Project Structure will be merged with selected choices' values.
+![Edit Values](./.readme/edit-values.png)
+
+Gotouch uses editor of [survey](https://github.com/go-survey/survey#editor). It launches your default editor for YAML. 
+If you want to change your editor, set **$VISUAL** or **$EDITOR** environment variables.
+
+![Vim editor](./.readme/vim-editor.png)
+
+When you exit your the editor, gotouch will save the values and continue creating the project.
+
+Values under Project Structure will be merged with all selected choices' values.
 
 Apart from these values, you can use following predefined values :
 

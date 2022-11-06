@@ -4,6 +4,10 @@ import (
 	"github.com/denizgursoy/gotouch/internal/logger"
 )
 
+type emptySetupChecker struct {
+	Logger logger.Logger
+}
+
 func NewEmptySetupChecker() Checker {
 	return &emptySetupChecker{}
 }
@@ -14,10 +18,6 @@ func (e *emptySetupChecker) Setup() error {
 
 func (e *emptySetupChecker) CheckDependency(dependency interface{}) error {
 	return nil
-}
-
-type emptySetupChecker struct {
-	Logger logger.Logger
 }
 
 func (e *emptySetupChecker) CleanUp() error {
