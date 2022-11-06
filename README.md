@@ -94,7 +94,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-You can also use other go template library's capabilities such as conditions, iterating array values etc. For more
+You can also use other go template library's capabilities such as conditions, iterating array values, etc. For more
 information see [go template library](https://pkg.go.dev/text/template).
 
 ### Write your properties yaml file
@@ -203,8 +203,7 @@ A choice can be written like:
 
 #### Values
 
-If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`
-. The most common cases can be port numbers, service addresses, and some configuration values etc. Gotouch will ask user
+If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`. The most common cases can be port numbers, service addresses, and some configuration values, etc. Gotouch will ask user
 to change the values if he/she wants.
 
 ![Edit Values](./.readme/edit-values.png)
