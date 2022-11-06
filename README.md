@@ -249,7 +249,7 @@ Firstly,The command asks for project name. Project name is written to go module 
 
 `gotouch package --source path-to-source --target path-to-target`
 
-Package command compresses the source directory with the zip extension and moves the zip file to target directory.
+Package command compresses the source directory with the .tar.gz extension and moves the zip file to target directory.
 `source` and `target` flags are optional. Default values for `source` and `target` are `./`, `../` respectively.
 
 Package command ignores following files/directories:
