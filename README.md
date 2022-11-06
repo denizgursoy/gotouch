@@ -5,7 +5,7 @@
 <a href="https://github.com/denizgursoy/gotouch/issues" target="_blank"><img alt="GitHub issues" src="https://img.shields.io/github/issues/denizgursoy/gotouch?color=b"></a>
 </p>
 
-gotouch easy way to create go projects.
+gotouch easy way to create your projects.
 
 Install, run on CLI, make your selections and start development.
 
@@ -14,7 +14,7 @@ Install, run on CLI, make your selections and start development.
 </p>
 
 ## Installation
-
+***
 ### Go install
 ```bash
 go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
@@ -29,7 +29,7 @@ Test the installation:
 gotouch --help
 ```
 ## Usage
-
+***
 Execute
 
 ```bash
@@ -44,22 +44,24 @@ use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-t
 gotouch -f path-to-properties-yaml
 ```
 
-# How Gotouch works
-
+## How Gotouch works
+***
 1. Asks for user to select a project structure in [properties yaml](#Write-your-properties-yaml-file)
-2. Asks for module name
-3. Asks for a choice of every [question](#Question) under the selected project structure in order and saves the choices
-4. Asks for changing the values of the selected project structure if any
-5. Creates a new directory with module name's last part after last /
-6. Uncompress the template project of the selected project structure into the created directory
-7. Updates the module's name in the go.mod with the value user entered, if there is no go.mod file, it creates the
+2. If the selected project's language is go, it will check whether `go` command is installed on the OS   
+3. Asks for module name
+4. Asks for a choice of every [question](#Question) under the selected project structure in order and saves the choices
+5. Asks for changing the values of the selected project structure if any
+6. Add default to [values](#values)
+7. Creates a new directory with module name's last part after last /
+8. Uncompress/checkout the template project of the selected project structure into the created directory
+9. If the selected project's language is go,updates the module's name in the go.mod with the value user entered, if there is no go.mod file, it creates the
    go.mod file
-8. Creates files, and adds dependencies of all selected choices
-9. Merges values under the selected project structure with the values of all selected choices and default values
-10. Walks through the newly created directory's content and templates every file with the merged [values](#values),
+10. Creates files, and adds dependencies of all selected choices
+11. Merges values under the selected project structure with the values of all selected choices and default values
+12. Walks through the newly created directory's content and templates every file with the merged [values](#values),
 
-# How to customize
-
+## How to customize
+***
 Follow the steps below to create your properties yaml. The suggested way to share files, your template project, and the
 properties yaml is to host them in a git repository and use
 the [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a.png?trim=1,1&bg-color=000&pad=1,1) of
@@ -69,7 +71,7 @@ the files in the properties yaml.
 2. [Write your properties yaml file](#Write-your-properties-yaml-file)
 3. [Share your properties yaml with the others](#Share-your-properties-yaml-with-others)
 
-## Create your template project
+### Create your template project
 
 Template is a zip file that has your directories and files inside.Template can be created
 with [package command](#package-subcommand). Files inside a template can
@@ -99,7 +101,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 You can also use other go template library's capabilities such as conditions, iterating array values etc. For more
 information see [go template library](https://pkg.go.dev/text/template).
 
-## Write your properties yaml file
+### Write your properties yaml file
 
 Properties yaml is a **list** of what we call `Project Structure` as it can be seen below:
 
@@ -203,7 +205,7 @@ A choice can be written like:
       httpLibrary: echo
 ```
 
-### Values
+#### Values
 
 If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`
 . The most common cases can be port numbers, service addresses, and some configuration values etc. Gotouch will ask user
@@ -229,13 +231,15 @@ WorkingDirectory: location where Gotouch command is executed
 ProjectFullPath: Projects full path which is actually WorkingDirectory / ProjectName
 Dependencies: Arrray of all dependencies of selected choices
 ```
+You can also use values in your directories. If you, for example, have a directory {{ .ProjectName }}, It will be replaced
+with the corresponding values.
 
-## Share your properties yaml with others
+### Share your properties yaml with others
 
 If you share your properties yaml with us, we can add it to [list](./List.md) so that other people can use it.
 
-# Commands
-
+## Commands
+***
 ### gotouch command
 
 `gotouch --file path-to-yaml`
