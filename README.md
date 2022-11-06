@@ -14,7 +14,6 @@ Install, run on CLI, make your selections and start development.
 </p>
 
 ## Installation
-***
 ### Go install
 ```bash
 go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
@@ -29,7 +28,6 @@ Test the installation:
 gotouch --help
 ```
 ## Usage
-***
 Execute
 
 ```bash
@@ -45,7 +43,6 @@ gotouch -f path-to-properties-yaml
 ```
 
 ## How Gotouch works
-***
 1. Asks for user to select a project structure in [properties yaml](#Write-your-properties-yaml-file)
 2. If the selected project's language is go, it will check whether `go` command is installed on the OS   
 3. Asks for module name
@@ -61,7 +58,6 @@ gotouch -f path-to-properties-yaml
 12. Walks through the newly created directory's content and templates every file with the merged [values](#values),
 
 ## How to customize
-***
 Follow the steps below to create your properties yaml. The suggested way to share files, your template project, and the
 properties yaml is to host them in a git repository and use
 the [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a.png?trim=1,1&bg-color=000&pad=1,1) of
@@ -239,7 +235,6 @@ with the corresponding values.
 If you share your properties yaml with us, we can add it to [list](./List.md) so that other people can use it.
 
 ## Commands
-***
 ### gotouch command
 
 `gotouch --file path-to-yaml`
