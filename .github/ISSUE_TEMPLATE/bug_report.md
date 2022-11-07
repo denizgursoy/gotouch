@@ -1,9 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
+title: 'bug: gotouch does not'
 labels: ''
-assignees: ''
+assignees: denizgursoy
 
 ---
 

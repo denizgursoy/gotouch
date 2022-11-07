@@ -1,9 +1,9 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: ''
+title: 'feat: gotouch should'
 labels: ''
-assignees: ''
+assignees: denizgursoy
 
 ---
 
