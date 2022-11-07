@@ -224,7 +224,7 @@ ModuleName: Module name user typed
 ProjectName: Project directory name
 WorkingDirectory: location where Gotouch command is executed
 ProjectFullPath: Projects full path which is actually WorkingDirectory / ProjectName
-Dependencies: Arrray of all dependencies of selected choices
+Dependencies: Array of dependencies of all selected choices
 ```
 You can also use values in your directories. If you, for example, have a directory {{ .ProjectName }}, It will be replaced
 with the corresponding values.
