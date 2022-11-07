@@ -235,7 +235,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 
 			mockManager.
 				EXPECT().
-				CreateDirectoryIfNotExists(gomock.Eq(testCase.projectDirectory))
+				CreateDirectoryIfNotExist(gomock.Eq(testCase.projectDirectory))
 
 			task := projectNameTask{
 				ModuleName: testCase.projectName,
@@ -266,7 +266,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 
 		mockManager.
 			EXPECT().
-			CreateDirectoryIfNotExists(gomock.Any()).
+			CreateDirectoryIfNotExist(gomock.Any()).
 			Return(errors.New("could not create folder")).
 			Times(1)
 
