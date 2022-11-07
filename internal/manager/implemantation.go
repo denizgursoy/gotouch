@@ -32,7 +32,7 @@ func newFileManager() Manager {
 	}
 }
 
-func (f *fManager) CreateDirectoryIfNotExists(directoryName string) error {
+func (f *fManager) CreateDirectoryIfNotExist(directoryName string) error {
 	return os.Mkdir(directoryName, os.ModePerm)
 }
 

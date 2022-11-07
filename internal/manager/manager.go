@@ -21,7 +21,7 @@ func GetInstance() Manager {
 
 type (
 	Manager interface {
-		CreateDirectoryIfNotExists(directoryName string) error
+		CreateDirectoryIfNotExist(directoryName string) error
 		CreateFile(reader io.ReadCloser, path string) error
 		GetExtractLocation() string
 	}

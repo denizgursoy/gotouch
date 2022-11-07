@@ -70,7 +70,7 @@ func (p *projectNameTask) Complete() error {
 
 	workingDirectory := p.Manager.GetExtractLocation()
 	projectFullPath := fmt.Sprintf("%s/%s", workingDirectory, projectName)
-	dirCreationErr := p.Manager.CreateDirectoryIfNotExists(projectFullPath)
+	dirCreationErr := p.Manager.CreateDirectoryIfNotExist(projectFullPath)
 
 	p.Store.SetValue(store.WorkingDirectory, workingDirectory)
 	p.Store.SetValue(store.ProjectFullPath, projectFullPath)

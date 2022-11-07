@@ -34,18 +34,18 @@ func (m *MockManager) EXPECT() *MockManagerMockRecorder {
 	return m.recorder
 }
 
-// CreateDirectoryIfNotExists mocks base method.
-func (m *MockManager) CreateDirectoryIfNotExists(directoryName string) error {
+// CreateDirectoryIfNotExist mocks base method.
+func (m *MockManager) CreateDirectoryIfNotExist(directoryName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateDirectoryIfNotExists", directoryName)
+	ret := m.ctrl.Call(m, "CreateDirectoryIfNotExist", directoryName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreateDirectoryIfNotExists indicates an expected call of CreateDirectoryIfNotExists.
-func (mr *MockManagerMockRecorder) CreateDirectoryIfNotExists(directoryName interface{}) *gomock.Call {
+// CreateDirectoryIfNotExist indicates an expected call of CreateDirectoryIfNotExist.
+func (mr *MockManagerMockRecorder) CreateDirectoryIfNotExist(directoryName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDirectoryIfNotExists", reflect.TypeOf((*MockManager)(nil).CreateDirectoryIfNotExists), directoryName)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDirectoryIfNotExist", reflect.TypeOf((*MockManager)(nil).CreateDirectoryIfNotExist), directoryName)
 }
 
 // CreateFile mocks base method.
