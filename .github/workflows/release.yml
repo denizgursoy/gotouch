@@ -27,6 +27,14 @@ jobs:
         run: go install github.com/golang/mock/mockgen@v1.6.0
       # More assembly might be required: Docker logins, GPG, etc. It all depends
       # on your needs.
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: goreleaser/goreleaser-action@v2
         with:
           # either 'goreleaser' (default) or 'goreleaser-pro':
