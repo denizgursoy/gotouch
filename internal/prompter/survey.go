@@ -25,8 +25,6 @@ func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (int
 
 	if count == 0 {
 		return nil, EmptyList
-	} else if count == 1 {
-		return list[0], nil
 	}
 
 	options := make(map[string]fmt.Stringer)
