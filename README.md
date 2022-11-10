@@ -21,7 +21,7 @@ go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 ### Installation on Unix/macOS
 The following will install gotouch into `/usr/local/bin/`:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/denizgursoy/gotouch/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/denizgursoy/gotouch/main/scripts/install.sh | sudo bash
 ```
 Test the installation:
 ```bash
