@@ -30,3 +30,15 @@ mock:
 
 release:
 	goreleaser release --snapshot --rm-dist
+
+install-semver:
+	go install github.com/maykonlf/semver-cli/cmd/semver@latest
+
+up-major:
+	semver up major
+
+up-minor:
+	semver up minor
+
+up-release:
+	semver up release
