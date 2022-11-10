@@ -40,3 +40,21 @@ changelog:
 # modelines, feel free to remove those if you don't want/use them:
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
+dockers:
+  - image_templates:
+      - 'ghcr.io/denizgursoy/gotouch:{{ .Tag }}-alpine3.16.2'
+      - 'ghcr.io/denizgursoy/gotouch:latest'
+    dockerfile: build/package/Dockerfile
+    build_flag_templates:
+      - "--pull"
+      - "--label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/denizgursoy/gotouch/main/README.md"
+      - "--label=io.artifacthub.package.maintainers=[{\"name\":\"Deniz Gursoy\",\"email\":\"denizgursoy.443@gmail.com\"}]"
+      - "--label=io.artifacthub.package.license=MIT"
+      - "--label=org.opencontainers.image.description=Customizable Project Creator"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+      - "--build-arg=ALPINE=alpine:3.16.2"
