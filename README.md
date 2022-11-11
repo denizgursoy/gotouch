@@ -42,7 +42,10 @@ gotouch -f path-to-properties-yaml
 Execute following command to run in a docker container. Change `$(pwd)` if you want to create
 project in another folder. `-f` argument can only be URL. 
 
-`docker run -it -v $(pwd):/out --rm ghcr.io/denizgursoy/gotouch:latest`
+```bash
+docker run -it -v $(pwd):/out --rm ghcr.io/denizgursoy/gotouch:latest
+```
+
 ## How Gotouch works
 1. Asks for user to select a project structure in [properties yaml](#Write-your-properties-yaml-file)
 2. If the selected project's language is go, it will check whether `go` command is installed on the OS   
