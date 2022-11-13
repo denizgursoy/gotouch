@@ -42,7 +42,7 @@ changelog:
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
 dockers:
   - image_templates:
-      - 'ghcr.io/denizgursoy/gotouch:{{ .Tag }}-alpine3.16.2'
+      - 'ghcr.io/denizgursoy/gotouch:{{ .Tag }}-alpine'
       - 'ghcr.io/denizgursoy/gotouch:latest'
     dockerfile: build/package/Dockerfile
     build_flag_templates:
