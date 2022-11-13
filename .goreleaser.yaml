@@ -58,3 +58,13 @@ dockers:
       - "--label=org.opencontainers.image.source={{.GitURL}}"
       - "--platform=linux/amd64"
       - "--build-arg=ALPINE=alpine:3.16.2"
+
+brews:
+- name: gotouch
+  homepage: https://denizgursoy.github.io/gotouch/
+  description: "customizable project creator"
+  tap:
+    owner: brew-tools
+    name: homebrew-tap
+    token: "{{ .Env.BREW_TOKEN }}"
+  folder: Formula
