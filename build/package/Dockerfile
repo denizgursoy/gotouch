@@ -1,7 +1,6 @@
-FROM alpine
+FROM golang
 
 COPY gotouch /gotouch
-
 
 WORKDIR /out
 
