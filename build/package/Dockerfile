@@ -1,7 +1,8 @@
-FROM golang:alpine
+FROM alpine
 
-RUN go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
+COPY dist/gotouch_linux_386/gotouch /executable/gotouch
+
 
 WORKDIR /out
 
-ENTRYPOINT [ "gotouch" ]
+ENTRYPOINT [ "/executable/gotouch" ]
