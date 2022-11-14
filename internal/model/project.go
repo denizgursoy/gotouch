@@ -11,13 +11,13 @@ import (
 
 type (
 	ProjectStructureData struct {
-		Name      string      `yaml:"name"`
-		Reference string      `yaml:"reference"`
-		URL       string      `yaml:"url"`
-		Questions []*Question `yaml:"questions"`
-		Values    interface{} `yaml:"values"`
-		Language  string      `yaml:"language"`
-		Delimeter string      `yaml:"delimeter"`
+		Name       string      `yaml:"name"`
+		Reference  string      `yaml:"reference"`
+		URL        string      `yaml:"url"`
+		Questions  []*Question `yaml:"questions"`
+		Values     interface{} `yaml:"values"`
+		Language   string      `yaml:"language"`
+		Delimeters string      `yaml:"delimeters"`
 	}
 
 	Question struct {
@@ -76,7 +76,7 @@ func (p *ProjectStructureData) IsValid() error {
 		return ErrProjectURLIsNotValid
 	}
 
-	delimeters := strings.Fields(p.Delimeter)
+	delimeters := strings.Fields(p.Delimeters)
 	if len(delimeters) != 0 && len(delimeters) != 2 {
 		return ErrWrongDelimeterFormat{projectName: p.Name}
 	}

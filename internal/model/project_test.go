@@ -268,9 +268,9 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 
 		for _, d := range delimeters {
 			project := &ProjectStructureData{
-				Name:      projectName,
-				URL:       validProjectURL,
-				Delimeter: d.Case,
+				Name:       projectName,
+				URL:        validProjectURL,
+				Delimeters: d.Case,
 			}
 			err := project.IsValid()
 

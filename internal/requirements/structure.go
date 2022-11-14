@@ -2,9 +2,10 @@ package requirements
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/langs"
-	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -117,9 +118,10 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	}
 
 	requirements = append(requirements, &templateRequirement{
-		Prompter: p.Prompter,
-		Store:    p.Store,
-		Values:   task.ProjectStructure.Values,
+		Prompter:   p.Prompter,
+		Store:      p.Store,
+		Values:     task.ProjectStructure.Values,
+		Delimeters: task.ProjectStructure.Delimeters,
 	})
 
 	tasks = append(tasks, &cleanupTask{

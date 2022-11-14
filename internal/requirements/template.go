@@ -2,12 +2,12 @@ package requirements
 
 import (
 	"bytes"
-	"html/template"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+	"text/template"
 
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
@@ -23,22 +23,26 @@ const (
 
 type (
 	templateRequirement struct {
-		Prompter prompter.Prompter `validate:"required"`
-		Store    store.Store       `validate:"required"`
-		Values   interface{}       `validate:"required"`
+		Prompter   prompter.Prompter `validate:"required"`
+		Store      store.Store       `validate:"required"`
+		Values     interface{}       `validate:"required"`
+		Delimeters string
 	}
 
 	templateTask struct {
-		Store  store.Store `validate:"required"`
-		Values interface{} `validate:"required"`
+		Store      store.Store `validate:"required"`
+		Values     interface{} `validate:"required"`
+		Delimeters string
+		Template   *template.Template
 	}
 )
 
 func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	tasks := make([]model.Task, 0)
 	templateTsk := &templateTask{
-		Store:  t.Store,
-		Values: t.Values,
+		Store:      t.Store,
+		Values:     t.Values,
+		Delimeters: t.Delimeters,
 	}
 
 	if t.Values != nil {
@@ -75,6 +79,9 @@ func (t *templateTask) Complete() error {
 	path := t.Store.GetValue(store.ProjectFullPath)
 	t.combineWithDefaultValues()
 
+	delimeters := strings.Fields(t.Delimeters)
+	t.Template = template.New("task").Delims(delimeters[0], delimeters[1])
+
 	folders := make([]string, 0)
 
 	err := filepath.Walk(path,
@@ -97,7 +104,7 @@ func (t *templateTask) Complete() error {
 }
 
 func (t *templateTask) AddSimpleTemplate(path string) {
-	files, err := template.ParseFiles(path)
+	files, err := t.Template.ParseFiles(path)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -123,8 +130,7 @@ func (t *templateTask) templateDirectoryNames(folders []string) error {
 
 	for len(folders) > 0 {
 		oldName := folders[0]
-		t2 := template.New("directory")
-		parse, parseError := t2.Parse(oldName)
+		parse, parseError := t.Template.Parse(oldName)
 		if parseError != nil {
 			return parseError
 		}
