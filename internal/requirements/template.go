@@ -80,12 +80,12 @@ func (t *templateTask) Complete() error {
 	t.combineWithDefaultValues()
 
 	delimiters := strings.Fields(t.Delimeters)
-	templ := template.New("task")
 
 	if len(delimiters) > 0 {
-		templ.Delims(delimiters[0], delimiters[1])
+		t.Template = template.New("task").Delims(delimiters[0], delimiters[1])
+	} else {
+		t.Template = template.New("task")
 	}
-	t.Template = templ
 
 	folders := make([]string, 0)
 
