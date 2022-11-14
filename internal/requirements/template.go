@@ -79,8 +79,13 @@ func (t *templateTask) Complete() error {
 	path := t.Store.GetValue(store.ProjectFullPath)
 	t.combineWithDefaultValues()
 
-	delimeters := strings.Fields(t.Delimeters)
-	t.Template = template.New("task").Delims(delimeters[0], delimeters[1])
+	delimiters := strings.Fields(t.Delimeters)
+	templ := template.New("task")
+
+	if len(delimiters) > 0 {
+		templ.Delims(delimiters[0], delimiters[1])
+	}
+	t.Template = templ
 
 	folders := make([]string, 0)
 
