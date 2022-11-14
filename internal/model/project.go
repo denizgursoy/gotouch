@@ -3,9 +3,10 @@ package model
 import (
 	"errors"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/langs"
 	"net/url"
 	"strings"
+
+	"github.com/denizgursoy/gotouch/internal/langs"
 )
 
 type (
@@ -16,6 +17,7 @@ type (
 		Questions []*Question `yaml:"questions"`
 		Values    interface{} `yaml:"values"`
 		Language  string      `yaml:"language"`
+		Delimeter string      `yaml:"delimeter"`
 	}
 
 	Question struct {
@@ -72,6 +74,11 @@ func (p *ProjectStructureData) IsValid() error {
 
 	if _, err := url.ParseRequestURI(projectUrl); err != nil {
 		return ErrProjectURLIsNotValid
+	}
+
+	delimeters := strings.Fields(p.Delimeter)
+	if len(delimeters) != 0 && len(delimeters) != 2 {
+		return ErrWrongDelimeterFormat{projectName: p.Name}
 	}
 
 	if len(p.Questions) > 0 {
@@ -263,6 +270,9 @@ type (
 		choiceIndex   int
 		fileIndex     int
 	}
+	ErrWrongDelimeterFormat struct {
+		projectName string
+	}
 )
 
 func (e ErrEmptyQuestionField) Error() string {
@@ -303,4 +313,8 @@ func (e ErrEmptyFileField) Error() string {
 
 func (e ErrInvalidURLFile) Error() string {
 	return fmt.Sprintf("%s's %d. question, %d. choice, %d. file URL is invalid.", e.projectName, e.questionIndex+1, e.choiceIndex+1, e.fileIndex+1)
+}
+
+func (e ErrWrongDelimeterFormat) Error() string {
+	return fmt.Sprintf("%s's delimeter must be seperated by space as '[[ ]]'", e.projectName)
 }
