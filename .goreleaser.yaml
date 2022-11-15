@@ -5,7 +5,7 @@ before:
     # You may remove this if you don't use go modules.
     - go mod tidy
     # you may remove this if you don't need go generate
-    - go generate ./...
+    # - go generate ./...
 builds:
   - env:
       - CGO_ENABLED=0
@@ -14,6 +14,10 @@ builds:
       - windows
       - darwin
     main: ./cmd/gotouch
+    ldflags:
+      - -s -w -X main.Version={{.Version}} -X main.BuildCommit={{.ShortCommit}} -X main.BuildDate={{.Date}}
+    flags:
+      - -trimpath
     ignore:
       - goos:  windows
         goarch: arm64
