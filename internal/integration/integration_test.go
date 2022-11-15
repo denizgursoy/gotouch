@@ -81,6 +81,8 @@ func (z *ZippingTestSuite) TestDelimiter() {
 
 	z.checkFileContent("main.go", "delimiter-main.go")
 	z.checkFileContent("testapp/main.go", "delimiter-main.go")
+
+	z.checkDirectoriesExist([]string{"testapp/a/testapp"})
 }
 
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
