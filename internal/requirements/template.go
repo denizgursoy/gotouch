@@ -94,6 +94,10 @@ func (t *templateTask) Complete() error {
 			return nil
 		})
 
+	if err != nil {
+		return err
+	}
+
 	if err = t.templateDirectoryNames(folders); err != nil {
 		return err
 	}
@@ -109,7 +113,9 @@ func (t *templateTask) setDelimiter(temp *template.Template) {
 }
 
 func (t *templateTask) AddSimpleTemplate(path string) error {
-	fileTemplates, err := template.ParseFiles(path)
+	fileTemplate := template.New(filepath.Base(path))
+	t.setDelimiter(fileTemplate)
+	fileTemplate, err := fileTemplate.ParseFiles(path)
 	if err != nil {
 		return err
 	}
@@ -120,8 +126,7 @@ func (t *templateTask) AddSimpleTemplate(path string) error {
 	}
 	defer fileWriter.Close()
 
-	t.setDelimiter(fileTemplates)
-	err = fileTemplates.Execute(fileWriter, t.Values)
+	err = fileTemplate.Execute(fileWriter, t.Values)
 	if err != nil {
 		return err
 	}
@@ -138,7 +143,7 @@ func (t *templateTask) templateDirectoryNames(folders []string) error {
 	for len(folders) > 0 {
 		oldName := folders[0]
 
-		directoryTemplate := template.New("directory")
+		directoryTemplate := template.New(filepath.Base(oldName))
 		t.setDelimiter(directoryTemplate)
 
 		parse, parseError := directoryTemplate.Parse(oldName)

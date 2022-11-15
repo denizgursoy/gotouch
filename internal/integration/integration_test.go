@@ -73,7 +73,14 @@ func (z *ZippingTestSuite) TestGithub() {
 	z.executeGotouch()
 
 	z.checkDefaultProjectStructure()
-	z.checkModuleName("module g.c/dg/testapp", dependencies)
+}
+
+func (z *ZippingTestSuite) TestDelimiter() {
+	z.setInputFile("delimiter.txt")
+	z.executeGotouch()
+
+	z.checkFileContent("main.go", "delimiter-main.go")
+	z.checkFileContent("testapp/main.go", "delimiter-main.go")
 }
 
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
@@ -133,7 +140,6 @@ func (z *ZippingTestSuite) checkFilesExist(files []string) {
 	}
 }
 
-// CmdExec Execute a command
 func (z *ZippingTestSuite) CmdExec(args ...string) {
 
 	baseCmd := args[0]
