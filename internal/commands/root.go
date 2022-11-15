@@ -7,27 +7,38 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Execute() {
-	rootCommand := CreateRootCommand(operator.GetInstance())
+type BuildInfo struct {
+	Version     string
+	BuildCommit string
+	BuildDate   string
+}
+
+func Execute(info BuildInfo) {
+	rootCommand := CreateRootCommand(operator.GetInstance(), info)
 	err := rootCommand.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
-func CreateRootCommand(cmdr operator.Operator) *cobra.Command {
+func CreateRootCommand(cmdr operator.Operator, info BuildInfo) *cobra.Command {
 	createCommand := &cobra.Command{
-		Use:   "gotouch",
-		Short: "Helps you create new  projects",
-		Long: `Parses properties yaml provided with file flag. If no flag is provided, Gotouch will use the yaml at
-https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml. 
+		Use:     "gotouch",
+		Version: info.Version,
+		Short:   "Helps you create new projects",
+		Long: `Gotouch helps you create new projects from templates.
+Version: ` + info.Version + ` Commit: ` + info.BuildCommit + ` Date: ` + info.BuildDate + `
+
+Parses properties yaml provided with file flag. If no flag is provided, Gotouch will use the yaml at
+https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml.
+
 Gotouch will list the project structures in the yaml to user in order to make selection.
 Gotouch will ask for project name. Project name will be used to create directory to which archive file will be extracted.
 If selected project structure's language is go, project name will be used as module name. See below:
 
-Project Name						Module Name 						Directory Name
-my-app								my-app								my-app
-github.com/my-account/my-app		github.com/my-account/my-app		my-app
+Project Name                 | Module Name                  | Directory Name
+my-app                       | my-app                       | my-app
+github.com/my-account/my-app | github.com/my-account/my-app | my-app
 
 If no go.mod file exists in the template, Gotouch will create one with the module name.
 Gotouch will ask the questions in the selected project structure in order.`,

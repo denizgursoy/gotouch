@@ -33,7 +33,7 @@ func TestCreateRootCommand(t *testing.T) {
 			},
 		}
 
-		actualCommand := CreateRootCommand(instance)
+		actualCommand := CreateRootCommand(instance, BuildInfo{})
 		checkCommandHasCorrectValues(t, expectedCommand, actualCommand)
 	})
 
