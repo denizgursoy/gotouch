@@ -243,6 +243,46 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.ErrorIs(t, err, ErrProjectURLIsNotValid)
 	})
 
+	t.Run("should provide Delimeter in correct format", func(t *testing.T) {
+		delimiters := []struct {
+			Name string
+			Case string
+			Err  bool
+		}{
+			{
+				Name: "empty test",
+				Case: " ",
+				Err:  false,
+			},
+			{
+				Name: "correct delimeter",
+				Case: "[[ ]]",
+				Err:  false,
+			},
+			{
+				Name: "wrong concat value",
+				Case: "[[]]",
+				Err:  true,
+			},
+		}
+
+		for _, d := range delimiters {
+			project := &ProjectStructureData{
+				Name:       projectName,
+				URL:        validProjectURL,
+				Delimiters: d.Case,
+			}
+			err := project.IsValid()
+
+			t.Run(d.Name, func(t *testing.T) {
+				require.True(t, (err == nil) != d.Err)
+				if err != nil {
+					require.ErrorAs(t, err, &ErrWrongDelimeterFormat{})
+				}
+			})
+		}
+	})
+
 	t.Run("should return no error", func(t *testing.T) {
 		err := validProjectWithNoCustom.IsValid()
 		require.Nil(t, err)

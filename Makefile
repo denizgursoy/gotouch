@@ -1,4 +1,5 @@
 LINUX_BUILD := env GOOS=linux GARCH=amd64 go build
+MAC_BUILD := env GOOS=darwin GARCH=x86_64 go build
 
 build:
 	go build -o gotouch-mac -v ./cmd/gotouch/
@@ -11,10 +12,8 @@ lint:
 	golangci-lint run
 
 build-test:
-	 $(LINUX_BUILD) -v -o gotouch-linux-test -tags=integration ./cmd/gotouch/
-
-build-mac-test:
-	go build -v -o gotouch-mac-test ./cmd/gotouch/
+	$(LINUX_BUILD) -v -o gotouch-linux -tags=integration ./cmd/gotouch/
+	$(MAC_BUILD)   -v -o gotouch-darwin -tags=integration ./cmd/gotouch/
 
 unit:
 	go test -v -coverprofile coverage.out --tags=unit ./...
