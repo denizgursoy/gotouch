@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -20,15 +19,17 @@ var (
 )
 
 func init() {
-	exPath := fmt.Sprintf("%s/input.txt", GetExtractLocation())
-	file, err := os.ReadFile(exPath)
+	getenv := os.Getenv("TARGET_FILE")
+	body, err := os.ReadFile(getenv)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("unable to read file: %v", err)
 	}
+
 	urls = make([]string, 0)
-	for _, line := range strings.Split(string(file), "\n") {
+	for _, line := range strings.Split(string(body), "\n") {
 		urls = append(urls, line)
 	}
+
 }
 
 func (s srv) AskForString(direction string, validator Validator) (string, error) {
@@ -67,12 +68,4 @@ func getStream() io.ReadCloser {
 	nopCloser := io.NopCloser(strings.NewReader(urls[index]))
 	index++
 	return nopCloser
-}
-
-func GetExtractLocation() string {
-	ex, err := os.Executable()
-	if err != nil {
-		log.Fatal("could not fetch executable information", err)
-	}
-	return filepath.Dir(ex)
 }
