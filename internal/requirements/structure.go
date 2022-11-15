@@ -121,7 +121,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		Prompter:   p.Prompter,
 		Store:      p.Store,
 		Values:     task.ProjectStructure.Values,
-		Delimiters: task.ProjectStructure.Delimeters,
+		Delimiters: task.ProjectStructure.Delimiters,
 	})
 
 	tasks = append(tasks, &cleanupTask{

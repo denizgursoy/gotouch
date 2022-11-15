@@ -244,7 +244,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 	})
 
 	t.Run("should provide Delimeter in correct format", func(t *testing.T) {
-		delimeters := []struct {
+		delimiters := []struct {
 			Name string
 			Case string
 			Err  bool
@@ -266,11 +266,11 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 			},
 		}
 
-		for _, d := range delimeters {
+		for _, d := range delimiters {
 			project := &ProjectStructureData{
 				Name:       projectName,
 				URL:        validProjectURL,
-				Delimeters: d.Case,
+				Delimiters: d.Case,
 			}
 			err := project.IsValid()
 

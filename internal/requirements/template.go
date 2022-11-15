@@ -31,7 +31,7 @@ type (
 	templateTask struct {
 		Store      store.Store `validate:"required"`
 		Values     interface{} `validate:"required"`
-		Delimeters string
+		Delimiters string
 	}
 )
 
@@ -40,7 +40,7 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	templateTsk := &templateTask{
 		Store:      t.Store,
 		Values:     t.Values,
-		Delimeters: t.Delimiters,
+		Delimiters: t.Delimiters,
 	}
 
 	if t.Values != nil {
@@ -105,7 +105,7 @@ func (t *templateTask) Complete() error {
 }
 
 func (t *templateTask) setDelimiter(temp *template.Template) {
-	delimiters := strings.Fields(t.Delimeters)
+	delimiters := strings.Fields(t.Delimiters)
 
 	if len(delimiters) > 0 {
 		temp.Delims(delimiters[0], delimiters[1])
