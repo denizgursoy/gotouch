@@ -2,7 +2,6 @@
 
 Properties yaml is a **list** of what we call [Project Structure](/customize/project-structure).
 
-
 ```yaml
 - name: Backend for Frontend # mandatory
   url: https://github.com/microservice-project/microservice.git # mandatory
@@ -13,6 +12,5 @@ Properties yaml is a **list** of what we call [Project Structure](/customize/pro
   language: go # must be go or golang for go projects, otherwise omit the field
 ```
 
-
-After creating your properties YAML, **you should validate your YAML** with [validate](/commands#validate) command to check if it can be processed by Gotouch.
-to 
+After creating your properties YAML, **you should validate your YAML** with [validate](/commands#validate) command to
+check if it can be processed by Gotouch.

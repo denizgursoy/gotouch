@@ -27,3 +27,10 @@ Package command ignores following files/directories:
 `gotouch validate --file path-to-yaml`
 
 Validate checks if your yaml is valid or not. 
+
+
+## version
+
+`gotouch --version`
+
+Shows version of the binary

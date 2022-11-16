@@ -3,7 +3,7 @@
 File content can be fetched from internet or provided in the YAML. A file must have `pathFromRoot` field to which Gotouch 
 will create the file.
 
-## Files from internet
+## Files from Internet
 ```yaml
 questions: #optional
   - direction: Do you want Dockerfile? #mandatory
@@ -15,7 +15,7 @@ questions: #optional
             pathFromRoot: Dockerfile #mandatory
 ```
 
-## Files from content
+## Files from Content
 
 ```yaml
 questions: #optional

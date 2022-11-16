@@ -8,7 +8,7 @@ gotouch
 ```
 
 Gotouch will use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml) if
--f/--file argument is not provided. If you have custom properties yaml, execute
+**`-f`**/**`--file`** argument is not provided. If you have custom properties yaml, execute
 
 ```bash
 gotouch -f path-to-properties-yaml

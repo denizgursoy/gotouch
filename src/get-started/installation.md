@@ -28,7 +28,7 @@ Install:
 brew install gotouch
 ```
 
-To get latest version:
+To get the latest version:
 
 ```bash
 brew upgrade gotouch
