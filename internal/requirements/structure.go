@@ -5,15 +5,15 @@ import (
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
-	"github.com/denizgursoy/gotouch/internal/langs"
-
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -63,6 +63,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 
 	projectStructureData := selected.(*model.ProjectStructureData)
 
+	template := projectStructureData.GetTemplate()
+
 	//TODO: test
 	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
 	if setupError := p.LanguageChecker.CheckSetup(); setupError != nil {
@@ -84,13 +86,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	tasks := make([]model.Task, 0)
 	requirements := make([]model.Requirement, 0)
 
-	for _, task := range nameTasks {
-		tasks = append(tasks, task)
-	}
-
-	for _, requirement := range nameRequirements {
-		requirements = append(requirements, requirement)
-	}
+	tasks = append(tasks, nameTasks...)
+	requirements = append(requirements, nameRequirements...)
 
 	task := projectStructureTask{
 		ProjectStructure: projectStructureData,
@@ -118,10 +115,10 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	}
 
 	requirements = append(requirements, &templateRequirement{
-		Prompter:   p.Prompter,
-		Store:      p.Store,
-		Values:     task.ProjectStructure.Values,
-		Delimiters: task.ProjectStructure.Delimiters,
+		Prompter: p.Prompter,
+		Store:    p.Store,
+		Values:   task.ProjectStructure.Values,
+		Template: template,
 	})
 
 	tasks = append(tasks, &cleanupTask{

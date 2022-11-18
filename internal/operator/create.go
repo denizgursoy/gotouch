@@ -2,6 +2,9 @@ package operator
 
 import (
 	"errors"
+
+	"github.com/go-playground/validator/v10"
+
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -11,7 +14,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/requirements"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/go-playground/validator/v10"
 )
 
 var (

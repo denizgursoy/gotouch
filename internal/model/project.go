@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/langs"
+	"github.com/denizgursoy/gotouch/internal/template"
 )
 
 type (
@@ -18,6 +19,7 @@ type (
 		Values     interface{} `yaml:"values"`
 		Language   string      `yaml:"language"`
 		Delimiters string      `yaml:"delimiters"`
+		NoSprig    bool        `yaml:"noSprig"`
 	}
 
 	Question struct {
@@ -40,6 +42,21 @@ type (
 		PathFromRoot string `yaml:"pathFromRoot"`
 	}
 )
+
+func (p *ProjectStructureData) GetTemplate() *template.Template {
+	t := template.New()
+
+	if !p.NoSprig {
+		t.SetSprigFuncs()
+	}
+
+	delimiters := strings.Fields(p.Delimiters)
+	if len(delimiters) > 0 {
+		t.SetDelims(delimiters[0], delimiters[1])
+	}
+
+	return t
+}
 
 func (p *ProjectStructureData) String() string {
 	projectName := p.Name
@@ -78,7 +95,7 @@ func (p *ProjectStructureData) IsValid() error {
 
 	delimiters := strings.Fields(p.Delimiters)
 	if len(delimiters) != 0 && len(delimiters) != 2 {
-		return ErrWrongDelimeterFormat{projectName: p.Name}
+		return ErrWrongDelimiterFormat{projectName: p.Name}
 	}
 
 	if len(p.Questions) > 0 {
@@ -270,7 +287,7 @@ type (
 		choiceIndex   int
 		fileIndex     int
 	}
-	ErrWrongDelimeterFormat struct {
+	ErrWrongDelimiterFormat struct {
 		projectName string
 	}
 )
@@ -315,6 +332,6 @@ func (e ErrInvalidURLFile) Error() string {
 	return fmt.Sprintf("%s's %d. question, %d. choice, %d. file URL is invalid.", e.projectName, e.questionIndex+1, e.choiceIndex+1, e.fileIndex+1)
 }
 
-func (e ErrWrongDelimeterFormat) Error() string {
-	return fmt.Sprintf("%s's delimeter must be seperated by space as '[[ ]]'", e.projectName)
+func (e ErrWrongDelimiterFormat) Error() string {
+	return fmt.Sprintf("%s's delimiter must be seperated by space as '[[ ]]'", e.projectName)
 }

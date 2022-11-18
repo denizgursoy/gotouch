@@ -1,17 +1,17 @@
 package requirements
 
 import (
-	"bytes"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
-	"text/template"
+
+	"gopkg.in/yaml.v3"
 
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"gopkg.in/yaml.v2"
+	"github.com/denizgursoy/gotouch/internal/template"
 )
 
 const (
@@ -22,25 +22,25 @@ const (
 
 type (
 	templateRequirement struct {
-		Prompter   prompter.Prompter `validate:"required"`
-		Store      store.Store       `validate:"required"`
-		Values     interface{}       `validate:"required"`
-		Delimiters string
+		Prompter prompter.Prompter `validate:"required"`
+		Store    store.Store       `validate:"required"`
+		Values   interface{}       `validate:"required"`
+		Template *template.Template
 	}
 
 	templateTask struct {
-		Store      store.Store `validate:"required"`
-		Values     interface{} `validate:"required"`
-		Delimiters string
+		Store    store.Store `validate:"required"`
+		Values   interface{} `validate:"required"`
+		Template *template.Template
 	}
 )
 
 func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	tasks := make([]model.Task, 0)
 	templateTsk := &templateTask{
-		Store:      t.Store,
-		Values:     t.Values,
-		Delimiters: t.Delimiters,
+		Store:    t.Store,
+		Values:   t.Values,
+		Template: t.Template,
 	}
 
 	if t.Values != nil {
@@ -104,18 +104,8 @@ func (t *templateTask) Complete() error {
 	return err
 }
 
-func (t *templateTask) setDelimiter(temp *template.Template) {
-	delimiters := strings.Fields(t.Delimiters)
-
-	if len(delimiters) > 0 {
-		temp.Delims(delimiters[0], delimiters[1])
-	}
-}
-
 func (t *templateTask) AddSimpleTemplate(path string) error {
-	fileTemplate := template.New(filepath.Base(path))
-	t.setDelimiter(fileTemplate)
-	fileTemplate, err := fileTemplate.ParseFiles(path)
+	v, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
@@ -126,7 +116,7 @@ func (t *templateTask) AddSimpleTemplate(path string) error {
 	}
 	defer fileWriter.Close()
 
-	err = fileTemplate.Execute(fileWriter, t.Values)
+	err = t.Template.ExecuteContent(fileWriter, t.Values, v)
 	if err != nil {
 		return err
 	}
@@ -142,21 +132,11 @@ func (t *templateTask) templateDirectoryNames(folders []string) error {
 
 	for len(folders) > 0 {
 		oldName := folders[0]
+		newName, err := t.Template.Execute(t.Values, oldName)
 
-		directoryTemplate := template.New(filepath.Base(oldName))
-		t.setDelimiter(directoryTemplate)
-
-		parse, parseError := directoryTemplate.Parse(oldName)
-		if parseError != nil {
-			return parseError
+		if err != nil {
+			return err
 		}
-		bufferString := bytes.NewBufferString("")
-		executeError := parse.Execute(bufferString, t.Values)
-
-		if executeError != nil {
-			return parseError
-		}
-		newName := bufferString.String()
 
 		folders = append(folders[:0], folders[0+1:]...)
 
@@ -165,7 +145,7 @@ func (t *templateTask) templateDirectoryNames(folders []string) error {
 			if err != nil {
 				return err
 			}
-			for i, _ := range folders {
+			for i := range folders {
 				if strings.HasPrefix(folders[i], oldName) {
 					folders[i] = strings.ReplaceAll(folders[i], oldName, newName)
 				}

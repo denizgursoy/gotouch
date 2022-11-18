@@ -6,16 +6,16 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"sync"
 
-	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/go-playground/validator/v10"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
+
+	"github.com/denizgursoy/gotouch/internal/model"
 )
 
 type (
@@ -81,7 +81,11 @@ func (m *mainLister) getProjectsFromStrategy(strategy ReadStrategy) ([]*model.Pr
 func ParseToProjectStructureData(reader io.ReadCloser) ([]*model.ProjectStructureData, error) {
 	structures := make([]*model.ProjectStructureData, 0)
 
-	allBytes, err := ioutil.ReadAll(reader)
+	allBytes, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, ProjectDataParseError
+	}
+
 	err = yaml.Unmarshal(allBytes, &structures)
 
 	if err != nil {
