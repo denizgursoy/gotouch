@@ -21,7 +21,8 @@ var (
 		echoWithVersion,
 		"github.com/spf13/viper",
 	}
-	file = ""
+	file          = ""
+	PropertiesUrl = "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/test/package.yaml"
 )
 
 type ZippingTestSuite struct {
@@ -146,6 +147,8 @@ func (z *ZippingTestSuite) CmdExec(args ...string) {
 
 	baseCmd := args[0]
 	cmdArgs := args[1:]
+
+	cmdArgs = append(cmdArgs, "-f", PropertiesUrl)
 
 	cmd := exec.Command(baseCmd, cmdArgs...)
 	cmd.Env = os.Environ()
