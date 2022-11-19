@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/langs"
-	"github.com/denizgursoy/gotouch/internal/template"
 )
 
 type (
@@ -19,7 +18,6 @@ type (
 		Values     interface{} `yaml:"values"`
 		Language   string      `yaml:"language"`
 		Delimiters string      `yaml:"delimiters"`
-		NoSprig    bool        `yaml:"noSprig"`
 	}
 
 	Question struct {
@@ -42,21 +40,6 @@ type (
 		PathFromRoot string `yaml:"pathFromRoot"`
 	}
 )
-
-func (p *ProjectStructureData) GetTemplate() *template.Template {
-	t := template.New()
-
-	if !p.NoSprig {
-		t.SetSprigFuncs()
-	}
-
-	delimiters := strings.Fields(p.Delimiters)
-	if len(delimiters) > 0 {
-		t.SetDelims(delimiters[0], delimiters[1])
-	}
-
-	return t
-}
 
 func (p *ProjectStructureData) String() string {
 	projectName := p.Name

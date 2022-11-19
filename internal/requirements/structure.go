@@ -2,6 +2,7 @@ package requirements
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/template"
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
@@ -51,19 +52,12 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
-	options := make([]fmt.Stringer, 0)
-	for _, datum := range p.ProjectsData {
-		options = append(options, datum)
-	}
-
-	selected, err := p.Prompter.AskForSelectionFromList(SelectProjectTypeDirection, options)
+	projectStructureData, err := p.SelectProject()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	projectStructureData := selected.(*model.ProjectStructureData)
-
-	template := projectStructureData.GetTemplate()
+	template := GetTemplate(projectStructureData)
 
 	//TODO: test
 	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
@@ -128,6 +122,21 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	return tasks, requirements, nil
 }
 
+func (p *ProjectStructureRequirement) SelectProject() (*model.ProjectStructureData, error) {
+	options := make([]fmt.Stringer, 0)
+	for _, datum := range p.ProjectsData {
+		options = append(options, datum)
+	}
+
+	selected, err := p.Prompter.AskForSelectionFromList(SelectProjectTypeDirection, options)
+	if err != nil {
+		return nil, err
+	}
+
+	projectStructureData := selected.(*model.ProjectStructureData)
+	return projectStructureData, nil
+}
+
 func (p *projectStructureTask) Complete() error {
 	if err := validator.New().Struct(p); err != nil {
 		return err
@@ -150,4 +159,17 @@ func (p *projectStructureTask) Complete() error {
 	}
 
 	return nil
+}
+
+func GetTemplate(p *model.ProjectStructureData) *template.Template {
+	t := template.New()
+
+	t.SetSprigFuncs()
+
+	delimiters := strings.Fields(p.Delimiters)
+	if len(delimiters) > 0 {
+		t.SetDelims(delimiters[0], delimiters[1])
+	}
+
+	return t
 }
