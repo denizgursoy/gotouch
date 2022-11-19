@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -37,7 +38,12 @@ func (f *fManager) CreateDirectoryIfNotExist(directoryName string) error {
 }
 
 func (f *fManager) GetExtractLocation() string {
-	return GetExtractLocation()
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("could not get working directory", err)
+	}
+
+	return wd
 }
 
 func (f *fManager) CreateFile(reader io.ReadCloser, path string) error {
