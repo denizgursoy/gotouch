@@ -6,7 +6,6 @@ package prompter
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -33,7 +32,7 @@ func init() {
 }
 
 func (s srv) AskForString(direction string, validator Validator) (string, error) {
-	all, err := ioutil.ReadAll(getStream())
+	all, err := io.ReadAll(getStream())
 	if err != nil {
 		return "", err
 	}
@@ -41,7 +40,7 @@ func (s srv) AskForString(direction string, validator Validator) (string, error)
 }
 
 func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {
-	all, err := ioutil.ReadAll(getStream())
+	all, err := io.ReadAll(getStream())
 	if err != nil {
 		return "", err
 	}
@@ -51,7 +50,7 @@ func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (int
 }
 
 func (s srv) AskForYesOrNo(direction string) (bool, error) {
-	all, err := ioutil.ReadAll(getStream())
+	all, err := io.ReadAll(getStream())
 	if err != nil {
 		return false, err
 	}

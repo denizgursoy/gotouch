@@ -3,7 +3,6 @@ package manager
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -62,7 +61,7 @@ func (f *fManager) CreateFile(reader io.ReadCloser, path string) error {
 	}
 	defer create.Close()
 
-	all, readError := ioutil.ReadAll(reader)
+	all, readError := io.ReadAll(reader)
 	if readError != nil {
 		return readError
 	}
