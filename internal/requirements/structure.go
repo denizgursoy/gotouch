@@ -2,18 +2,19 @@ package requirements
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/template"
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
-	"github.com/denizgursoy/gotouch/internal/langs"
-
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
+	"github.com/denizgursoy/gotouch/internal/langs"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -51,17 +52,12 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
-	options := make([]fmt.Stringer, 0)
-	for _, datum := range p.ProjectsData {
-		options = append(options, datum)
-	}
-
-	selected, err := p.Prompter.AskForSelectionFromList(SelectProjectTypeDirection, options)
+	projectStructureData, err := p.SelectProject()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	projectStructureData := selected.(*model.ProjectStructureData)
+	template := GetTemplate(projectStructureData)
 
 	//TODO: test
 	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
@@ -84,13 +80,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	tasks := make([]model.Task, 0)
 	requirements := make([]model.Requirement, 0)
 
-	for _, task := range nameTasks {
-		tasks = append(tasks, task)
-	}
-
-	for _, requirement := range nameRequirements {
-		requirements = append(requirements, requirement)
-	}
+	tasks = append(tasks, nameTasks...)
+	requirements = append(requirements, nameRequirements...)
 
 	task := projectStructureTask{
 		ProjectStructure: projectStructureData,
@@ -118,10 +109,10 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	}
 
 	requirements = append(requirements, &templateRequirement{
-		Prompter:   p.Prompter,
-		Store:      p.Store,
-		Values:     task.ProjectStructure.Values,
-		Delimiters: task.ProjectStructure.Delimiters,
+		Prompter: p.Prompter,
+		Store:    p.Store,
+		Values:   task.ProjectStructure.Values,
+		Template: template,
 	})
 
 	tasks = append(tasks, &cleanupTask{
@@ -129,6 +120,21 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	})
 
 	return tasks, requirements, nil
+}
+
+func (p *ProjectStructureRequirement) SelectProject() (*model.ProjectStructureData, error) {
+	options := make([]fmt.Stringer, 0)
+	for _, datum := range p.ProjectsData {
+		options = append(options, datum)
+	}
+
+	selected, err := p.Prompter.AskForSelectionFromList(SelectProjectTypeDirection, options)
+	if err != nil {
+		return nil, err
+	}
+
+	projectStructureData := selected.(*model.ProjectStructureData)
+	return projectStructureData, nil
 }
 
 func (p *projectStructureTask) Complete() error {
@@ -153,4 +159,17 @@ func (p *projectStructureTask) Complete() error {
 	}
 
 	return nil
+}
+
+func GetTemplate(p *model.ProjectStructureData) *template.Template {
+	t := template.New()
+
+	t.SetSprigFuncs()
+
+	delimiters := strings.Fields(p.Delimiters)
+	if len(delimiters) > 0 {
+		t.SetDelims(delimiters[0], delimiters[1])
+	}
+
+	return t
 }

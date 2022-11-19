@@ -5,6 +5,7 @@ package integration
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -21,7 +22,8 @@ var (
 		echoWithVersion,
 		"github.com/spf13/viper",
 	}
-	file = ""
+	file          = ""
+	PropertiesUrl = "https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/test/package.yaml"
 )
 
 type ZippingTestSuite struct {
@@ -48,6 +50,12 @@ func (z *ZippingTestSuite) SetupTest() {
 	mkdirTemp, _ := os.MkdirTemp("", "gotouch-test*")
 	z.createdProjectPath = mkdirTemp + "/" + "testapp"
 	z.workingDir = mkdirTemp
+
+	err := os.Chdir(mkdirTemp)
+	if err != nil {
+		log.Fatalln("could not change directory")
+	}
+
 	//exec.Command("open", mkdirTemp).Start()
 	fmt.Println("binaryDir          -->" + z.binaryDir)
 	fmt.Println("binaryPath         -->" + z.binaryPath)
@@ -147,15 +155,15 @@ func (z *ZippingTestSuite) CmdExec(args ...string) {
 	baseCmd := args[0]
 	cmdArgs := args[1:]
 
+	cmdArgs = append(cmdArgs, "-f", PropertiesUrl)
+
 	cmd := exec.Command(baseCmd, cmdArgs...)
 	cmd.Env = os.Environ()
 
-	env1 := fmt.Sprintf("%s=%s", "TARGET_DIRECTORY", z.workingDir)
 	env2 := fmt.Sprintf("%s=%s", "TARGET_FILE", file)
 
 	//fmt.Println(env1 + " " + env2 + " " + z.binaryPath)
 
-	cmd.Env = append(cmd.Env, env1)
 	cmd.Env = append(cmd.Env, env2)
 
 	out, err := cmd.Output()
