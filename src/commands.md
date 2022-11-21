@@ -2,7 +2,7 @@
 
 ## gotouch
 
-gotouch command uses [properties yaml](../customize/properties-yaml) file for prompting user to enter name and select project
+gotouch command uses [properties yaml](./customize/properties-yaml) file for prompting user to enter name and select project
 structure. If file flag value is not provided, it is going to
 use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml).
 Firstly,The command asks for project name. Project name is written to go module and used for directory name.
