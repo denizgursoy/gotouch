@@ -1,6 +1,6 @@
 # How It Works
 
-1. Asks the user to select a project structure in [properties yaml](/customize/properties-yaml)
+1. Asks the user to select a project structure in [properties yaml](../customize/properties-yaml)
 2. If the selected project's language is go, it will check whether `go` command is installed on the OS
 3. Asks for module name
 4. Asks for a choice of every [question](/customize/question) under the selected project structure in order and saves the choices
