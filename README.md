@@ -21,3 +21,7 @@ go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 ## Get Started
 
 To see how to install and customize visit [gotouch web site](https://denizgursoy.github.io/gotouch/get-started/installation.html)
+
+## Rationale of Gotouch
+
+See the article [on medium](https://medium.com/@dgursoy/do-not-use-go-mod-init-anymore-5ff8b372cf81)
