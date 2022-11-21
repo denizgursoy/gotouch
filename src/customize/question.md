@@ -1,7 +1,7 @@
 # Question
 
 Question allows your users to customize their projects. A question must have a direction and choices. Gotouch prompts
-user to make a [choice](/customize/choice) for every question in the selected Project Structure.
+user to make a [choice](../choice) for every question in the selected Project Structure.
 
 **`direction`**: Direction is displayed for question. It is a mandatory field.
 

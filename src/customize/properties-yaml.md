@@ -1,6 +1,6 @@
 # Properties YAML
 
-Properties yaml is a **list** of what we call [Project Structure](/customize/project-structure).
+Properties yaml is a **list** of what we call [Project Structure](./project-structure).
 
 ```yaml
 - name: Backend for Frontend # mandatory
@@ -12,5 +12,5 @@ Properties yaml is a **list** of what we call [Project Structure](/customize/pro
   language: go # must be go or golang for go projects, otherwise omit the field
 ```
 
-After creating your properties YAML, **you should validate your YAML** with [validate](/commands#validate) command to
+After creating your properties YAML, **you should validate your YAML** with [validate](../commands#validate) command to
 check if it can be processed by Gotouch.

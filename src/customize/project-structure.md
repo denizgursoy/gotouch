@@ -36,8 +36,8 @@ and `}}`. New left and write delimiter should be seperated by space.
 
 **`values`**: Values used to templating files' content or directories' name in the tempalte project. This filed can have
 any values. It can be omitted as well. If the field is not empty, users can also change it.
-See [value](/customize/value) for more information.
+See [value](./value) for more information.
 
 **`questions`**: List of questions to customize project in case that this project structure is selected.
-See [question](/customize/question) for more information.
+See [question](./question) for more information.
 

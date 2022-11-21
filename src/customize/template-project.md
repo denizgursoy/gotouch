@@ -2,12 +2,12 @@
 
 Template project contains all the directories and files that you think you must have in every project.
 Files inside a template can have [actions](https://pkg.go.dev/text/template#hdr-Actions) which will be [templated](https://pkg.go.dev/text/template)
-with the [values](/customize/value). For example, if you have an action like: 
+with the [values](../value). For example, if you have an action like: 
 
  ```go
 {{ .Port }} 
 ```
-and `Port` key in your [values](/customize/value), it  will be replaced with the corresponding value.
+and `Port` key in your [values](../value), it  will be replaced with the corresponding value.
 
  ```go
 package main
@@ -30,7 +30,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 Template project address are written to properties YAML. Template project can be in a git repository and the URL of `.git`
 repository can be used in a properties YAML.
 
-Template can be compressed as `.tar.gz` file with [package command](/commands#package). Compressed `.tar.gz` file can be hosted
+Template can be compressed as `.tar.gz` file with [package command](../commands#package). Compressed `.tar.gz` file can be hosted
 in HTTP server and the URL to `.tar.gz` can be used in a properties YAML.
 
 ::: tip
