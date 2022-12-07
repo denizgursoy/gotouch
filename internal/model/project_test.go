@@ -56,6 +56,15 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Files:        nil,
 	}
 
+	choiceValidOnlyValue := &Choice{
+		Choice:       "choice",
+		Dependencies: nil,
+		Files:        nil,
+		Values: map[string]interface{}{
+			"key": "value",
+		},
+	}
+
 	choiceValidWithFile := &Choice{
 		Choice:       "choice2",
 		Dependencies: nil,
@@ -121,6 +130,12 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Choices:           []*Choice{choiceValidWithFile},
 	}
 
+	questionWithChoiceHavingOnlyValueField := &Question{
+		Direction: "Example Question",
+		CanSkip:   true,
+		Choices:   []*Choice{choiceValidOnlyValue},
+	}
+
 	questionInvalidWhenCanSkipFalse := &Question{
 		Direction:         "Example Question",
 		CanSkip:           false,
@@ -175,6 +190,14 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Reference: "",
 		URL:       validProjectURL,
 		Questions: []*Question{questionValid, questionInvalidWhenCanSelectMultipleTrue},
+		Values:    nil,
+	}
+
+	validProjectStructureWithChoiceHavingOnlyAValue := ProjectStructureData{
+		Name:      "project",
+		Reference: "",
+		URL:       validProjectURL,
+		Questions: []*Question{questionWithChoiceHavingOnlyValueField},
 		Values:    nil,
 	}
 
@@ -285,6 +308,11 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 
 	t.Run("should return no error", func(t *testing.T) {
 		err := validProjectWithNoCustom.IsValid()
+		require.Nil(t, err)
+	})
+
+	t.Run("should return no error if choice has only values,no files and dependencies", func(t *testing.T) {
+		err := validProjectStructureWithChoiceHavingOnlyAValue.IsValid()
 		require.Nil(t, err)
 	})
 
