@@ -83,134 +83,150 @@ func (p *ProjectStructureData) IsValid() error {
 
 	if len(p.Questions) > 0 {
 		for questionIndex, q := range p.Questions {
-			if len(strings.TrimSpace(q.Direction)) == 0 {
-				return ErrEmptyQuestionField{
-					projectName: p.Name,
-					index:       questionIndex,
-					field:       "Direction",
-				}
-			}
-			if len(q.Choices) == 0 {
-				return ErrEmptyQuestionField{
-					projectName: p.Name,
-					index:       questionIndex,
-					field:       "Choices",
-				}
-			} else if len(q.Choices) == 1 && q.CanSelectMultiple == true {
-				return ErrCanSelectMultiple{
-					projectName: p.Name,
-					index:       questionIndex,
-				}
-			} else if len(q.Choices) == 1 && q.CanSkip == false {
-				return ErrCanSkip{
-					projectName: p.Name,
-					index:       questionIndex,
-				}
-			}
-			for choiceIndex, choice := range q.Choices {
-				if len(strings.TrimSpace(choice.Choice)) == 0 {
-					return ErrEmptyChoice{
-						projectName:   p.Name,
-						questionIndex: questionIndex,
-						choiceIndex:   choiceIndex,
-						field:         "Choice",
-					}
-				}
-
-				if len(choice.Files) == 0 && len(choice.Dependencies) == 0 {
-					return ErrEmptyFileAndDependency{
-						projectName:   p.Name,
-						questionIndex: questionIndex,
-						choiceIndex:   choiceIndex,
-					}
-				}
-
-				if len(choice.Files) > 0 {
-					for k, file := range choice.Files {
-
-						if len(strings.TrimSpace(file.PathFromRoot)) == 0 {
-							return ErrEmptyFileField{
-								projectName:   p.Name,
-								questionIndex: questionIndex,
-								choiceIndex:   choiceIndex,
-								fileIndex:     k,
-								field:         "PathFromRoot",
-							}
-						}
-
-						if len(strings.TrimSpace(file.Url)) == 0 && len(strings.TrimSpace(file.Content)) == 0 {
-							return ErrEmptyUrlAndContent{
-								projectName:   p.Name,
-								questionIndex: questionIndex,
-								choiceIndex:   choiceIndex,
-								fileIndex:     k,
-							}
-						}
-
-						if len(strings.TrimSpace(file.Url)) > 0 && len(strings.TrimSpace(file.Content)) > 0 {
-							return ErrMultipleFieldUrlAndContent{
-								projectName:   p.Name,
-								questionIndex: questionIndex,
-								choiceIndex:   choiceIndex,
-								fileIndex:     k,
-							}
-						}
-
-						if len(file.Content) == 0 {
-							fileUrl := strings.TrimSpace(file.Url)
-
-							if len(fileUrl) == 0 {
-								return ErrEmptyFileField{
-									projectName:   p.Name,
-									questionIndex: questionIndex,
-									choiceIndex:   choiceIndex,
-									fileIndex:     k,
-									field:         "URL",
-								}
-							}
-
-							if _, err := url.ParseRequestURI(fileUrl); err != nil {
-								return ErrInvalidURLFile{
-									projectName:   p.Name,
-									questionIndex: questionIndex,
-									choiceIndex:   choiceIndex,
-									fileIndex:     k,
-								}
-							}
-						} else {
-							content := strings.TrimSpace(file.Content)
-
-							if len(content) == 0 {
-								return ErrEmptyFileField{
-									projectName:   p.Name,
-									questionIndex: questionIndex,
-									choiceIndex:   choiceIndex,
-									fileIndex:     k,
-									field:         "Content",
-								}
-							}
-						}
-					}
-				}
-
-				if len(choice.Dependencies) > 0 {
-
-					for dependencyIndex, dependency := range choice.Dependencies {
-						if err := langs.GetChecker(p.Language, nil, nil).CheckDependency(dependency); err != nil {
-							return ErrWrongDependencyFormat{
-								projectName:     p.Name,
-								questionIndex:   questionIndex,
-								choiceIndex:     choiceIndex,
-								dependencyIndex: dependencyIndex,
-							}
-						}
-					}
-				}
-
+			err := p.validateQuestion(q, questionIndex)
+			if err != nil {
+				return err
 			}
 		}
 	}
 
+	return nil
+}
+
+func (p *ProjectStructureData) validateQuestion(q *Question, questionIndex int) error {
+	if len(strings.TrimSpace(q.Direction)) == 0 {
+		return ErrEmptyQuestionField{
+			projectName: p.Name,
+			index:       questionIndex,
+			field:       "Direction",
+		}
+	}
+	if len(q.Choices) == 0 {
+		return ErrEmptyQuestionField{
+			projectName: p.Name,
+			index:       questionIndex,
+			field:       "Choices",
+		}
+	} else if len(q.Choices) == 1 && q.CanSelectMultiple == true {
+		return ErrCanSelectMultiple{
+			projectName: p.Name,
+			index:       questionIndex,
+		}
+	} else if len(q.Choices) == 1 && q.CanSkip == false {
+		return ErrCanSkip{
+			projectName: p.Name,
+			index:       questionIndex,
+		}
+	}
+	for choiceIndex, choice := range q.Choices {
+		err := p.validateChoice(choice, questionIndex, choiceIndex)
+		if err != nil {
+			return err
+		}
+
+	}
+	return nil
+}
+
+func (p *ProjectStructureData) validateChoice(choice *Choice, questionIndex int, choiceIndex int) error {
+	if len(strings.TrimSpace(choice.Choice)) == 0 {
+		return ErrEmptyChoice{
+			projectName:   p.Name,
+			questionIndex: questionIndex,
+			choiceIndex:   choiceIndex,
+			field:         "Choice",
+		}
+	}
+
+	if len(choice.Files) == 0 && len(choice.Dependencies) == 0 && len(choice.Values) == 0 {
+		return ErrEmptyFileAndDependency{
+			projectName:   p.Name,
+			questionIndex: questionIndex,
+			choiceIndex:   choiceIndex,
+		}
+	}
+
+	if len(choice.Files) > 0 {
+		for k, file := range choice.Files {
+
+			if len(strings.TrimSpace(file.PathFromRoot)) == 0 {
+				return ErrEmptyFileField{
+					projectName:   p.Name,
+					questionIndex: questionIndex,
+					choiceIndex:   choiceIndex,
+					fileIndex:     k,
+					field:         "PathFromRoot",
+				}
+			}
+
+			if len(strings.TrimSpace(file.Url)) == 0 && len(strings.TrimSpace(file.Content)) == 0 {
+				return ErrEmptyUrlAndContent{
+					projectName:   p.Name,
+					questionIndex: questionIndex,
+					choiceIndex:   choiceIndex,
+					fileIndex:     k,
+				}
+			}
+
+			if len(strings.TrimSpace(file.Url)) > 0 && len(strings.TrimSpace(file.Content)) > 0 {
+				return ErrMultipleFieldUrlAndContent{
+					projectName:   p.Name,
+					questionIndex: questionIndex,
+					choiceIndex:   choiceIndex,
+					fileIndex:     k,
+				}
+			}
+
+			if len(file.Content) == 0 {
+				fileUrl := strings.TrimSpace(file.Url)
+
+				if len(fileUrl) == 0 {
+					return ErrEmptyFileField{
+						projectName:   p.Name,
+						questionIndex: questionIndex,
+						choiceIndex:   choiceIndex,
+						fileIndex:     k,
+						field:         "URL",
+					}
+				}
+
+				if _, err := url.ParseRequestURI(fileUrl); err != nil {
+					return ErrInvalidURLFile{
+						projectName:   p.Name,
+						questionIndex: questionIndex,
+						choiceIndex:   choiceIndex,
+						fileIndex:     k,
+					}
+				}
+			} else {
+				content := strings.TrimSpace(file.Content)
+
+				if len(content) == 0 {
+					return ErrEmptyFileField{
+						projectName:   p.Name,
+						questionIndex: questionIndex,
+						choiceIndex:   choiceIndex,
+						fileIndex:     k,
+						field:         "Content",
+					}
+				}
+			}
+		}
+	}
+
+	if len(choice.Dependencies) > 0 {
+
+		for dependencyIndex, dependency := range choice.Dependencies {
+			if err := langs.GetChecker(p.Language, nil, nil).CheckDependency(dependency); err != nil {
+				return ErrWrongDependencyFormat{
+					projectName:     p.Name,
+					questionIndex:   questionIndex,
+					choiceIndex:     choiceIndex,
+					dependencyIndex: dependencyIndex,
+				}
+			}
+		}
+	}
 	return nil
 }
 
@@ -292,7 +308,7 @@ func (e ErrEmptyChoice) Error() string {
 }
 
 func (e ErrEmptyFileAndDependency) Error() string {
-	return fmt.Sprintf("%s's %d. question %d. choice do not have both file and dependency. Choice must have at least one file or dependency", e.projectName, e.questionIndex+1, e.choiceIndex+1)
+	return fmt.Sprintf("%s's %d. question %d. choice does not have any files,values or dependencies. Choice must have at least one file, value or dependency", e.projectName, e.questionIndex+1, e.choiceIndex+1)
 }
 
 func (e ErrEmptyUrlAndContent) Error() string {
