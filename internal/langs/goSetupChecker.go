@@ -16,6 +16,8 @@ var (
 	ErrDependencyIsNotValid = errors.New("dependency is not valid")
 )
 
+const GoCommand = "go"
+
 type golangSetupChecker struct {
 	Logger logger.Logger
 	Store  store.Store
@@ -61,7 +63,7 @@ func (g *golangSetupChecker) CheckDependency(dependency interface{}) error {
 }
 
 func (g *golangSetupChecker) CheckSetup() error {
-	_, err := exec.LookPath("go")
+	_, err := exec.LookPath(GoCommand)
 	if err != nil {
 		return fmt.Errorf("could not find %s in PATH. make sure that %s installed", "go", "go")
 	}
@@ -102,13 +104,47 @@ func (g *golangSetupChecker) GetDependency(dependency interface{}) error {
 }
 
 func (g *golangSetupChecker) CleanUp() error {
+
+	if err := g.executeFmt(); err != nil {
+		return err
+	}
+
+	if err := g.executeTidy(); err != nil {
+		return err
+	}
+
+	if err := g.downloadDependencies(); err != nil {
+		return err
+	}
+
 	return nil
-	//g.Logger.LogInfo("Executing go mod tidy")
-	//tidyTask := &CommandData{
-	//	Command: "go",
-	//	Args:    []string{"mod, tidy"},
-	//}
-	//return g.RunCommand(tidyTask)
+}
+
+func (g *golangSetupChecker) executeFmt() error {
+	g.Logger.LogInfo("Executing go fmt ./...")
+	formatTask := &CommandData{
+		Command: GoCommand,
+		Args:    []string{"fmt", "./..."},
+	}
+	return g.RunCommand(formatTask)
+}
+
+func (g *golangSetupChecker) downloadDependencies() error {
+	g.Logger.LogInfo("Executing go mod download")
+	formatTask := &CommandData{
+		Command: GoCommand,
+		Args:    []string{"mod", "download"},
+	}
+	return g.RunCommand(formatTask)
+}
+
+func (g *golangSetupChecker) executeTidy() error {
+	g.Logger.LogInfo("Executing go mod tidy")
+	tidyTask := &CommandData{
+		Command: GoCommand,
+		Args:    []string{"mod", "tidy"},
+	}
+	return g.RunCommand(tidyTask)
 }
 
 func (g *golangSetupChecker) RunCommand(data *CommandData) error {

@@ -89,17 +89,15 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
 
-		require.Len(t, tasks, 3)
+		require.Len(t, tasks, 2)
 		require.IsType(t, (*projectNameTask)(nil), tasks[0])
 
 		require.IsType(t, &projectStructureTask{}, tasks[1])
 		require.IsType(t, testProjectData[1], tasks[1].(*projectStructureTask).ProjectStructure)
 
-		require.IsType(t, (*cleanupTask)(nil), tasks[2])
-
 		actualQuestions := make([]*model.Question, 0)
 
-		require.Len(t, requirements, 3)
+		require.Len(t, requirements, 4)
 		for i := 0; i < 2; i++ {
 			actualQuestions = append(actualQuestions, &requirements[i].(*QuestionRequirement).Question)
 		}
@@ -107,6 +105,7 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		require.IsType(t, &templateRequirement{}, requirements[2])
 		require.IsType(t, testProjectData[0].Values, requirements[2].(*templateRequirement).Values)
+		require.IsType(t, (*cleanupRequirement)(nil), requirements[3])
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {

@@ -57,7 +57,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
-	template := GetTemplate(projectStructureData)
+	templateWithDelimiters := GetTemplate(projectStructureData)
 
 	//TODO: test
 	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
@@ -112,11 +112,15 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		Prompter: p.Prompter,
 		Store:    p.Store,
 		Values:   task.ProjectStructure.Values,
-		Template: template,
+		Template: templateWithDelimiters,
 	})
 
-	tasks = append(tasks, &cleanupTask{
+	requirements = append(requirements, &cleanupRequirement{
 		LanguageChecker: p.LanguageChecker,
+	})
+
+	requirements = append(requirements, &initRequirement{
+		Store: p.Store,
 	})
 
 	return tasks, requirements, nil
