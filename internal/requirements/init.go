@@ -3,7 +3,6 @@ package requirements
 import (
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/logger"
-	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
@@ -14,14 +13,12 @@ import (
 
 type (
 	initRequirement struct {
-		Manager manager.Manager
-		Store   store.Store
-		Logger  logger.Logger
+		Store  store.Store
+		Logger logger.Logger
 	}
 	initTask struct {
-		Manager manager.Manager
-		Store   store.Store
-		Logger  logger.Logger
+		Store  store.Store
+		Logger logger.Logger
 	}
 )
 
@@ -29,9 +26,8 @@ func (i *initRequirement) AskForInput() ([]model.Task, []model.Requirement, erro
 	tasks := make([]model.Task, 0)
 
 	tasks = append(tasks, &initTask{
-		Manager: i.Manager,
-		Store:   i.Store,
-		Logger:  i.Logger,
+		Store:  i.Store,
+		Logger: i.Logger,
 	})
 	return tasks, nil, nil
 }
@@ -46,15 +42,20 @@ func (i *initTask) Complete() error {
 
 	_, err := os.Stat(initFileAddress)
 	if err == nil {
+		i.Logger.LogInfo("Executing " + InitFileName)
 		defer os.Remove(initFileAddress)
 		err := os.Chmod(initFileAddress, 0777)
 		if err != nil {
 			return err
 		}
-		return executeInitFile(i.Store)
+		err = executeInitFile(i.Store)
+		if err != nil {
+			return err
+		}
+		i.Logger.LogInfo("Executed " + InitFileName)
+		return nil
 	}
 	return nil
-
 }
 
 type CommandData struct {

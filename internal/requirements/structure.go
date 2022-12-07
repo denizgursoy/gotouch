@@ -120,7 +120,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	})
 
 	requirements = append(requirements, &initRequirement{
-		Store: p.Store,
+		Store:  p.Store,
+		Logger: p.Logger,
 	})
 
 	return tasks, requirements, nil

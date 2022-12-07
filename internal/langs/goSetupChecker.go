@@ -157,7 +157,9 @@ func (g *golangSetupChecker) RunCommand(data *CommandData) error {
 	}
 	cmd := exec.Command(data.Command, data.Args...)
 
-	err := cmd.Run()
+	output, err := cmd.CombinedOutput()
+	fmt.Println(string(output))
+
 	if err != nil {
 		//	log.Printf("Command finished with error: %v", err)
 		return err
