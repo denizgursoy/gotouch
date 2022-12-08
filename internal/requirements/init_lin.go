@@ -1,10 +1,11 @@
+// go:build !windows
+//go:build !windows
+
 package requirements
 
 import (
 	"github.com/denizgursoy/gotouch/internal/store"
 )
-
-const InitFileName = "init.sh"
 
 func executeInitFile(str store.Store) error {
 	commandData := CommandData{

@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 )
 
 type (
@@ -20,6 +21,15 @@ type (
 		Store  store.Store
 		Logger logger.Logger
 	}
+)
+
+const (
+	LinuxInitFile   = "init.sh"
+	WindowsInitFile = "init.bat"
+)
+
+var (
+	InitFiles = []string{LinuxInitFile, WindowsInitFile}
 )
 
 func (i *initRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
@@ -38,24 +48,39 @@ func (i *initTask) Complete() error {
 	}
 
 	projectFullPath := i.Store.GetValue(store.ProjectFullPath)
-	initFileAddress := filepath.Join(projectFullPath, InitFileName)
+
+	defer deleteInitFiles(projectFullPath)
+
+	initFile := LinuxInitFile
+
+	if runtime.GOOS == "windows" {
+		initFile = WindowsInitFile
+	}
+
+	initFileAddress := filepath.Join(projectFullPath, initFile)
 
 	_, err := os.Stat(initFileAddress)
 	if err == nil {
-		i.Logger.LogInfo("Executing " + InitFileName)
-		defer os.Remove(initFileAddress)
-		err := os.Chmod(initFileAddress, 0777)
-		if err != nil {
+		i.Logger.LogInfo("Executing " + initFile)
+		if err := os.Chmod(initFileAddress, 0777); err != nil {
 			return err
 		}
-		err = executeInitFile(i.Store)
-		if err != nil {
+		if err = executeInitFile(i.Store); err != nil {
 			return err
 		}
-		i.Logger.LogInfo("Executed " + InitFileName)
-		return nil
+		i.Logger.LogInfo("Executed " + initFile)
 	}
 	return nil
+}
+
+func deleteInitFiles(projectFullPath string) {
+	for i, _ := range InitFiles {
+		initFileAddress := filepath.Join(projectFullPath, InitFiles[i])
+		err := os.Remove(initFileAddress)
+		if err == nil {
+			fmt.Printf("could not delete file %s \n", initFileAddress)
+		}
+	}
 }
 
 type CommandData struct {

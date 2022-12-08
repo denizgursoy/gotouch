@@ -1,6 +1,3 @@
-//go:build unit
-// +build unit
-
 package requirements
 
 import (
@@ -95,9 +92,11 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.IsType(t, &projectStructureTask{}, tasks[1])
 		require.IsType(t, testProjectData[1], tasks[1].(*projectStructureTask).ProjectStructure)
 
+		require.IsType(t, (*cleanupTask)(nil), tasks[2])
+
 		actualQuestions := make([]*model.Question, 0)
 
-		require.Len(t, requirements, 4)
+		require.Len(t, requirements, 5)
 		for i := 0; i < 2; i++ {
 			actualQuestions = append(actualQuestions, &requirements[i].(*QuestionRequirement).Question)
 		}
@@ -106,6 +105,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.IsType(t, &templateRequirement{}, requirements[2])
 		require.IsType(t, testProjectData[0].Values, requirements[2].(*templateRequirement).Values)
 		require.IsType(t, (*cleanupRequirement)(nil), requirements[3])
+		require.IsType(t, (*initRequirement)(nil), requirements[4])
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {

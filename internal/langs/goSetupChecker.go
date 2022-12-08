@@ -104,19 +104,6 @@ func (g *golangSetupChecker) GetDependency(dependency interface{}) error {
 }
 
 func (g *golangSetupChecker) CleanUp() error {
-
-	if err := g.executeFmt(); err != nil {
-		return err
-	}
-
-	if err := g.executeTidy(); err != nil {
-		return err
-	}
-
-	if err := g.downloadDependencies(); err != nil {
-		return err
-	}
-
 	return nil
 }
 
