@@ -77,7 +77,7 @@ func (t *templateTask) Complete() error {
 	path := t.Store.GetValue(store.ProjectFullPath)
 	t.combineWithDefaultValues()
 
-	folders := make([]string, 0)
+	paths := make([]string, 0)
 
 	err := filepath.Walk(path,
 		func(filePath string, info os.FileInfo, err error) error {
@@ -88,9 +88,8 @@ func (t *templateTask) Complete() error {
 				if err := t.AddSimpleTemplate(filePath); err != nil {
 					return err
 				}
-			} else {
-				folders = append(folders, filePath)
 			}
+			paths = append(paths, filePath)
 			return nil
 		})
 
@@ -98,7 +97,7 @@ func (t *templateTask) Complete() error {
 		return err
 	}
 
-	if err = t.templateDirectoryNames(folders); err != nil {
+	if err = t.templateDirectoryNames(paths); err != nil {
 		return err
 	}
 	return err
