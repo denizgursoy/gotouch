@@ -2,6 +2,7 @@ package commands
 
 import (
 	"github.com/denizgursoy/gotouch/internal/cloner"
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
@@ -40,16 +41,18 @@ func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 			pointer = nil
 		}
 
+		appStore := store.GetInstance()
 		options := operator.CreateNewProjectOptions{
-			Lister:     lister.GetInstance(),
-			Prompter:   prompter.GetInstance(),
-			Manager:    manager.GetInstance(),
-			Compressor: compressor.GetInstance(),
-			Executor:   executor.GetInstance(),
-			Logger:     newLogger,
-			Path:       pointer,
-			Store:      store.GetInstance(),
-			Cloner:     cloner.GetInstance(),
+			Lister:        lister.GetInstance(),
+			Prompter:      prompter.GetInstance(),
+			Manager:       manager.GetInstance(),
+			Compressor:    compressor.GetInstance(),
+			Executor:      executor.GetInstance(),
+			Logger:        newLogger,
+			Path:          pointer,
+			Store:         appStore,
+			Cloner:        cloner.GetInstance(),
+			CommandRunner: commandrunner.GetInstance(appStore),
 		}
 
 		err := cmdr.CreateNewProject(&options)

@@ -1,9 +1,7 @@
-//go:build unit
-// +build unit
-
 package operator
 
 import (
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -117,17 +115,19 @@ func createTestNewProjectOptions(t *testing.T, path *string) (CreateNewProjectOp
 	mockLogger := logger.NewLogger()
 	mockStore := store.GetInstance()
 	mockCloner := cloner.NewMockCloner(controller)
+	mockRunner := commandrunner.NewMockRunner(controller)
 
 	return CreateNewProjectOptions{
-		Lister:     mockLister,
-		Prompter:   mockPrompter,
-		Manager:    newMockManager,
-		Compressor: mockCompressor,
-		Executor:   mockExecutor,
-		Logger:     mockLogger,
-		Store:      mockStore,
-		Path:       nil,
-		Cloner:     mockCloner,
+		Lister:        mockLister,
+		Prompter:      mockPrompter,
+		Manager:       newMockManager,
+		Compressor:    mockCompressor,
+		Executor:      mockExecutor,
+		Logger:        mockLogger,
+		Store:         mockStore,
+		Path:          nil,
+		Cloner:        mockCloner,
+		CommandRunner: mockRunner,
 	}, controller
 
 }

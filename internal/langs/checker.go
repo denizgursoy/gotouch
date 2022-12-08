@@ -3,6 +3,7 @@
 package langs
 
 import (
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"strings"
@@ -16,10 +17,10 @@ type Checker interface {
 	CleanUp() error
 }
 
-func GetChecker(language string, Logger logger.Logger, str store.Store) Checker {
+func GetChecker(language string, Logger logger.Logger, str store.Store, runner commandrunner.Runner) Checker {
 	if strings.ToLower(language) == "golang" ||
 		strings.ToLower(language) == "go" {
-		return NewGolangSetupChecker(Logger, str)
+		return NewGolangSetupChecker(Logger, str, runner)
 	} else {
 		return NewEmptySetupChecker()
 	}

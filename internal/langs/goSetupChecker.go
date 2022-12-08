@@ -3,6 +3,7 @@ package langs
 import (
 	"errors"
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"os"
@@ -16,21 +17,19 @@ var (
 	ErrDependencyIsNotValid = errors.New("dependency is not valid")
 )
 
+const GoCommand = "go"
+
 type golangSetupChecker struct {
-	Logger logger.Logger
-	Store  store.Store
+	Logger        logger.Logger
+	Store         store.Store
+	CommandRunner commandrunner.Runner
 }
 
-type CommandData struct {
-	WorkingDir *string
-	Command    string
-	Args       []string
-}
-
-func NewGolangSetupChecker(Logger logger.Logger, Store store.Store) Checker {
+func NewGolangSetupChecker(Logger logger.Logger, Store store.Store, runner commandrunner.Runner) Checker {
 	return &golangSetupChecker{
-		Logger: Logger,
-		Store:  Store,
+		Logger:        Logger,
+		Store:         Store,
+		CommandRunner: runner,
 	}
 }
 
@@ -61,7 +60,7 @@ func (g *golangSetupChecker) CheckDependency(dependency interface{}) error {
 }
 
 func (g *golangSetupChecker) CheckSetup() error {
-	_, err := exec.LookPath("go")
+	_, err := exec.LookPath(GoCommand)
 	if err != nil {
 		return fmt.Errorf("could not find %s in PATH. make sure that %s installed", "go", "go")
 	}
@@ -87,12 +86,12 @@ func (g *golangSetupChecker) GetDependency(dependency interface{}) error {
 
 	g.Logger.LogInfo(fmt.Sprintf("Adding -> %s", goDependency.String()))
 
-	data := &CommandData{
+	data := &commandrunner.CommandData{
 		Command: "go",
 		Args:    []string{"get", goDependency.String()},
 	}
 
-	if err := g.RunCommand(data); err != nil {
+	if err := g.CommandRunner.Run(data); err != nil {
 		return err
 	}
 
@@ -103,30 +102,33 @@ func (g *golangSetupChecker) GetDependency(dependency interface{}) error {
 
 func (g *golangSetupChecker) CleanUp() error {
 	return nil
-	//g.Logger.LogInfo("Executing go mod tidy")
-	//tidyTask := &CommandData{
-	//	Command: "go",
-	//	Args:    []string{"mod, tidy"},
-	//}
-	//return g.RunCommand(tidyTask)
 }
 
-func (g *golangSetupChecker) RunCommand(data *CommandData) error {
-	if data.WorkingDir == nil {
-		projectFullPath := g.Store.GetValue(store.ProjectFullPath)
-		err := os.Chdir(projectFullPath)
-		if err != nil {
-			return err
-		}
+func (g *golangSetupChecker) executeFmt() error {
+	g.Logger.LogInfo("Executing go fmt ./...")
+	formatTask := &commandrunner.CommandData{
+		Command: GoCommand,
+		Args:    []string{"fmt", "./..."},
 	}
-	cmd := exec.Command(data.Command, data.Args...)
+	return g.CommandRunner.Run(formatTask)
+}
 
-	err := cmd.Run()
-	if err != nil {
-		//	log.Printf("Command finished with error: %v", err)
-		return err
+func (g *golangSetupChecker) downloadDependencies() error {
+	g.Logger.LogInfo("Executing go mod download")
+	formatTask := &commandrunner.CommandData{
+		Command: GoCommand,
+		Args:    []string{"mod", "download"},
 	}
-	return nil
+	return g.CommandRunner.Run(formatTask)
+}
+
+func (g *golangSetupChecker) executeTidy() error {
+	g.Logger.LogInfo("Executing go mod tidy")
+	tidyTask := &commandrunner.CommandData{
+		Command: GoCommand,
+		Args:    []string{"mod", "tidy"},
+	}
+	return g.CommandRunner.Run(tidyTask)
 }
 
 type (
@@ -152,12 +154,12 @@ func (g *golangSetupChecker) EditGoModule() error {
 		args = append(args, "mod", "init", moduleName)
 	}
 
-	data := &CommandData{
-		Command: "go",
+	data := &commandrunner.CommandData{
+		Command: GoCommand,
 		Args:    args,
 	}
 
-	return g.RunCommand(data)
+	return g.CommandRunner.Run(data)
 }
 
 func (g *golangSetupChecker) hasGoModule(projectDirectory string) bool {

@@ -217,7 +217,7 @@ func (p *ProjectStructureData) validateChoice(choice *Choice, questionIndex int,
 	if len(choice.Dependencies) > 0 {
 
 		for dependencyIndex, dependency := range choice.Dependencies {
-			if err := langs.GetChecker(p.Language, nil, nil).CheckDependency(dependency); err != nil {
+			if err := langs.GetChecker(p.Language, nil, nil, nil).CheckDependency(dependency); err != nil {
 				return ErrWrongDependencyFormat{
 					projectName:     p.Name,
 					questionIndex:   questionIndex,

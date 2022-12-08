@@ -18,7 +18,7 @@ build-test:
 	$(MAC_BUILD)   -v -o gotouch-darwin -tags=integration ./cmd/gotouch/
 
 unit:
-	go test -v -coverprofile coverage.out --tags=unit ./...
+	go test -v -coverprofile coverage.out ./...
 
 coverage:
 	go tool cover -html=coverage.out
