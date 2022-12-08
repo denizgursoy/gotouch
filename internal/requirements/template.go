@@ -157,9 +157,9 @@ func (t *templateTask) templateDirectoryNames(folders []string) error {
 }
 
 func (t *templateTask) combineWithDefaultValues() {
-	combinedValues := map[interface{}]interface{}{}
+	combinedValues := map[string]interface{}{}
 	if t.Values != nil {
-		combinedValues = t.Values.(map[interface{}]interface{})
+		combinedValues = t.Values.(map[string]interface{})
 	}
 
 	for key, value := range t.getDefaultValues() {
@@ -172,8 +172,8 @@ func (t *templateTask) combineWithDefaultValues() {
 	t.Values = combinedValues
 }
 
-func (t *templateTask) getDefaultValues() map[interface{}]interface{} {
-	defaultValues := make(map[interface{}]interface{}, 0)
+func (t *templateTask) getDefaultValues() map[string]interface{} {
+	defaultValues := make(map[string]interface{}, 0)
 
 	defaultValues[store.ProjectName] = t.Store.GetValue(store.ProjectName)
 	defaultValues[store.ProjectFullPath] = t.Store.GetValue(store.ProjectFullPath)

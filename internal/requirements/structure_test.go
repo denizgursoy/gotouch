@@ -38,8 +38,8 @@ var (
 		Reference: "go.dev",
 		URL:       "https://project1.com",
 		Questions: questions,
-		Values: map[interface{}]interface{}{
-			1: "23",
+		Values: map[string]interface{}{
+			"1": "23",
 		},
 	}
 	projectStructure2 = model.ProjectStructureData{
@@ -52,7 +52,7 @@ var (
 		Name:      "Project -2",
 		Reference: "go2.dev",
 		URL:       "https://project2.com",
-		Values: map[interface{}]interface{}{
+		Values: map[string]interface{}{
 			"x": "",
 		},
 	}
