@@ -8,6 +8,6 @@ import "github.com/denizgursoy/gotouch/internal/commandrunner"
 
 func getCommand() *commandrunner.CommandData {
 	return &commandrunner.CommandData{
-		Command: InitFileName,
+		Command: WindowsInitFile,
 	}
 }
