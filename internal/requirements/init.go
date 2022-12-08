@@ -81,7 +81,7 @@ func deleteInitFiles(projectFullPath string) {
 	for i, _ := range InitFiles {
 		initFileAddress := filepath.Join(projectFullPath, InitFiles[i])
 		err := os.Remove(initFileAddress)
-		if err == nil {
+		if err != nil {
 			fmt.Printf("could not delete file %s \n", initFileAddress)
 		}
 	}
