@@ -2,6 +2,7 @@ package operator
 
 import (
 	"errors"
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 
 	"github.com/go-playground/validator/v10"
 
@@ -24,15 +25,16 @@ var (
 
 type (
 	CreateNewProjectOptions struct {
-		Lister     lister.Lister         `validate:"required"`
-		Prompter   prompter.Prompter     `validate:"required"`
-		Manager    manager.Manager       `validate:"required"`
-		Compressor compressor.Compressor `validate:"required"`
-		Executor   executor.Executor     `validate:"required"`
-		Logger     logger.Logger         `validate:"required"`
-		Path       *string               `validate:"omitempty,endswith=.yaml,url|file"`
-		Store      store.Store           `validate:"required"`
-		Cloner     cloner.Cloner         `validate:"required"`
+		Lister        lister.Lister         `validate:"required"`
+		Prompter      prompter.Prompter     `validate:"required"`
+		Manager       manager.Manager       `validate:"required"`
+		Compressor    compressor.Compressor `validate:"required"`
+		Executor      executor.Executor     `validate:"required"`
+		Logger        logger.Logger         `validate:"required"`
+		Path          *string               `validate:"omitempty,endswith=.yaml,url|file"`
+		Store         store.Store           `validate:"required"`
+		Cloner        cloner.Cloner         `validate:"required"`
+		CommandRunner commandrunner.Runner  `validate:"required"`
 	}
 )
 
@@ -49,14 +51,15 @@ func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 	}
 
 	requirement := requirements.ProjectStructureRequirement{
-		ProjectsData: projects,
-		Prompter:     opts.Prompter,
-		Compressor:   opts.Compressor,
-		Manager:      opts.Manager,
-		Logger:       opts.Logger,
-		Executor:     opts.Executor,
-		Store:        opts.Store,
-		Cloner:       opts.Cloner,
+		ProjectsData:  projects,
+		Prompter:      opts.Prompter,
+		Compressor:    opts.Compressor,
+		Manager:       opts.Manager,
+		Logger:        opts.Logger,
+		Executor:      opts.Executor,
+		Store:         opts.Store,
+		Cloner:        opts.Cloner,
+		CommandRunner: opts.CommandRunner,
 	}
 	newProjectRequirements = append(newProjectRequirements, &requirement)
 

@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
@@ -40,16 +41,18 @@ func TestGetCreateCommandHandler(t *testing.T) {
 			controller := gomock.NewController(t)
 			mockCommander := operator.NewMockOperator(controller)
 
+			appStore := store.GetInstance()
 			expectedCall := &operator.CreateNewProjectOptions{
-				Lister:     lister.GetInstance(),
-				Prompter:   prompter.GetInstance(),
-				Manager:    manager.GetInstance(),
-				Compressor: compressor.GetInstance(),
-				Executor:   executor.GetInstance(),
-				Logger:     logger.NewLogger(),
-				Path:       argument.pointer,
-				Store:      store.GetInstance(),
-				Cloner:     cloner.GetInstance(),
+				Lister:        lister.GetInstance(),
+				Prompter:      prompter.GetInstance(),
+				Manager:       manager.GetInstance(),
+				Compressor:    compressor.GetInstance(),
+				Executor:      executor.GetInstance(),
+				Logger:        logger.NewLogger(),
+				Path:          argument.pointer,
+				Store:         appStore,
+				Cloner:        cloner.GetInstance(),
+				CommandRunner: commandrunner.GetInstance(appStore),
 			}
 
 			mockCommander.EXPECT().CreateNewProject(gomock.Eq(expectedCall))

@@ -2,6 +2,7 @@ package requirements
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/template"
 	"strings"
 
@@ -28,7 +29,8 @@ type (
 		Executor        executor.Executor     `validate:"required"`
 		Store           store.Store           `validate:"required"`
 		LanguageChecker langs.Checker
-		Cloner          cloner.Cloner `validate:"required"`
+		Cloner          cloner.Cloner        `validate:"required"`
+		CommandRunner   commandrunner.Runner `validate:"required"`
 	}
 
 	projectStructureTask struct {
@@ -60,7 +62,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	templateWithDelimiters := GetTemplate(projectStructureData)
 
 	//TODO: test
-	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store)
+	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store, p.CommandRunner)
 	if setupError := p.LanguageChecker.CheckSetup(); setupError != nil {
 		return nil, nil, setupError
 	}
@@ -120,8 +122,9 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	})
 
 	requirements = append(requirements, &initRequirement{
-		Store:  p.Store,
-		Logger: p.Logger,
+		Store:         p.Store,
+		Logger:        p.Logger,
+		CommandRunner: p.CommandRunner,
 	})
 
 	return tasks, requirements, nil

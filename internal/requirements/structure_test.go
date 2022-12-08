@@ -3,6 +3,7 @@ package requirements
 import (
 	"fmt"
 	"github.com/denizgursoy/gotouch/internal/cloner"
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/langs"
 	"testing"
 
@@ -155,6 +156,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 	mockLogger := logger.NewLogger()
 	mockStore := store.GetInstance()
 	mockCloner := cloner.NewMockCloner(controller)
+	mockRunner := commandrunner.NewMockRunner(controller)
 
 	return ProjectStructureRequirement{
 		ProjectsData:    projectData,
@@ -166,6 +168,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 		Store:           mockStore,
 		LanguageChecker: langs.NewMockChecker(controller),
 		Cloner:          mockCloner,
+		CommandRunner:   mockRunner,
 	}, controller
 
 }

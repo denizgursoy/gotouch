@@ -4,11 +4,10 @@
 
 package requirements
 
-import "github.com/denizgursoy/gotouch/internal/store"
+import "github.com/denizgursoy/gotouch/internal/commandrunner"
 
-func executeInitFile(str store.Store) error {
-	commandData := CommandData{
+func getCommand() *commandrunner.CommandData {
+	return &commandrunner.CommandData{
 		Command: InitFileName,
 	}
-	return RunCommand(&commandData, str)
 }

@@ -10,7 +10,7 @@ func TestNewLanguageChecker(t *testing.T) {
 		strings := make([]string, 0)
 		strings = append(strings, "go", "Go", "GO", "golang", "Golang", "GOLANG")
 		for _, s := range strings {
-			checker := GetChecker(s, nil, nil)
+			checker := GetChecker(s, nil, nil, nil)
 			require.IsType(t, checker, &golangSetupChecker{})
 		}
 	})
@@ -19,7 +19,7 @@ func TestNewLanguageChecker(t *testing.T) {
 		strings := make([]string, 0)
 		strings = append(strings, " ", "    ", "", "test", "java", "go-test")
 		for _, s := range strings {
-			checker := GetChecker(s, nil, nil)
+			checker := GetChecker(s, nil, nil, nil)
 			require.IsType(t, checker, &emptySetupChecker{})
 		}
 	})

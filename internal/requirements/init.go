@@ -2,24 +2,26 @@ package requirements
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 )
 
 type (
 	initRequirement struct {
-		Store  store.Store
-		Logger logger.Logger
+		Store         store.Store
+		Logger        logger.Logger
+		CommandRunner commandrunner.Runner `validate:"required"`
 	}
 	initTask struct {
-		Store  store.Store
-		Logger logger.Logger
+		Store         store.Store
+		Logger        logger.Logger
+		CommandRunner commandrunner.Runner `validate:"required"`
 	}
 )
 
@@ -36,8 +38,9 @@ func (i *initRequirement) AskForInput() ([]model.Task, []model.Requirement, erro
 	tasks := make([]model.Task, 0)
 
 	tasks = append(tasks, &initTask{
-		Store:  i.Store,
-		Logger: i.Logger,
+		Store:         i.Store,
+		Logger:        i.Logger,
+		CommandRunner: i.CommandRunner,
 	})
 	return tasks, nil, nil
 }
@@ -65,9 +68,10 @@ func (i *initTask) Complete() error {
 		if err := os.Chmod(initFileAddress, 0777); err != nil {
 			return err
 		}
-		if err = executeInitFile(i.Store); err != nil {
+		if err = i.CommandRunner.Run(getCommand()); err != nil {
 			return err
 		}
+
 		i.Logger.LogInfo("Executed " + initFile)
 	}
 	return nil
@@ -81,29 +85,4 @@ func deleteInitFiles(projectFullPath string) {
 			fmt.Printf("could not delete file %s \n", initFileAddress)
 		}
 	}
-}
-
-type CommandData struct {
-	WorkingDir *string
-	Command    string
-	Args       []string
-}
-
-func RunCommand(data *CommandData, str store.Store) error {
-	if data.WorkingDir == nil {
-		projectFullPath := str.GetValue(store.ProjectFullPath)
-		err := os.Chdir(projectFullPath)
-		if err != nil {
-			return err
-		}
-	}
-	cmd := exec.Command(data.Command, data.Args...)
-
-	output, err := cmd.CombinedOutput()
-	fmt.Println(string(output))
-	if err != nil {
-		//	log.Printf("Command finished with error: %v", err)
-		return err
-	}
-	return nil
 }
