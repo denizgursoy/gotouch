@@ -4,6 +4,7 @@ import (
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"os"
 	"path/filepath"
 )
@@ -26,14 +27,15 @@ func newCloner() Cloner {
 	}
 }
 
-func (g *gitCloner) CloneFromUrl(url string) error {
+func (g *gitCloner) CloneFromUrl(url, branchName string) error {
 	g.Logger.LogInfo("Cloning repository  -> " + url)
 
 	projectName := g.Store.GetValue(store.ProjectName)
 
 	_, err := git.PlainClone(projectName, false, &git.CloneOptions{
-		URL:      url,
-		Progress: os.Stdout,
+		URL:           url,
+		Progress:      os.Stdout,
+		ReferenceName: plumbing.ReferenceName(branchName),
 	})
 
 	if err != nil {
