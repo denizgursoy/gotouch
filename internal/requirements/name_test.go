@@ -123,9 +123,13 @@ func Test_validateProjectName(t *testing.T) {
 			wantErr: true,
 		},
 	}
+	mockManager := manager.NewMockManager(gomock.NewController(t))
+	mockManager.EXPECT().GetExtractLocation().AnyTimes()
+
 	req := &ProjectNameRequirement{
-		Manager: manager.NewMockManager(gomock.NewController(t)),
+		Manager: mockManager,
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := req.validateModuleName(tt.args.projectName); (err != nil) != tt.wantErr {
