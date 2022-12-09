@@ -2,6 +2,7 @@ package requirements
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -40,7 +41,7 @@ func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requiremen
 	}
 
 	//TODO: move validateModuleName to langs
-	moduleName, err := p.Prompter.AskForString(ModuleNameDirection, validateModuleName)
+	moduleName, err := p.Prompter.AskForString(ModuleNameDirection, p.validateModuleName)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -83,10 +84,26 @@ func (p *projectNameTask) Complete() error {
 	return nil
 }
 
-func validateModuleName(name interface{}) error {
-	path := name.(string)
-	if !strings.Contains(path, "/") {
-		return module.CheckImportPath(path)
+func (p *ProjectNameRequirement) validateModuleName(name interface{}) error {
+	moduleName := name.(string)
+	if !strings.Contains(moduleName, "/") {
+		err := module.CheckImportPath(moduleName)
+		if err != nil {
+			return err
+		}
+	} else {
+		err := module.CheckPath(moduleName)
+		if err != nil {
+			return err
+		}
 	}
-	return module.CheckPath(path)
+
+	projectName := filepath.Base(moduleName)
+	workingDirectory := p.Manager.GetExtractLocation()
+	projectFullPath := fmt.Sprintf("%s/%s", workingDirectory, projectName)
+	if _, err := os.Stat(projectFullPath); !os.IsNotExist(err) {
+		return fmt.Errorf("directory %s exists, select another name", projectName)
+	}
+
+	return nil
 }
