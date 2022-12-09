@@ -123,9 +123,12 @@ func Test_validateProjectName(t *testing.T) {
 			wantErr: true,
 		},
 	}
+	req := &ProjectNameRequirement{
+		Manager: manager.NewMockManager(gomock.NewController(t)),
+	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := validateModuleName(tt.args.projectName); (err != nil) != tt.wantErr {
+			if err := req.validateModuleName(tt.args.projectName); (err != nil) != tt.wantErr {
 				t.Errorf("validateModuleName() error = %v, wantErr %v, values %s", err, tt.wantErr, tt.args.projectName)
 			}
 		})
