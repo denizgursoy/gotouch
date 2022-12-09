@@ -7,6 +7,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -32,11 +33,17 @@ func (g *gitCloner) CloneFromUrl(url, branchName string) error {
 
 	projectName := g.Store.GetValue(store.ProjectName)
 
-	_, err := git.PlainClone(projectName, false, &git.CloneOptions{
+	var name plumbing.ReferenceName
+	if len(strings.TrimSpace(branchName)) != 0 {
+		name = plumbing.NewBranchReferenceName(branchName)
+	}
+	cloneOptions := &git.CloneOptions{
 		URL:           url,
 		Progress:      os.Stdout,
-		ReferenceName: plumbing.ReferenceName(branchName),
-	})
+		ReferenceName: name,
+	}
+
+	_, err := git.PlainClone(projectName, false, cloneOptions)
 
 	if err != nil {
 		return err

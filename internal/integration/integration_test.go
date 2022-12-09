@@ -93,6 +93,20 @@ func (z *ZippingTestSuite) TestDelimiter() {
 	z.checkDirectoriesExist([]string{"testapp/a/testapp"})
 }
 
+func (z *ZippingTestSuite) TestGitCheckout() {
+	z.setInputFile("git-checkout-main.txt")
+	z.executeGotouch()
+
+	z.checkDirectoriesExist([]string{"test"})
+}
+
+func (z *ZippingTestSuite) TestGitCheckoutBranch() {
+	z.setInputFile("git-checkout-branch.txt")
+	z.executeGotouch()
+
+	z.checkFileContent("test-branch-content.txt", "test-branch-content.txt")
+}
+
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	directories := make([]string, 0)
 	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
