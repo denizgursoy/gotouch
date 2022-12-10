@@ -64,7 +64,10 @@ func (z *ZippingTestSuite) SetupTest() {
 }
 
 func (z *ZippingTestSuite) TearDownTest() {
-	os.RemoveAll(z.workingDir)
+	err := os.RemoveAll(z.workingDir)
+	if err != nil {
+		return
+	}
 }
 
 func (z *ZippingTestSuite) TestUnzipping() {
@@ -107,6 +110,14 @@ func (z *ZippingTestSuite) TestGitCheckoutBranch() {
 	z.checkFileContent("test-branch-content.txt", "test-branch-content.txt")
 }
 
+func (z *ZippingTestSuite) TestMultipleSelectQuestion() {
+	z.setInputFile("multiple-select.txt")
+	z.executeGotouch()
+
+	z.checkFileExists("app-deployment.yaml")
+	z.checkFileExists("Dockerfile")
+}
+
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	directories := make([]string, 0)
 	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
@@ -118,6 +129,12 @@ func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	z.checkFilesExist(files)
 	z.checkFileContent("Dockerfile", "Dockerfile")
 	z.checkFileContent("test.txt", "test.txt")
+}
+
+func (z *ZippingTestSuite) checkFileExists(fileName string) {
+	actualFilePath := fmt.Sprintf("%s/%s", z.createdProjectPath, fileName)
+	_, err2 := os.Stat(actualFilePath)
+	z.Nil(err2)
 }
 
 func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
