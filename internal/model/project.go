@@ -14,6 +14,7 @@ type (
 		Name       string      `yaml:"name"`
 		Reference  string      `yaml:"reference"`
 		URL        string      `yaml:"url"`
+		Branch     string      `yaml:"branch"`
 		Questions  []*Question `yaml:"questions"`
 		Values     interface{} `yaml:"values"`
 		Language   string      `yaml:"language"`

@@ -5,7 +5,7 @@ package cloner
 import "sync"
 
 type Cloner interface {
-	CloneFromUrl(url string) error
+	CloneFromUrl(url, branchName string) error
 }
 
 var (

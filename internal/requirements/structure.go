@@ -153,7 +153,7 @@ func (p *projectStructureTask) Complete() error {
 	url := p.ProjectStructure.URL
 
 	if strings.HasSuffix(url, ".git") {
-		if err := p.Cloner.CloneFromUrl(url); err != nil {
+		if err := p.Cloner.CloneFromUrl(url, p.ProjectStructure.Branch); err != nil {
 			return err
 		}
 	} else {

@@ -1,11 +1,14 @@
 package cloner
 
 import (
+	"fmt"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -26,15 +29,25 @@ func newCloner() Cloner {
 	}
 }
 
-func (g *gitCloner) CloneFromUrl(url string) error {
-	g.Logger.LogInfo("Cloning repository  -> " + url)
+func (g *gitCloner) CloneFromUrl(url, branchName string) error {
 
 	projectName := g.Store.GetValue(store.ProjectName)
 
-	_, err := git.PlainClone(projectName, false, &git.CloneOptions{
-		URL:      url,
-		Progress: os.Stdout,
-	})
+	var name plumbing.ReferenceName
+	if len(strings.TrimSpace(branchName)) != 0 {
+		name = plumbing.NewBranchReferenceName(branchName)
+		g.Logger.LogInfo(fmt.Sprintf("Cloning branch %s from   -> %s", branchName, url))
+	} else {
+		g.Logger.LogInfo("Cloning repository  -> " + url)
+	}
+
+	cloneOptions := &git.CloneOptions{
+		URL:           url,
+		Progress:      os.Stdout,
+		ReferenceName: name,
+	}
+
+	_, err := git.PlainClone(projectName, false, cloneOptions)
 
 	if err != nil {
 		return err

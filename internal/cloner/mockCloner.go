@@ -34,15 +34,15 @@ func (m *MockCloner) EXPECT() *MockClonerMockRecorder {
 }
 
 // CloneFromUrl mocks base method.
-func (m *MockCloner) CloneFromUrl(url string) error {
+func (m *MockCloner) CloneFromUrl(url, branchName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CloneFromUrl", url)
+	ret := m.ctrl.Call(m, "CloneFromUrl", url, branchName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CloneFromUrl indicates an expected call of CloneFromUrl.
-func (mr *MockClonerMockRecorder) CloneFromUrl(url interface{}) *gomock.Call {
+func (mr *MockClonerMockRecorder) CloneFromUrl(url, branchName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloneFromUrl", reflect.TypeOf((*MockCloner)(nil).CloneFromUrl), url)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloneFromUrl", reflect.TypeOf((*MockCloner)(nil).CloneFromUrl), url, branchName)
 }

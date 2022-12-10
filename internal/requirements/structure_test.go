@@ -42,6 +42,16 @@ var (
 			"1": "23",
 		},
 	}
+	projectStructureWithGitRepository = model.ProjectStructureData{
+		Name:      "Project -1",
+		Reference: "go.dev",
+		URL:       "a.git",
+		Branch:    "test",
+		Questions: questions,
+		Values: map[string]interface{}{
+			"1": "23",
+		},
+	}
 	projectStructure2 = model.ProjectStructureData{
 		Name:      "Project -2",
 		Reference: "go2.dev",
@@ -136,6 +146,22 @@ func TestStructure_Complete(t *testing.T) {
 		task.Compressor.(*compressor.MockCompressor).
 			EXPECT().
 			UncompressFromUrl(gomock.Eq(projectStructure1.URL)).
+			Return(nil)
+
+		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
+
+		err := task.Complete()
+		require.Nil(t, err)
+	})
+
+	t.Run("should call cloner with branch name", func(t *testing.T) {
+		task, controller := getTestProjectTask(t)
+		defer controller.Finish()
+
+		task.ProjectStructure = &projectStructureWithGitRepository
+		task.Cloner.(*cloner.MockCloner).
+			EXPECT().
+			CloneFromUrl(gomock.Eq(projectStructureWithGitRepository.URL), gomock.Eq(projectStructureWithGitRepository.Branch)).
 			Return(nil)
 
 		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
