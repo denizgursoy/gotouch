@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea for this project
 title: 'feat: gotouch should'
-labels: ''
+labels: enhancement
 assignees: denizgursoy
 
 ---
