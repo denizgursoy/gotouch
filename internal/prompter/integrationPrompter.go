@@ -39,7 +39,7 @@ func (s srv) AskForString(direction string, validator Validator) (string, error)
 	return string(all), nil
 }
 
-func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {
+func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (any, error) {
 	all, err := io.ReadAll(getStream())
 	if err != nil {
 		return "", err
@@ -49,14 +49,24 @@ func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (int
 	return list[atoi], nil
 }
 
-func (s srv) AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]interface{}, error) {
+func (s srv) AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]any, error) {
 	all, err := io.ReadAll(getStream())
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	atoi, err := strconv.Atoi(string(all))
-	return list[atoi], nil
+	fields := strings.Fields(string(all))
+	anies := make([]any, 0)
+	for i, field := range fields {
+		atoi, err := strconv.Atoi(field)
+		if err != nil {
+			return nil, err
+		}
+		if atoi == 1 {
+			anies = append(anies, list[i])
+		}
+	}
+	return anies, nil
 }
 
 func (s srv) AskForYesOrNo(direction string) (bool, error) {
