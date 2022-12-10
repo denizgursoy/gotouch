@@ -19,17 +19,18 @@ var (
 type (
 	Prompter interface {
 		AskForString(direction string, validator Validator) (string, error)
-		AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error)
+		AskForSelectionFromList(direction string, list []fmt.Stringer) (any, error)
+		AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]any, error)
 		AskForYesOrNo(direction string) (bool, error)
 		AskForMultilineString(direction, defaultValue, pattern string) (string, error)
 	}
 
 	ListOption struct {
 		DisplayText string
-		ReturnVal   interface{}
+		ReturnVal   any
 	}
 
-	Validator func(interface{}) error
+	Validator func(any) error
 
 	srv struct {
 		Manager manager.Manager

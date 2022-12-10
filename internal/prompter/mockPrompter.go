@@ -49,11 +49,26 @@ func (mr *MockPrompterMockRecorder) AskForMultilineString(direction, defaultValu
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForMultilineString", reflect.TypeOf((*MockPrompter)(nil).AskForMultilineString), direction, defaultValue, pattern)
 }
 
+// AskForMultipleSelectionFromList mocks base method.
+func (m *MockPrompter) AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]any, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AskForMultipleSelectionFromList", direction, list)
+	ret0, _ := ret[0].([]any)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AskForMultipleSelectionFromList indicates an expected call of AskForMultipleSelectionFromList.
+func (mr *MockPrompterMockRecorder) AskForMultipleSelectionFromList(direction, list interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForMultipleSelectionFromList", reflect.TypeOf((*MockPrompter)(nil).AskForMultipleSelectionFromList), direction, list)
+}
+
 // AskForSelectionFromList mocks base method.
-func (m *MockPrompter) AskForSelectionFromList(direction string, list []fmt.Stringer) (interface{}, error) {
+func (m *MockPrompter) AskForSelectionFromList(direction string, list []fmt.Stringer) (any, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AskForSelectionFromList", direction, list)
-	ret0, _ := ret[0].(interface{})
+	ret0, _ := ret[0].(any)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

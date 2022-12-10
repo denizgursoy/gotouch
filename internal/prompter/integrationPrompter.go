@@ -49,6 +49,16 @@ func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (int
 	return list[atoi], nil
 }
 
+func (s srv) AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]interface{}, error) {
+	all, err := io.ReadAll(getStream())
+	if err != nil {
+		return "", err
+	}
+
+	atoi, err := strconv.Atoi(string(all))
+	return list[atoi], nil
+}
+
 func (s srv) AskForYesOrNo(direction string) (bool, error) {
 	all, err := io.ReadAll(getStream())
 	if err != nil {

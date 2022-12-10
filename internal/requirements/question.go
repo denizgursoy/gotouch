@@ -41,12 +41,13 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	for _, choice := range question.Choices {
 		choices = append(choices, choice)
 	}
-	var selection *model.Choice
 
 	if question.CanSkip && len(question.Choices) > 1 {
 		choices = append(choices, noneOfAboveChoice)
 	}
+
 	isYesNoQuestion := question.CanSkip && len(choices) == 1
+	selectedChoices := make([]*model.Choice, 0)
 
 	if isYesNoQuestion {
 		userSelection, err := q.Prompter.AskForYesOrNo(question.Direction)
@@ -54,7 +55,15 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 			return nil, nil, err
 		}
 		if userSelection {
-			selection = question.Choices[0]
+			selectedChoices = append(selectedChoices, question.Choices[0])
+		}
+	} else if question.CanSelectMultiple {
+		allSelectedChoices, err := q.Prompter.AskForMultipleSelectionFromList(question.Direction, choices)
+		if err != nil {
+			return nil, nil, err
+		}
+		for _, selectedChoice := range allSelectedChoices {
+			selectedChoices = append(selectedChoices, selectedChoice.(*model.Choice))
 		}
 	} else {
 		userSelection, err := q.Prompter.AskForSelectionFromList(question.Direction, choices)
@@ -62,13 +71,13 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 			return nil, nil, err
 		}
 		if userSelection != noneOfAboveChoice {
-			selection = userSelection.(*model.Choice)
+			selectedChoices = append(selectedChoices, userSelection.(*model.Choice))
 		}
 	}
 
 	tasks := make([]model.Task, 0)
 
-	if selection != nil {
+	for _, selection := range selectedChoices {
 		for _, dependency := range selection.Dependencies {
 			tasks = append(tasks, &dependencyTask{
 				Dependency:      dependency,
@@ -86,7 +95,6 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 			})
 		}
 		q.Store.AddValues(selection.Values)
-
 	}
 	return tasks, nil, nil
 }

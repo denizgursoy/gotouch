@@ -18,24 +18,43 @@ import (
 )
 
 var (
-	dependency1 = "2132"
-	dependency2 = "2132"
+	dependency1 = "dependency-1"
+	dependency2 = "dependency-2"
+	dependency3 = "dependency-3"
+	dependency4 = "dependency-4"
+	dependency5 = "dependency-5"
 	file1       = model.File{
-		Url:          "",
-		Content:      "",
-		PathFromRoot: "",
+		Url:          "file url1",
+		Content:      "content-1",
+		PathFromRoot: "path-1",
 	}
 	file2 = model.File{
-		Url:          "",
-		Content:      "",
-		PathFromRoot: "",
+		Url:          "file url2",
+		Content:      "content-2",
+		PathFromRoot: "path2",
 	}
 	choice = model.Choice{
-		Choice:       "112322",
+		Choice:       "choice 1",
 		Dependencies: []interface{}{dependency1, dependency2},
 		Files:        []*model.File{&file1, &file2},
 		Values: map[string]interface{}{
 			"X": "sds",
+		},
+	}
+	choice2 = model.Choice{
+		Choice:       "choice 2",
+		Dependencies: []interface{}{dependency3},
+		Files:        []*model.File{&file1, &file2},
+		Values: map[string]interface{}{
+			"Y": "sds",
+		},
+	}
+	choice3 = model.Choice{
+		Choice:       "choice 3",
+		Dependencies: []interface{}{dependency4, dependency5},
+		Files:        []*model.File{&file2},
+		Values: map[string]interface{}{
+			"Z": "sds",
 		},
 	}
 
@@ -58,6 +77,11 @@ var (
 		CanSkip:           true,
 		CanSelectMultiple: false,
 		Choices:           []*model.Choice{&choice, &choice},
+	}
+	multipleChoiceQuestionWithMultiSelection = model.Question{
+		Direction:         "yes no question",
+		CanSelectMultiple: true,
+		Choices:           []*model.Choice{&choice, &choice2, &choice3},
 	}
 	promptErr = errors.New("prompt-err")
 )
@@ -167,6 +191,55 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		require.NotNil(t, err)
 		require.ErrorIs(t, err, promptErr)
 	})
+
+	t.Run("should ask for multiple choice from prompter", func(t *testing.T) {
+		requirement, controller := getTestQuestionRequirement(t, multipleChoiceQuestionWithMultiSelection)
+		defer controller.Finish()
+
+		choices := make([]fmt.Stringer, 0)
+		for _, choice := range requirement.Question.Choices {
+			choices = append(choices, choice)
+		}
+
+		selectedChoices := make([]any, 0)
+		selectedChoices = append(selectedChoices, choices[0], choices[2])
+
+		for _, selectedChoice := range selectedChoices {
+			chc := selectedChoice.(*model.Choice)
+
+			requirement.Store.(*store.MockStore).
+				EXPECT().
+				AddValues(gomock.Eq(chc.Values)).
+				Times(1)
+
+			for _, dependency := range chc.Dependencies {
+				requirement.Store.(*store.MockStore).
+					EXPECT().
+					AddDependency(gomock.Eq(dependency)).
+					AnyTimes()
+			}
+		}
+
+		requirement.Prompter.(*prompter.MockPrompter).
+			EXPECT().
+			AskForMultipleSelectionFromList(gomock.Eq(multipleChoiceQuestionWithSkip.Direction), gomock.Eq(choices)).
+			Return(selectedChoices, nil).
+			Times(1)
+
+		tasks, _, err := requirement.AskForInput()
+		require.Nil(t, err)
+		require.Len(t, tasks, 7)
+
+		require.Equal(t, choices[0].(*model.Choice).Dependencies[0], tasks[0].(*dependencyTask).Dependency)
+		require.Equal(t, choices[0].(*model.Choice).Dependencies[1], tasks[1].(*dependencyTask).Dependency)
+		require.Equal(t, *choices[0].(*model.Choice).Files[0], tasks[2].(*fileTask).File)
+		require.Equal(t, *choices[0].(*model.Choice).Files[1], tasks[3].(*fileTask).File)
+
+		require.Equal(t, choices[2].(*model.Choice).Dependencies[0], tasks[4].(*dependencyTask).Dependency)
+		require.Equal(t, choices[2].(*model.Choice).Dependencies[1], tasks[5].(*dependencyTask).Dependency)
+		require.Equal(t, *choices[2].(*model.Choice).Files[0], tasks[6].(*fileTask).File)
+	})
+
 }
 
 func getTestQuestionRequirement(t *testing.T, question model.Question) (*QuestionRequirement, *gomock.Controller) {
