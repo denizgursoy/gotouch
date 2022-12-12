@@ -108,14 +108,20 @@ func (z *ZippingTestSuite) TestGitCheckoutBranch() {
 	z.executeGotouch()
 
 	z.checkFileContent("test-branch-content.txt", "test-branch-content.txt")
+
+	// check init files are called and deleted
+	z.checkFileExists("init.sh", false)
+	z.checkFileExists("init.bat", false)
+	z.checkFileExists("test-linux.txt", true)
+	z.checkFileExists("test-windows.txt", false)
 }
 
 func (z *ZippingTestSuite) TestMultipleSelectQuestion() {
 	z.setInputFile("multiple-select.txt")
 	z.executeGotouch()
 
-	z.checkFileExists("app-deployment.yaml")
-	z.checkFileExists("Dockerfile")
+	z.checkFileExists("app-deployment.yaml", true)
+	z.checkFileExists("Dockerfile", true)
 }
 
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
@@ -131,10 +137,14 @@ func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	z.checkFileContent("test.txt", "test.txt")
 }
 
-func (z *ZippingTestSuite) checkFileExists(fileName string) {
+func (z *ZippingTestSuite) checkFileExists(fileName string, exists bool) {
 	actualFilePath := fmt.Sprintf("%s/%s", z.createdProjectPath, fileName)
 	_, err2 := os.Stat(actualFilePath)
-	z.Nil(err2)
+	if exists {
+		z.Nil(err2)
+	} else {
+		z.NotNil(err2)
+	}
 }
 
 func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
