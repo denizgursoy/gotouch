@@ -76,3 +76,33 @@ Will be displayed like:
 
 
 ![None of Above Question](@images/none-of-above.png)
+
+
+## Multiple Select Question
+
+If a question's `canSelectMultiple` is set to true, user can select more than one choice.
+
+```yaml
+- name: Api Gateway
+  url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
+  language: go # must be go or golang for go projects, otherwise omit the field
+  canSkip: true #if true, there must be at least one choice. 
+  questions:
+    - direction: Select features you want
+      canSelectMultiple: true
+      choices:
+        - choice: Elastic APM
+          values:
+            isElastic: true
+        - choice: Swagger
+          values:
+            isSwagger: true
+        - choice: Keycloak
+          values:
+            isKeycloak: true
+```
+
+Will be displayed like:
+
+
+![Multiple Select Question](@images/multiple-select.png)
