@@ -7,6 +7,21 @@ You may want to execute some commands after project is created, Gotouch will exe
 | init.sh | Linux and MacOS|   
 | init.bat|  Windows|
 
+::: tip
+Gotouch will execute init files after templating is completed. This means that you can take advantage of templating and using values in the init files. 
+This allows you run some commands conditionally or change commands inside init files. As an example:
+
+```sh
+echo "Run some commands"
+
+{{ if .isDocker }}
+docker build .
+{{ end }}
+
+echo "Run some other commands"
+```
+:::
+
 After the execution of init file, Gotouch will delete `init.sh` and `init.bat` on the root folder.
 
 ::: warning 

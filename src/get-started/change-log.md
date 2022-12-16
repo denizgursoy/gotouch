@@ -1,7 +1,7 @@
 # Change Log
 
 ## v1.8.0
-Gotouch can checkout custom [branch]((../customize/project-structure.md)) on git. See the branch field description.
+Gotouch can checkout custom [branch](../customize/project-structure.md) on git. See the branch field description.
 
 ## v1.7.0
 Add init file [init file](../customize/init.md).
