@@ -4,7 +4,7 @@
 - name: Empty Project Layout #mandatory 
   reference: https://go.dev/ #optional  
   url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory 
-  branch: empty-go # branch name of git repository to be checkout
+  branch: empty-go # branch name of git repository to be cloned
   language: go # go, golang 
   delimiter: "<< >>" # optional to replace default templating values
   values: # optional
