@@ -3,7 +3,6 @@
 package commandrunner
 
 import (
-	"fmt"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"os"
 	"os/exec"
@@ -49,9 +48,9 @@ func (r *runner) Run(data *CommandData) error {
 		}
 	}
 	cmd := exec.Command(data.Command, data.Args...)
-
-	output, err := cmd.CombinedOutput()
-	fmt.Println(string(output))
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	err := cmd.Start()
 	if err != nil {
 		//	log.Printf("Command finished with error: %v", err)
 		return err
