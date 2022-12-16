@@ -48,9 +48,12 @@ func (r *runner) Run(data *CommandData) error {
 		}
 	}
 	cmd := exec.Command(data.Command, data.Args...)
+
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
-	err := cmd.Start()
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
 	if err != nil {
 		//	log.Printf("Command finished with error: %v", err)
 		return err
