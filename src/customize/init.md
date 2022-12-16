@@ -28,5 +28,5 @@ Docker build command will only run if user selects docker.
 After the execution of init file, Gotouch will delete `init.sh` and `init.bat` on the root folder.
 
 ::: warning 
-Make sure that init files on root folder. If they are not on the root folder, they will be ignored.
+Make sure that init files are on the root folder. If they are not on the root folder, they will be ignored.
 :::
