@@ -21,7 +21,7 @@ docker build .
 echo "Run some other commands"
 ```
 
-Docker build command will only run if user selected docker.
+Docker build command will only run if user selects docker.
 
 :::
 
