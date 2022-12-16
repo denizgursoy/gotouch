@@ -47,6 +47,7 @@ module.exports = {
                     'get-started/installation.md',
                     'get-started/execute.md',
                     'get-started/how-it-works.md',
+                    'get-started/change-log.md',
                 ],
             },
             {
@@ -62,6 +63,7 @@ module.exports = {
                     'customize/file.md',
                     'customize/value.md',
                     'customize/examples.md',
+                    'customize/init.md',
                 ],
             },
             "share.md",
