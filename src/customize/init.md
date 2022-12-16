@@ -20,6 +20,9 @@ docker build .
 
 echo "Run some other commands"
 ```
+
+Docker build command will only run if user selected docker.
+
 :::
 
 After the execution of init file, Gotouch will delete `init.sh` and `init.bat` on the root folder.
