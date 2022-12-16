@@ -4,6 +4,7 @@
 - name: Empty Project Layout #mandatory 
   reference: https://go.dev/ #optional  
   url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory 
+  branch: enpty-go # branch name of git repository to be checkout
   language: go # go, golang 
   delimiter: "<< >>" # optional to replace default templating values
   values: # optional
@@ -27,6 +28,9 @@
 **`url`**: URL of template project. It can be a git repository `https://github.com/bff-project/bff.git`
 or address of `.tar.gz` file like `https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip`. It
 is a mandatory field.
+
+**`branch`**: Gotouch allows you clone custom branch other than main on git. This allows you to host
+all template projects in one git repository. This value is taken into consideration only if url is a git repository URL.
 
 **`language`**: For Go project, it must be `go` or `golang`. For other languages, it can be omitted. Language is
 appended to name while prompting project's name.
