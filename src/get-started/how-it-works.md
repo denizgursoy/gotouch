@@ -14,4 +14,4 @@
 11. Merges values under the selected project structure with the values of all selected choices and default values
 12. Walks through the newly created directory's content and templates every file with the merged [values](../customize/value)
 13. Executes init.sh/init.bat on the root folder depending on the OS
-14. Deletes init.sh and init.bat files on the root folder
+14. Deletes `init.sh` and `init.bat` files on the root folder
