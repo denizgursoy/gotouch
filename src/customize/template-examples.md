@@ -1,35 +1,5 @@
 # Go template examples
 
-## if to chek boolean
-Values:
-```yaml
-isEcho: true
-```
-File:
-```go
-func main(){
-{{ if .isEcho}}
-    e := echo.New()
-    
-    e.GET("/", func(c echo.Context) error {
-    	return c.String(http.StatusOK, "Hello, World!")
-    })
-    e.Logger.Fatal(e.Start(":1323"))
-{{ end }}
-}
-```
-Output:
-```go
-func main(){
-    e := echo.New()
-    
-    e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
-    })
-    e.Logger.Fatal(e.Start(":1323"))
-}
-```
-
 ## if, else if, else 
 You can use following values keywords in if statement to compare values
 
@@ -93,6 +63,36 @@ func main(){
     if err != nil {
         log.Fatal(err)
     }
+}
+```
+
+## if to chek boolean
+Values:
+```yaml
+isEcho: true
+```
+File:
+```go
+func main(){
+{{ if .isEcho}}
+    e := echo.New()
+    
+    e.GET("/", func(c echo.Context) error {
+    	return c.String(http.StatusOK, "Hello, World!")
+    })
+    e.Logger.Fatal(e.Start(":1323"))
+{{ end }}
+}
+```
+Output:
+```go
+func main(){
+    e := echo.New()
+    
+    e.GET("/", func(c echo.Context) error {
+    return c.String(http.StatusOK, "Hello, World!")
+    })
+    e.Logger.Fatal(e.Start(":1323"))
 }
 ```
 
