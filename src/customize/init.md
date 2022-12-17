@@ -8,7 +8,7 @@ You may want to execute some commands after project is created, Gotouch will exe
 | init.bat|  Windows|
 
 ::: tip
-Gotouch will execute init files after templating is completed. This means that you can take advantage of templating and using values in the init files. 
+Gotouch will execute init files after templating is completed. This means that you can take advantage of templating and use values in the init files. 
 This allows you run some commands conditionally or change commands inside init files. As an example:
 
 ```sh
