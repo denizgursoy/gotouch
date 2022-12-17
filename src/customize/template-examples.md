@@ -29,6 +29,7 @@ func main(){
 ```
 
 ## if, else if, else 
+You can use following values keywords in if statement to compare values
 
 ```
 eq
