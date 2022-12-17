@@ -1,6 +1,6 @@
 # Go template examples
 
-## if, else if, else 
+## If, else if, else 
 You can use following values keywords in if statement to compare values
 
 ```
@@ -66,7 +66,7 @@ func main(){
 }
 ```
 
-## if to chek boolean
+## If to chek boolean
 Values:
 ```yaml
 isEcho: true
@@ -96,7 +96,7 @@ func main(){
 }
 ```
 
-## iterate an array
+## Iterate an array
 Values:
 ```yaml
 endpoints: 
