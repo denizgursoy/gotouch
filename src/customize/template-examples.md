@@ -1,7 +1,7 @@
 # Go template examples
 
 ## If, else if, else 
-You can use following values keywords in if statement to compare values
+You can use following keywords in if statements to compare values
 
 ```
 eq
