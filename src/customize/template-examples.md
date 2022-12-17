@@ -1,6 +1,6 @@
 # Go template examples
 
-## if
+## if to chek boolean
 Values:
 ```yaml
 isEcho: true
@@ -28,8 +28,7 @@ func main(){
 }
 ```
 
-## if 
-You can use following values keywords in if statement to compare values
+## if, else if, else 
 
 ```
 eq
@@ -45,35 +44,6 @@ gt
 ge
 	Returns the boolean truth of arg1 >= arg2
 ```
-
-Values:
-```yaml
-webFramework: echo
-```
-File:
-```gotemplate
-func main(){
-{{ if eq  .webFramework "echo" }}
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
-    })
-    e.Logger.Fatal(e.Start(":1323"))
-{{ end }}
-}
-```
-Output:
-```go
-func main(){
-    e := echo.New()
-    e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
-    })
-    e.Logger.Fatal(e.Start(":1323"))
-}
-```
-
-### if, else if, else 
 
 Values:
 ```yaml
