@@ -6,7 +6,7 @@ Values:
 isEcho: true
 ```
 File:
-```gotemplate
+```go
 func main(){
 {{ if .isEcho}}
     e := echo.New()
@@ -52,7 +52,7 @@ webFramework: default
 ```
 
 File:
-```gotemplate
+```go
 func main(){
 {{ if eq  .webFramework "echo" }}
     e := echo.New()
