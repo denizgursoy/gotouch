@@ -10,8 +10,9 @@ File:
 func main(){
 {{ if .isEcho}}
     e := echo.New()
+    
     e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
+    	return c.String(http.StatusOK, "Hello, World!")
     })
     e.Logger.Fatal(e.Start(":1323"))
 {{ end }}
@@ -21,6 +22,7 @@ Output:
 ```go
 func main(){
     e := echo.New()
+    
     e.GET("/", func(c echo.Context) error {
     return c.String(http.StatusOK, "Hello, World!")
     })
@@ -56,24 +58,26 @@ File:
 func main(){
 {{ if eq  .webFramework "echo" }}
     e := echo.New()
+    
     e.GET("/", func(c echo.Context) error {
-    return c.String(http.StatusOK, "Hello, World!")
+        return c.String(http.StatusOK, "Hello, World!")
     })
     e.Logger.Fatal(e.Start(":8080"))
 {{else if eq .httpLibrary "gin"}}
     r := gin.Default()
+    
     r.GET("/", func(c *gin.Context) {
         c.String(http.StatusOK, "Hello, World!")
     })
     r.Run(":8080")
 {{ else }}
     http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-    io.WriteString(writer, "version 1")
+    	io.WriteString(writer, "version 1")
     })
     
     err := http.ListenAndServe(":8080", nil)
     if err != nil {
-    log.Fatal(err)
+        log.Fatal(err)
     }
 {{ end }}
 }
@@ -82,7 +86,7 @@ Output:
 ```go
 func main(){
     http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-     io.WriteString(writer, "version 1")
+    	io.WriteString(writer, "version 1")
     })
     
     err := http.ListenAndServe(":8080", nil)
