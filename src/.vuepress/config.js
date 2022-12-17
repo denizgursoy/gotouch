@@ -55,6 +55,7 @@ module.exports = {
                 path: '/customize/',
                 children: [
                     'customize/template-project.md',
+                    'customize/template-examples.md',
                     'customize/properties-yaml.md',
                     'customize/project-structure.md',
                     'customize/question.md',

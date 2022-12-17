@@ -3,7 +3,7 @@
 You may want to execute some commands after project is created, Gotouch will execute files in the following table.
 
 | File Name | OS |   
-|---------|---|
+|---------|----------------|
 | init.sh | Linux and MacOS|   
 | init.bat|  Windows|
 
