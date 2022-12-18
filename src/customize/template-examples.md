@@ -139,8 +139,6 @@ e.POST("/payment", func (c echo.Context) error {
 e.Logger.Fatal(e.Start(":8080"))
 }
 ```
-
-
 ## Iterate a map
 Values:
 ```yaml
