@@ -9,7 +9,10 @@ user to make a [choice](./choice) for every question in the selected Project Str
 If a question has only one choice and `canSkip` is true, it is evaluated as Yes/No question
 
 ```yaml
-questions: #optional
+- name: Api Gateway
+  url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
+  language: go # must be go or golang for go projects, otherwise omit the field
+  questions: #optional
   - direction: Do you want Dockerfile? #mandatory
     canSkip: true #if true, there must be at least one choice. 
     choices: #mandatory
