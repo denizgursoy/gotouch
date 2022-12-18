@@ -57,7 +57,6 @@ as a choice.
 - name: Api Gateway
   url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
   language: go # must be go or golang for go projects, otherwise omit the field
-  canSkip: true #if true, there must be at least one choice. 
   questions:
     - direction: Which HTTP framework do you want to use?
       choices:
@@ -86,7 +85,6 @@ If a question's `canSelectMultiple` is set to true, user can select more than on
 - name: Api Gateway
   url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
   language: go # must be go or golang for go projects, otherwise omit the field
-  canSkip: true #if true, there must be at least one choice. 
   questions:
     - direction: Select features you want
       canSelectMultiple: true
