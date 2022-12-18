@@ -140,3 +140,46 @@ e.Logger.Fatal(e.Start(":8080"))
 }
 ```
 
+
+## Iterate a map
+Values:
+```yaml
+endpoints: 
+   "/": "Hello, World!"
+  "/payment":"Payment is created"
+```
+File:
+```go
+func main(){
+e := echo.New()
+
+{{ range $key, $value := .endpoints }}
+e.GET("{{ $key }}", func (c echo.Context) error {
+return c.String(http.StatusOK, "{{ $value }}")
+})
+{{ end }}
+
+e.Logger.Fatal(e.Start(":8080"))
+}
+```
+Output:
+```go
+func main(){
+e := echo.New()
+
+
+e.GET("/", func (c echo.Context) error {
+return c.String(http.StatusOK, "Hello, World!")
+})
+
+e.GET("/payment", func (c echo.Context) error {
+return c.String(http.StatusOK, "Payment is created")
+})
+
+
+e.Logger.Fatal(e.Start(":8080"))
+}
+
+```
+
+
