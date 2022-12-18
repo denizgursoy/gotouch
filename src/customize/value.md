@@ -35,9 +35,10 @@ Be aware that only values under the selected project structure can be changed by
 
 Apart from these values, you can use following predefined values :
 
-```
+```yaml
 ModuleName: Module name user typed (github.com/denigursoy/my-app)
 ProjectName: Project directory name (my-app)
 WorkingDirectory: location where Gotouch command is executed
 ProjectFullPath: Projects root directory
 Dependencies: Array of dependencies of all selected choices
+```
