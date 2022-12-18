@@ -143,7 +143,7 @@ e.Logger.Fatal(e.Start(":8080"))
 Values:
 ```yaml
 endpoints: 
-   "/": "Hello, World!"
+  "/": "Hello, World!"
   "/payment": "Payment is created"
 ```
 File:
