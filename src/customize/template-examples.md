@@ -153,7 +153,7 @@ e := echo.New()
 
 {{ range $key, $value := .endpoints }}
 e.GET("{{ $key }}", func (c echo.Context) error {
-return c.String(http.StatusOK, "{{ $value }}")
+	return c.String(http.StatusOK, "{{ $value }}")
 })
 {{ end }}
 
