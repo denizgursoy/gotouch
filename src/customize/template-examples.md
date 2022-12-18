@@ -144,7 +144,7 @@ Values:
 ```yaml
 endpoints: 
    "/": "Hello, World!"
-  "/payment":"Payment is created"
+  "/payment": "Payment is created"
 ```
 File:
 ```go
