@@ -10,7 +10,8 @@ If a question has only one choice and `canSkip` is true, it is evaluated as Yes/
 
 ```yaml
 - name: Api Gateway
-  url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
   language: go # must be go or golang for go projects, otherwise omit the field
   questions: #optional
   - direction: Do you want Dockerfile? #mandatory
@@ -31,7 +32,8 @@ If a question has more than one choice it is evaluated as Multiple choice questi
 
 ```yaml
 - name: Api Gateway
-  url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
   language: go # must be go or golang for go projects, otherwise omit the field
   questions:
     - direction: Which HTTP framework do you want to use?
@@ -58,7 +60,8 @@ as a choice.
 
 ```yaml
 - name: Api Gateway
-  url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
   language: go # must be go or golang for go projects, otherwise omit the field
   questions:
     - direction: Which HTTP framework do you want to use?
@@ -86,7 +89,8 @@ If a question's `canSelectMultiple` is set to true, user can select more than on
 
 ```yaml
 - name: Api Gateway
-  url: https://raw.githubusercontent.com/api/app/main/api-gateway.tar.gz # can be a tar.gz archive file
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
   language: go # must be go or golang for go projects, otherwise omit the field
   questions:
     - direction: Select features you want

@@ -5,7 +5,8 @@
 ```yaml
 - name: Empty Project Layout
   reference: https://go.dev/
-  url: https://github.com/denizgursoy/go-touch-projects/raw/main/package/empty.tar.gz
+§  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
   language: go
 ```
 ## Projects in Other Languages
@@ -13,14 +14,16 @@
 ```yaml
 - name: Empty Project Layout
   reference: https://maven.apache.org/
-  url: https://github.com/denizgursoy/go-touch-projects/raw/main/package/empty.tar.gz
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
 ```
 ## Yes/No Question
 
 ```yaml
 - name: Empty Project Layout
   reference: https://go.dev/
-  url: https://github.com/denizgursoy/go-touch-projects/raw/main/package/empty.tar.gz
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
   language: go
   questions:
     - direction: Do you want Dockerfile? #mandatory
@@ -36,7 +39,8 @@
 ```yaml
 - name: Empty Project Layout
   reference: https://go.dev/
-  url: https://github.com/denizgursoy/go-touch-projects/raw/main/package/empty.tar.gz
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
   language: go
   questions:
     - direction: Do you want Dockerfile?
