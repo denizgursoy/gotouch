@@ -9,7 +9,8 @@ If following project structure is selected,
 ```yaml
 - name: Empty Project Layout #mandatory 
   reference: https://go.dev/ #optional  
-  url: https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip #mandatory 
+  url: https://github.com/denizgursoy/go-touch-projects.git #mandatory 
+  branch: empty
   language: go # go, golang 
   values: # optional
     Port: 8080

@@ -5,7 +5,7 @@
 ```yaml
 - name: Empty Project Layout
   reference: https://go.dev/
-§  url: https://github.com/denizgursoy/go-touch-projects.git
+  url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
   language: go
 ```
