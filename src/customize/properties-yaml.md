@@ -4,11 +4,11 @@ Properties yaml is a **list** of what we call [Project Structure](./project-stru
 
 ```yaml
 - name: Backend for Frontend # mandatory
-  url: https://github.com/microservice-project/microservice.git # mandatory
+  url: https://github.com/foo/bff.git # mandatory
 - name: Microservice
-  url: https://github.com/bff-project/bff.git # can be a git repository
+  url: https://github.com/foo/microservice.git # can be a git repository
 - name: Api Gateway
-  url: https://github.com/denizgursoy/go-touch-projects.git # can be git repository or a tar.gz archive file
+  url: https://github.com/denizgursoy/go-touch-projects/raw/main/test/package/empty.tar.gz # can be a tar.gz archive file
   branch: empty 
   language: go # must be go or golang for go projects, otherwise omit the field
 ```
