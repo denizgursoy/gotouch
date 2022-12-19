@@ -27,11 +27,9 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Server got the request\n")
 }
 ```
-Template project address is written to properties YAML. Template project can be in a git repository and the URL of `.git`
-repository can be used in a properties YAML.
-
-Template can be compressed as `.tar.gz` file with [package command](../commands#package). Compressed `.tar.gz` file can be hosted
-in HTTP server and the URL to `.tar.gz` can be used in a properties YAML.
+Template project address will be used in properties YAML. Template project can be in a git repository and the URL of `.git`
+repository can be used in a properties YAML. Template can also be compressed as `.tar.gz` file with [package command](../commands#package). Compressed `.tar.gz` file can be hosted
+in HTTP server or in a git repository and the URL to `.tar.gz` can be used in a properties YAML.
 
 ::: tip
 The suggested way to store template projects is to host all template projects in one git repository. For every template
