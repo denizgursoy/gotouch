@@ -1,5 +1,5 @@
-LINUX_BUILD := env GOOS=linux GARCH=amd64 go build
-MAC_BUILD := env GOOS=darwin GARCH=x86_64 go build
+LINUX_BUILD := env GOOS=linux go build
+MAC_BUILD := env GOOS=darwin go build
 
 .PHONY: build build-test fmt lint unit coverage integration mock release install-semver up-major up-minor up-release
 

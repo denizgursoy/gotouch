@@ -199,6 +199,11 @@ func (z *ZippingTestSuite) CmdExec(args ...string) {
 	cmdArgs = append(cmdArgs, "-f", PropertiesUrl)
 
 	cmd := exec.Command(baseCmd, cmdArgs...)
+
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+
 	cmd.Env = os.Environ()
 
 	env2 := fmt.Sprintf("%s=%s", "TARGET_FILE", file)
@@ -207,11 +212,10 @@ func (z *ZippingTestSuite) CmdExec(args ...string) {
 
 	cmd.Env = append(cmd.Env, env2)
 
-	out, err := cmd.Output()
+	err := cmd.Run()
 	if err != nil {
 		println(err)
 	}
-	fmt.Println(string(out))
 }
 
 func (z *ZippingTestSuite) executeGotouch() {
