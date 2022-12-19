@@ -8,7 +8,7 @@ Properties yaml is a **list** of what we call [Project Structure](./project-stru
 - name: Microservice
   url: https://github.com/foo/microservice.git # can be a git repository
 - name: Api Gateway
-  url: https://github.com/denizgursoy/go-touch-projects/raw/main/test/package/empty.tar.gz # can be a tar.gz archive file
+  url: https://foo.com/bar.tar.gz # can be a tar.gz archive file
   branch: empty 
   language: go # must be go or golang for go projects, otherwise omit the field
 ```
