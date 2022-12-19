@@ -45,6 +45,7 @@
   questions:
     - direction: Do you want Dockerfile?
       canSkip: true
+      canSelectMultiple: false
       choices:
         - choice: Yes
           dependencies:
@@ -70,13 +71,13 @@
             #boolean
             isDocker: true
             # string
-            myString: test
+            foo: test
             # object
-            myObject:
+            bar:
               x: value x
               y: value y
             # array
-            myArray:
+            fooBar:
               - arrayValue1
               - arrayValue2
 ```

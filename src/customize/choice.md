@@ -19,7 +19,7 @@ A choice can be written like:
     files:
       - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
         pathFromRoot: Dockerfile
-      - content: "My input"
+      - content: "foo"
         pathFromRoot: input.txt
     values:
       httpLibrary: echo
