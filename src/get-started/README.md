@@ -1,7 +1,9 @@
 # What is gotouch?
 Gotouch is a customizable project creator. Gotouch is inspired by technologies Helm, Maven and Vue CLI. 
 
-![gotouch](@images/helm-vue-cli-maven.png)
+<p align="center">
+  <img src="@images/helm-vue-cli-maven.png" />
+</p>
 
 Gotouch helps users maintain project structure like maven archetypes, allows users to modify project content with values just like generating Kubernetes YAMLs with Helm and finally, it allows users to customize the project to be created by asking their preferences.
 
