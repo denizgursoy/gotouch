@@ -42,7 +42,6 @@ Gotouch merges dependencies of all selected choices and add them as an array to 
 you can template with dependencies.
 
 ```xml
-
 <dependencies>
     {{- range .Dependencies}}
     <dependency>
@@ -57,7 +56,6 @@ you can template with dependencies.
 If the user select Postgres choice, pom.xml will be generated like:
 
 ```xml
-
 <dependencies>
     <dependency>
         <groupId>org.postgresql</groupId>
