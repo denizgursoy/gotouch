@@ -20,7 +20,7 @@ you can template with dependencies. You can find example templates for different
 
 ::: warning
 Following examples are just suggestions. Do not forget that you can use any format in dependencies, and you can template them
-however you want. If the language you use may not be in the examples, in this case you can use the examples as a guide.
+however you want. If the language you use is not in the examples, in this case you can use the examples as a guide.
 :::
 
 ### Java Maven
