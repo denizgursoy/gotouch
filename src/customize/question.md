@@ -8,10 +8,10 @@ user to make a [choice](./choice) for every question in the selected Project Str
 **`canSkip`**: This field allows skipping question. If there is one choice, question will be displayed as [yes/no question](#yes-no-question).
 If there are more than one choice, it will be displayed as [None of above question](#none-of-above-question). It is optional field.
 
-**`canSelectMultiple`**: This field allows users to make more than one choice. Instead of asking many yes/no question, choices can be combined
+**`canSelectMultiple`**: This field allows users to make more than one choice. Instead of asking many yes/no questions, choices can be combined
 in one question. Question will be displayed as [multiple select question](#multiple-select-question). It is optional field.
 
-**`choices`** Choices filed is a list of choices belonging to the question. It is mandatory field. See [choice](./choice) for more information.
+**`choices`**: Choices filed is a list of choices belonging to the question. It is mandatory field. See [choice](./choice) for more information.
 
 ## Yes/No question
 If a question has only one choice and `canSkip` is true, it is evaluated as Yes/No question
