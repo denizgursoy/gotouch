@@ -9,9 +9,9 @@ questions: #optional
   - direction: Do you want Dockerfile? #mandatory
     canSkip: true #if true, there must be at least one choice. 
     choices: #mandatory
-      - choice: Yes
+      - choice: Yes # mandatory
         files:
-          - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+          - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile # mandatory
             pathFromRoot: Dockerfile #mandatory
 ```
 
@@ -22,9 +22,9 @@ questions: #optional
   - direction: Do you want Dockerfile? #mandatory
     canSkip: true #if true, there must be at least one choice. 
     choices: #mandatory
-      - choice: Yes
-        files:
-          - content: |
+      - choice: Yes # mandatory
+        files: # content is mandatory
+          - content: | 
                 FROM golang:1.12.0-alpine3.9
                 RUN mkdir /app
                 COPY . /app

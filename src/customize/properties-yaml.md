@@ -4,7 +4,7 @@ Properties yaml is a **list** of what we call [Project Structure](./project-stru
 
 ```yaml
 - name: Backend for Frontend # mandatory
-  url: https://github.com/foo/bff.git # mandatory
+  url: https://github.com/foo/bff.git # optional
 - name: Microservice
   url: https://github.com/foo/microservice.git # can be a git repository
 - name: Api Gateway

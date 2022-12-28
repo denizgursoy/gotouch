@@ -7,12 +7,12 @@ user to change the values if he/she wants.
 If following project structure is selected,
 
 ```yaml
-- name: Empty Project Layout #mandatory 
-  reference: https://go.dev/ #optional  
-  url: https://github.com/denizgursoy/go-touch-projects.git #mandatory 
+- name: Empty Project Layout
+  reference: https://go.dev/
+  url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
-  language: go # go, golang 
-  values: # optional
+  language: go
+  values:
     Port: 8080
 ```
 
@@ -39,7 +39,7 @@ Apart from these values, you can use following predefined values :
 ```yaml
 ModuleName: Module name user typed (github.com/denigursoy/foo)
 ProjectName: Project directory name (foo)
-WorkingDirectory: location where Gotouch command is executed
-ProjectFullPath: Projects root directory
+WorkingDirectory: Location where Gotouch command is executed (/tmp)
+ProjectFullPath: Project's root directory (/tmp/foo)
 Dependencies: Array of dependencies of all selected choices
 ```

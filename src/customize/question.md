@@ -12,15 +12,15 @@ If a question has only one choice and `canSkip` is true, it is evaluated as Yes/
 - name: Api Gateway
   url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
-  language: go # must be go or golang for go projects, otherwise omit the field
-  questions: #optional
-  - direction: Do you want Dockerfile? #mandatory
+  language: go
+  questions:
+  - direction: Do you want Dockerfile?
     canSkip: true #if true, there must be at least one choice. 
     choices: #mandatory
-      - choice: Yes
+      - choice: Yes # mandatory
         files:
           - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
-            pathFromRoot: Dockerfile
+            pathFromRoot: Dockerfile # mandatory
 ```
 Will be displayed like:
 
@@ -34,7 +34,7 @@ If a question has more than one choice it is evaluated as Multiple choice questi
 - name: Api Gateway
   url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
-  language: go # must be go or golang for go projects, otherwise omit the field
+  language: go
   questions:
     - direction: Which HTTP framework do you want to use?
       choices:
@@ -62,7 +62,7 @@ as a choice.
 - name: Api Gateway
   url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
-  language: go # must be go or golang for go projects, otherwise omit the field
+  language: go
   questions:
     - direction: Which HTTP framework do you want to use?
       choices:
@@ -91,7 +91,7 @@ If a question's `canSelectMultiple` is set to true, user can select more than on
 - name: Api Gateway
   url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
-  language: go # must be go or golang for go projects, otherwise omit the field
+  language: go
   questions:
     - direction: Select features you want
       canSelectMultiple: true
