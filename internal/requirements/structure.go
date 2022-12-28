@@ -152,13 +152,15 @@ func (p *projectStructureTask) Complete() error {
 
 	url := p.ProjectStructure.URL
 
-	if strings.HasSuffix(url, ".git") {
-		if err := p.Cloner.CloneFromUrl(url, p.ProjectStructure.Branch); err != nil {
-			return err
-		}
-	} else {
-		if err := p.Compressor.UncompressFromUrl(url); err != nil {
-			return err
+	if len(strings.TrimSpace(url)) != 0 {
+		if strings.HasSuffix(url, ".git") {
+			if err := p.Cloner.CloneFromUrl(url, p.ProjectStructure.Branch); err != nil {
+				return err
+			}
+		} else {
+			if err := p.Compressor.UncompressFromUrl(url); err != nil {
+				return err
+			}
 		}
 	}
 

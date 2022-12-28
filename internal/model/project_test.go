@@ -239,7 +239,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		require.ErrorIs(t, err, ErrProjectNameIsEmpty)
 	})
 
-	t.Run("should return ErrProjectURLIsEmpty if url is empty", func(t *testing.T) {
+	t.Run("should not return ErrProjectURLIsEmpty if url is empty", func(t *testing.T) {
 		project := &ProjectStructureData{
 			Name:      projectName,
 			Reference: "",
@@ -247,8 +247,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		}
 		err := project.IsValid()
 
-		require.NotNil(t, err)
-		require.ErrorIs(t, err, ErrProjectURLIsEmpty)
+		require.Nil(t, err)
 	})
 
 	t.Run("should return ErrProjectURLIsNotValid if url is not valid", func(t *testing.T) {

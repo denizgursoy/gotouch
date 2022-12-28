@@ -54,7 +54,6 @@ func (p *ProjectStructureData) String() string {
 }
 
 var (
-	ErrProjectURLIsEmpty    = errors.New("project url can not be empty")
 	ErrProjectNameIsEmpty   = errors.New("project name can not be empty")
 	ErrProjectURLIsNotValid = errors.New("project url invalid")
 )
@@ -69,12 +68,10 @@ func (p *ProjectStructureData) IsValid() error {
 	}
 
 	projectUrl := strings.TrimSpace(p.URL)
-	if len(projectUrl) == 0 {
-		return ErrProjectURLIsEmpty
-	}
-
-	if _, err := url.ParseRequestURI(projectUrl); err != nil {
-		return ErrProjectURLIsNotValid
+	if len(projectUrl) != 0 {
+		if _, err := url.ParseRequestURI(projectUrl); err != nil {
+			return ErrProjectURLIsNotValid
+		}
 	}
 
 	delimiters := strings.Fields(p.Delimiters)

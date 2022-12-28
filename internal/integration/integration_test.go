@@ -124,6 +124,15 @@ func (z *ZippingTestSuite) TestMultipleSelectQuestion() {
 	z.checkFileExists("Dockerfile", true)
 }
 
+func (z *ZippingTestSuite) TestProjectWithNoUrl() {
+	z.setInputFile("project-with-no-url.txt")
+	z.executeGotouch()
+
+	z.checkFileExists("app-deployment.yaml", true)
+	z.checkFileExists("Dockerfile", true)
+	z.checkFileExists("Makefile", true)
+}
+
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	directories := make([]string, 0)
 	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
