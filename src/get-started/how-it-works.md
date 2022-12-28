@@ -4,7 +4,7 @@
 2. If the selected project's language is go, it will check whether `go` command is installed on the OS
 3. Asks for module name
 4. Asks for a choice of every [question](../customize/question) under the selected project structure in order and saves the choices
-5. Asks for changing the [values](../customize/value) of the selected project structure if any
+5. Asks for changing the [values](../customize/value) of **only the selected project structure** (not selected choices) if any
 6. Add default to [values](../customize/value)
 7. Creates a new directory with module name's last part after last `/`
 8. Uncompress/checkout the template project of the selected project structure into the created directory
