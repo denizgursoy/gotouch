@@ -29,14 +29,13 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Server got the request\n")
 }
 ```
-
 Template project address will be used in properties YAML. Template project can be in a git repository and the URL
-of `.git`
-repository can be used in a properties YAML. Template can also be compressed as `.tar.gz` file
+of `.git` repository can be used in a properties YAML. Template can also be compressed as `.tar.gz` file
 with [package command](../commands#package). Compressed `.tar.gz` file can be hosted in HTTP server or in a git
 repository and the URL to `.tar.gz` can be used in a properties YAML.
 
-::: tip The suggested way to store template projects is to host all template projects in one git repository. For every
+::: tip 
+The suggested way to store template projects is to host all template projects in one git repository. For every
 template project, you can create orphan branches with `git checkout --orphan orphan_name` command and set `branch` in
 the project structure to `orphan_name`. Common files can be stored in the `main` branch. See example projects:
 
