@@ -50,7 +50,7 @@ use [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a
 the files.
 :::
 
-## Using default values in your template project
+## Default values in template project
 
 You can use [default values](./value#default-values) in your templates. Let's assume that user entered module name
 `github.com/denigursoy/foo` and you create new packages in your template project. In order to import from other package,
@@ -119,7 +119,7 @@ func main() {
 ```
 
 
-## Templating with go templating library
+## Templating with go template library
 
 You can also use other go template library's capabilities such as conditions, iterating array values, etc. For more
 information see [go template library](https://pkg.go.dev/text/template).
