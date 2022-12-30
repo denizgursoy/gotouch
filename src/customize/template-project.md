@@ -51,9 +51,9 @@ use [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a
 the files.
 :::
 
-### Using default values in your template project
+## Using default values in your template project
 
-You can use [default values](./valuel#default-values) in your templates. Let's assume that user entered module name
+You can use [default values](./value#default-values) in your templates. Let's assume that user entered module name
 `github.com/denigursoy/foo` and you create new packages in your template project. In order to import from other package,
 you need to know module name user entered. You can access it with `.ModuleName` value. See the following example:
 
@@ -78,7 +78,7 @@ func printProductColor() {
 }
 ```
 
-Output:
+Result:
 ```go
 package product
 
@@ -92,9 +92,37 @@ func printProductColor() {
 }
 ```
 
-### Templating with go templating library
+## Using sprig functions
+
+During templating, you can use [sprig functions](http://masterminds.github.io/sprig/). You can use `uuidv4` function of spring to
+generate unique IDs.
+
+Source file:
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("{{uuidv4}}")
+}
+```
+
+Result:
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("dab4f91f-056c-49f3-abea-7ec3d6a74e8a")
+}
+```
+
+
+## Templating with go templating library
 
 You can also use other go template library's capabilities such as conditions, iterating array values, etc. For more
 information see [go template library](https://pkg.go.dev/text/template).
 
-See [simple examples](./template-examples.md) to learn templating
+See [simple examples](./template-examples.md) to learn templating.
