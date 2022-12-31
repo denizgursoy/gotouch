@@ -6,6 +6,7 @@ be [templated](https://pkg.go.dev/text/template)
 with the [values](./value). For example, if you have an action like <code v-pre>{{ .Port }}</code> and `Port` key in
 your [values](./value), it will be replaced with the corresponding value.
 
+Values:
 ```yaml
 Port: 9090
 ```
@@ -114,7 +115,7 @@ func printProductColor() {
 ## Templating directory and file names
 
 You can use values in directory or file names in your template project. For example, you can use `ProjectName` default value
-in your files/directories of template project. If user enters module name as`github.com/denigursoy/foo` and then `ProjectName`
+in your files/directories of template project. If user enters module name as `github.com/denigursoy/foo` and then `ProjectName`
 default value will be `foo`. During the templating file with the name <code v-pre>{{ .ProjectName }}.txt</code> will be `foo.txt`.
 
 ## Using sprig functions
