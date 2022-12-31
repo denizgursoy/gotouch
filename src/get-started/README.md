@@ -1,4 +1,4 @@
-# What is gotouch?
+# What is Gotouch?
 Gotouch is a customizable project creator inspired by technologies Helm, Maven and Vue CLI. 
 
 <p align="center">

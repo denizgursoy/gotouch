@@ -3,14 +3,14 @@
 Template project contains all the directories and files that you think you must have in every project. Files inside a
 template can have [actions](https://pkg.go.dev/text/template#hdr-Actions) which will
 be [templated](https://pkg.go.dev/text/template)
-with the [values](./value). For example, if you have an action like:
+with the [values](./value). For example, if you have an action like <code v-pre>{{ .Port }}</code> and `Port` key in
+your [values](./value), it will be replaced with the corresponding value.
 
- ```go
-{{ .Port }} 
+```yaml
+Port: 9090
 ```
 
-and `Port` key in your [values](./value), it will be replaced with the corresponding value.
-
+Source file:
  ```go
 package main
 
@@ -29,6 +29,26 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Server got the request\n")
 }
 ```
+Result:
+```go
+package main
+
+import (
+	"io"
+	"log"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", getRoot)
+	log.Fatalln(http.ListenAndServe(":9090", nil))
+}
+
+func getRoot(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Server got the request\n")
+}
+```
+
 Template project address will be used in properties YAML. Template project can be in a git repository and the URL
 of `.git` repository can be used in a properties YAML. Template can also be compressed as `.tar.gz` file
 with [package command](../commands#package). Compressed `.tar.gz` file can be hosted in HTTP server or in a git
@@ -91,9 +111,15 @@ func printProductColor() {
 }
 ```
 
+## Templating directory and file names
+
+You can use values in directory or file names in your template project. For example, you can use `ProjectName` default value
+in your files/directories of template project. If user enters module name as`github.com/denigursoy/foo` and then `ProjectName`
+default value will be `foo`. During the templating file with the name <code v-pre>{{ .ProjectName }}.txt</code> will be `foo.txt`.
+
 ## Using sprig functions
 
-During templating, you can use [sprig functions](http://masterminds.github.io/sprig/). You can use `uuidv4` function of spring to
+During templating, you can use [sprig functions](http://masterminds.github.io/sprig/). For example, You can use `uuidv4` function of spring to
 generate unique IDs.
 
 Source file:
