@@ -16,7 +16,7 @@ type (
 		URL       string      `yaml:"url"`
 		Branch    string      `yaml:"branch"`
 		Questions []*Question `yaml:"questions"`
-		Resource
+		Resources
 		Language   string `yaml:"language"`
 		Delimiters string `yaml:"delimiters"`
 	}
@@ -30,10 +30,10 @@ type (
 
 	Choice struct {
 		Choice string `yaml:"choice"`
-		Resource
+		Resources
 	}
 
-	Resource struct {
+	Resources struct {
 		Dependencies []interface{}          `yaml:"dependencies"`
 		Files        []*File                `yaml:"files"`
 		Values       map[string]interface{} `yaml:"values"`

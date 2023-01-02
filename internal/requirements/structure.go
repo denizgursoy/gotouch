@@ -54,25 +54,18 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
-	projectStructureData, err := p.SelectProject()
+	selectedPS, err := p.SelectProject()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	templateWithDelimiters := GetTemplate(projectStructureData)
-
 	//TODO: test
-	p.LanguageChecker = langs.GetChecker(projectStructureData.Language, p.Logger, p.Store, p.CommandRunner)
+	p.LanguageChecker = langs.GetChecker(selectedPS.Language, p.Logger, p.Store, p.CommandRunner)
 	if setupError := p.LanguageChecker.CheckSetup(); setupError != nil {
 		return nil, nil, setupError
 	}
 
-	nameRequirement := &ProjectNameRequirement{
-		Prompter: p.Prompter,
-		Manager:  p.Manager,
-		Logger:   p.Logger,
-		Store:    p.Store,
-	}
+	nameRequirement := p.getNameRequirement()
 
 	nameTasks, nameRequirements, err := nameRequirement.AskForInput()
 	if err != nil {
@@ -85,8 +78,37 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	tasks = append(tasks, nameTasks...)
 	requirements = append(requirements, nameRequirements...)
 
-	task := projectStructureTask{
-		ProjectStructure: projectStructureData,
+	resourceTasks := getTasks(selectedPS.Resources, p.Logger, p.Manager, p.LanguageChecker, p.Store)
+
+	if resourceTasks != nil {
+		tasks = append(tasks, resourceTasks...)
+	}
+
+	tasks = append(tasks, p.getProjectStructureTask(selectedPS))
+
+	for _, question := range selectedPS.Questions {
+		requirements = append(requirements, p.getQuestionRequirement(question))
+	}
+
+	requirements = append(requirements, p.getTemplateRequirement(selectedPS))
+	requirements = append(requirements, p.getCleanupRequirement())
+	requirements = append(requirements, p.getInitRequirement())
+
+	return tasks, requirements, nil
+}
+
+func (p *ProjectStructureRequirement) getNameRequirement() *ProjectNameRequirement {
+	return &ProjectNameRequirement{
+		Prompter: p.Prompter,
+		Manager:  p.Manager,
+		Logger:   p.Logger,
+		Store:    p.Store,
+	}
+}
+
+func (p *ProjectStructureRequirement) getProjectStructureTask(selectedPS *model.ProjectStructureData) *projectStructureTask {
+	return &projectStructureTask{
+		ProjectStructure: selectedPS,
 		Compressor:       p.Compressor,
 		Manager:          p.Manager,
 		Logger:           p.Logger,
@@ -95,39 +117,43 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		LanguageChecker:  p.LanguageChecker,
 		Cloner:           p.Cloner,
 	}
+}
 
-	tasks = append(tasks, &task)
-
-	for _, question := range task.ProjectStructure.Questions {
-		requirements = append(requirements, &QuestionRequirement{
-			Question:        *question,
-			Prompter:        p.Prompter,
-			Logger:          p.Logger,
-			Executor:        p.Executor,
-			Manager:         p.Manager,
-			Store:           p.Store,
-			LanguageChecker: p.LanguageChecker,
-		})
+func (p *ProjectStructureRequirement) getQuestionRequirement(question *model.Question) *QuestionRequirement {
+	return &QuestionRequirement{
+		Question:        *question,
+		Prompter:        p.Prompter,
+		Logger:          p.Logger,
+		Executor:        p.Executor,
+		Manager:         p.Manager,
+		Store:           p.Store,
+		LanguageChecker: p.LanguageChecker,
 	}
+}
 
-	requirements = append(requirements, &templateRequirement{
+func (p *ProjectStructureRequirement) getTemplateRequirement(selectedPS *model.ProjectStructureData) *templateRequirement {
+	templateWithDelimiters := GetTemplate(selectedPS)
+
+	return &templateRequirement{
 		Prompter: p.Prompter,
 		Store:    p.Store,
-		Values:   task.ProjectStructure.Values,
+		Values:   selectedPS.Values,
 		Template: templateWithDelimiters,
-	})
+	}
+}
 
-	requirements = append(requirements, &cleanupRequirement{
+func (p *ProjectStructureRequirement) getCleanupRequirement() *cleanupRequirement {
+	return &cleanupRequirement{
 		LanguageChecker: p.LanguageChecker,
-	})
+	}
+}
 
-	requirements = append(requirements, &initRequirement{
+func (p *ProjectStructureRequirement) getInitRequirement() *initRequirement {
+	return &initRequirement{
 		Store:         p.Store,
 		Logger:        p.Logger,
 		CommandRunner: p.CommandRunner,
-	})
-
-	return tasks, requirements, nil
+	}
 }
 
 func (p *ProjectStructureRequirement) SelectProject() (*model.ProjectStructureData, error) {

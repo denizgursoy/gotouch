@@ -34,27 +34,33 @@ var (
 		PathFromRoot: "path2",
 	}
 	choice = model.Choice{
-		Choice:       "choice 1",
-		Dependencies: []interface{}{dependency1, dependency2},
-		Files:        []*model.File{&file1, &file2},
-		Values: map[string]interface{}{
-			"X": "sds",
+		Choice: "choice 1",
+		Resources: model.Resources{
+			Dependencies: []interface{}{dependency1, dependency2},
+			Files:        []*model.File{&file1, &file2},
+			Values: map[string]interface{}{
+				"X": "sds",
+			},
 		},
 	}
 	choice2 = model.Choice{
-		Choice:       "choice 2",
-		Dependencies: []interface{}{dependency3},
-		Files:        []*model.File{&file1, &file2},
-		Values: map[string]interface{}{
-			"Y": "sds",
+		Choice: "choice 2",
+		Resources: model.Resources{
+			Dependencies: []interface{}{dependency3},
+			Files:        []*model.File{&file1, &file2},
+			Values: map[string]interface{}{
+				"Y": "sds",
+			},
 		},
 	}
 	choice3 = model.Choice{
-		Choice:       "choice 3",
-		Dependencies: []interface{}{dependency4, dependency5},
-		Files:        []*model.File{&file2},
-		Values: map[string]interface{}{
-			"Z": "sds",
+		Choice: "choice 3",
+		Resources: model.Resources{
+			Dependencies: []interface{}{dependency4, dependency5},
+			Files:        []*model.File{&file2},
+			Values: map[string]interface{}{
+				"Z": "sds",
+			},
 		},
 	}
 

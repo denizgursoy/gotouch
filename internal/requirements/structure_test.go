@@ -38,8 +38,10 @@ var (
 		Reference: "go.dev",
 		URL:       "https://project1.com",
 		Questions: questions,
-		Values: map[string]interface{}{
-			"1": "23",
+		Resources: model.Resources{
+			Values: map[string]interface{}{
+				"1": "23",
+			},
 		},
 	}
 	projectStructureWithGitRepository = model.ProjectStructureData{
@@ -48,8 +50,10 @@ var (
 		URL:       "a.git",
 		Branch:    "test",
 		Questions: questions,
-		Values: map[string]interface{}{
-			"1": "23",
+		Resources: model.Resources{
+			Values: map[string]interface{}{
+				"1": "23",
+			},
 		},
 	}
 	projectStructure2 = model.ProjectStructureData{
@@ -62,8 +66,10 @@ var (
 		Name:      "Project -2",
 		Reference: "go2.dev",
 		URL:       "https://project2.com",
-		Values: map[string]interface{}{
-			"x": "",
+		Resources: model.Resources{
+			Values: map[string]interface{}{
+				"x": "",
+			},
 		},
 	}
 

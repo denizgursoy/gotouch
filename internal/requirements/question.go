@@ -78,27 +78,41 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	tasks := make([]model.Task, 0)
 
 	for _, selection := range selectedChoices {
-		for _, dependency := range selection.Dependencies {
-			tasks = append(tasks, &dependencyTask{
-				Dependency:      dependency,
-				LanguageChecker: q.LanguageChecker,
-			})
-			q.Store.AddDependency(dependency)
-		}
+		choiceTasks := getTasks(selection.Resources, q.Logger, q.Manager, q.LanguageChecker, q.Store)
 
-		for _, file := range selection.Files {
-			tasks = append(tasks, &fileTask{
-				File:    *file,
-				Logger:  q.Logger,
-				Manager: q.Manager,
-				Client:  &http.Client{},
-			})
+		if choiceTasks != nil {
+			tasks = append(tasks, choiceTasks...)
 		}
-		q.Store.AddValues(selection.Values)
 	}
+
 	return tasks, nil, nil
 }
 
 func (n NoneOfAboveChoice) String() string {
 	return "None of above"
+}
+
+func getTasks(r model.Resources, l logger.Logger, m manager.Manager,
+	lc langs.Checker, s store.Store) []model.Task {
+
+	tasks := make([]model.Task, 0)
+
+	for _, dependency := range r.Dependencies {
+		tasks = append(tasks, &dependencyTask{
+			Dependency:      dependency,
+			LanguageChecker: lc,
+		})
+		s.AddDependency(dependency)
+	}
+
+	for _, file := range r.Files {
+		tasks = append(tasks, &fileTask{
+			File:    *file,
+			Logger:  l,
+			Manager: m,
+			Client:  &http.Client{},
+		})
+	}
+	s.AddValues(r.Values)
+	return tasks
 }
