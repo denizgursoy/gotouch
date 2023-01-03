@@ -115,10 +115,10 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.Equal(t, testProjectData[0].Resources.Dependencies[1], tasks[3].(*dependencyTask).Dependency)
 
 		require.IsType(t, (*fileTask)(nil), tasks[4])
-		require.Equal(t, testProjectData[0].Resources.Files[9], tasks[4].(*fileTask).File)
+		require.Equal(t, *testProjectData[0].Resources.Files[0], tasks[4].(*fileTask).File)
 
 		require.IsType(t, (*fileTask)(nil), tasks[5])
-		require.Equal(t, testProjectData[0].Resources.Files[1], tasks[5].(*fileTask).File)
+		require.Equal(t, *testProjectData[0].Resources.Files[1], tasks[5].(*fileTask).File)
 
 		actualQuestions := make([]*model.Question, 0)
 
