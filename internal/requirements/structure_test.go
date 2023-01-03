@@ -42,6 +42,8 @@ var (
 			Values: map[string]interface{}{
 				"1": "23",
 			},
+			Dependencies: []interface{}{"dep1", "dep2"},
+			Files:        []*model.File{&file1, &file2},
 		},
 	}
 	projectStructureWithGitRepository = model.ProjectStructureData{
@@ -60,12 +62,6 @@ var (
 		Name:      "Project -2",
 		Reference: "go2.dev",
 		URL:       "https://project2.com",
-	}
-
-	projectStructureWithValues = model.ProjectStructureData{
-		Name:      "Project -2",
-		Reference: "go2.dev",
-		URL:       "https://project2.com",
 		Resources: model.Resources{
 			Values: map[string]interface{}{
 				"x": "",
@@ -73,7 +69,10 @@ var (
 		},
 	}
 
-	testProjectData = []*model.ProjectStructureData{&projectStructure1, &projectStructure2}
+	testProjectData = []*model.ProjectStructureData{
+		&projectStructure1,
+		&projectStructure2,
+	}
 )
 
 func TestStructure_AskForInput(t *testing.T) {
@@ -103,13 +102,23 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
 
-		require.Len(t, tasks, 2)
+		require.Len(t, tasks, 6)
 		require.IsType(t, (*projectNameTask)(nil), tasks[0])
 
 		require.IsType(t, &projectStructureTask{}, tasks[1])
-		require.IsType(t, testProjectData[1], tasks[1].(*projectStructureTask).ProjectStructure)
+		require.Equal(t, testProjectData[0], tasks[1].(*projectStructureTask).ProjectStructure)
 
-		require.IsType(t, (*cleanupTask)(nil), tasks[2])
+		require.IsType(t, (*dependencyTask)(nil), tasks[2])
+		require.Equal(t, testProjectData[0].Resources.Dependencies[0], tasks[2].(*dependencyTask).Dependency)
+
+		require.IsType(t, (*dependencyTask)(nil), tasks[3])
+		require.Equal(t, testProjectData[0].Resources.Dependencies[1], tasks[3].(*dependencyTask).Dependency)
+
+		require.IsType(t, (*fileTask)(nil), tasks[4])
+		require.Equal(t, testProjectData[0].Resources.Files[9], tasks[4].(*fileTask).File)
+
+		require.IsType(t, (*fileTask)(nil), tasks[5])
+		require.Equal(t, testProjectData[0].Resources.Files[1], tasks[5].(*fileTask).File)
 
 		actualQuestions := make([]*model.Question, 0)
 

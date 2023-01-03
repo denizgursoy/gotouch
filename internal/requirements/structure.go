@@ -76,15 +76,11 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	requirements := make([]model.Requirement, 0)
 
 	tasks = append(tasks, nameTasks...)
+	tasks = append(tasks, p.getProjectStructureTask(selectedPS))
 	requirements = append(requirements, nameRequirements...)
 
 	resourceTasks := getTasks(selectedPS.Resources, p.Logger, p.Manager, p.LanguageChecker, p.Store)
-
-	if resourceTasks != nil {
-		tasks = append(tasks, resourceTasks...)
-	}
-
-	tasks = append(tasks, p.getProjectStructureTask(selectedPS))
+	tasks = append(tasks, resourceTasks...)
 
 	for _, question := range selectedPS.Questions {
 		requirements = append(requirements, p.getQuestionRequirement(question))

@@ -11,14 +11,14 @@ import (
 
 type (
 	ProjectStructureData struct {
-		Name      string      `yaml:"name"`
-		Reference string      `yaml:"reference"`
-		URL       string      `yaml:"url"`
-		Branch    string      `yaml:"branch"`
-		Questions []*Question `yaml:"questions"`
-		Resources
-		Language   string `yaml:"language"`
-		Delimiters string `yaml:"delimiters"`
+		Resources  `yaml:",inline"`
+		Name       string      `yaml:"name"`
+		Reference  string      `yaml:"reference"`
+		URL        string      `yaml:"url"`
+		Branch     string      `yaml:"branch"`
+		Questions  []*Question `yaml:"questions"`
+		Language   string      `yaml:"language"`
+		Delimiters string      `yaml:"delimiters"`
 	}
 
 	Question struct {
@@ -29,8 +29,8 @@ type (
 	}
 
 	Choice struct {
-		Choice string `yaml:"choice"`
-		Resources
+		Choice    string `yaml:"choice"`
+		Resources `yaml:",inline"`
 	}
 
 	Resources struct {

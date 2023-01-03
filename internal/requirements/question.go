@@ -79,10 +79,8 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 
 	for _, selection := range selectedChoices {
 		choiceTasks := getTasks(selection.Resources, q.Logger, q.Manager, q.LanguageChecker, q.Store)
-
-		if choiceTasks != nil {
-			tasks = append(tasks, choiceTasks...)
-		}
+		tasks = append(tasks, choiceTasks...)
+		q.Store.AddValues(selection.Values)
 	}
 
 	return tasks, nil, nil
@@ -113,6 +111,5 @@ func getTasks(r model.Resources, l logger.Logger, m manager.Manager,
 			Client:  &http.Client{},
 		})
 	}
-	s.AddValues(r.Values)
 	return tasks
 }
