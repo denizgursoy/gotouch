@@ -11,8 +11,8 @@ import (
 
 type Checker interface {
 	CheckSetup() error
-	CheckDependency(dependency interface{}) error
-	GetDependency(dependency interface{}) error
+	CheckDependency(dependency any) error
+	GetDependency(dependency any) error
 	Setup() error
 	CleanUp() error
 }

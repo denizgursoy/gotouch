@@ -39,10 +39,10 @@ var (
 		URL:       "https://project1.com",
 		Questions: questions,
 		Resources: model.Resources{
-			Values: map[string]interface{}{
+			Values: map[string]any{
 				"1": "23",
 			},
-			Dependencies: []interface{}{"dep1", "dep2"},
+			Dependencies: []any{"dep1", "dep2"},
 			Files:        []*model.File{&file1, &file2},
 		},
 	}
@@ -53,7 +53,7 @@ var (
 		Branch:    "test",
 		Questions: questions,
 		Resources: model.Resources{
-			Values: map[string]interface{}{
+			Values: map[string]any{
 				"1": "23",
 			},
 		},
@@ -63,7 +63,7 @@ var (
 		Reference: "go2.dev",
 		URL:       "https://project2.com",
 		Resources: model.Resources{
-			Values: map[string]interface{}{
+			Values: map[string]any{
 				"x": "",
 			},
 		},

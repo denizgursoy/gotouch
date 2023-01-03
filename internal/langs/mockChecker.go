@@ -34,7 +34,7 @@ func (m *MockChecker) EXPECT() *MockCheckerMockRecorder {
 }
 
 // CheckDependency mocks base method.
-func (m *MockChecker) CheckDependency(dependency interface{}) error {
+func (m *MockChecker) CheckDependency(dependency any) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CheckDependency", dependency)
 	ret0, _ := ret[0].(error)
@@ -76,7 +76,7 @@ func (mr *MockCheckerMockRecorder) CleanUp() *gomock.Call {
 }
 
 // GetDependency mocks base method.
-func (m *MockChecker) GetDependency(dependency interface{}) error {
+func (m *MockChecker) GetDependency(dependency any) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDependency", dependency)
 	ret0, _ := ret[0].(error)

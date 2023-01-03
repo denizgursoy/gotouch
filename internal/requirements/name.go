@@ -84,7 +84,7 @@ func (p *projectNameTask) Complete() error {
 	return nil
 }
 
-func (p *ProjectNameRequirement) validateModuleName(name interface{}) error {
+func (p *ProjectNameRequirement) validateModuleName(name any) error {
 	moduleName := name.(string)
 	if !strings.Contains(moduleName, "/") {
 		err := module.CheckImportPath(moduleName)

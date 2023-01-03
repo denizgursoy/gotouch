@@ -40,7 +40,7 @@ func TestCreateNewProject(t *testing.T) {
 		options.Executor.(*executor.MockExecutor).
 			EXPECT().
 			Execute(gomock.Any()).
-			Do(func(arg interface{}) {
+			Do(func(arg any) {
 				execRequirements := arg.(executor.Requirements)
 				require.Len(t, execRequirements, 1)
 				structure := execRequirements[0].(*requirements.ProjectStructureRequirement)

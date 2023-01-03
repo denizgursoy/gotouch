@@ -36,9 +36,9 @@ var (
 	choice = model.Choice{
 		Choice: "choice 1",
 		Resources: model.Resources{
-			Dependencies: []interface{}{dependency1, dependency2},
+			Dependencies: []any{dependency1, dependency2},
 			Files:        []*model.File{&file1, &file2},
-			Values: map[string]interface{}{
+			Values: map[string]any{
 				"X": "sds",
 			},
 		},
@@ -46,9 +46,9 @@ var (
 	choice2 = model.Choice{
 		Choice: "choice 2",
 		Resources: model.Resources{
-			Dependencies: []interface{}{dependency3},
+			Dependencies: []any{dependency3},
 			Files:        []*model.File{&file1, &file2},
-			Values: map[string]interface{}{
+			Values: map[string]any{
 				"Y": "sds",
 			},
 		},
@@ -56,9 +56,9 @@ var (
 	choice3 = model.Choice{
 		Choice: "choice 3",
 		Resources: model.Resources{
-			Dependencies: []interface{}{dependency4, dependency5},
+			Dependencies: []any{dependency4, dependency5},
 			Files:        []*model.File{&file2},
-			Values: map[string]interface{}{
+			Values: map[string]any{
 				"Z": "sds",
 			},
 		},

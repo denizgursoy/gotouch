@@ -24,13 +24,13 @@ type (
 	templateRequirement struct {
 		Prompter prompter.Prompter `validate:"required"`
 		Store    store.Store       `validate:"required"`
-		Values   interface{}       `validate:"required"`
+		Values   map[string]any    `validate:"required"`
 		Template *template.Template
 	}
 
 	templateTask struct {
-		Store    store.Store `validate:"required"`
-		Values   interface{} `validate:"required"`
+		Store    store.Store    `validate:"required"`
+		Values   map[string]any `validate:"required"`
 		Template *template.Template
 	}
 )
@@ -43,7 +43,7 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 		Template: t.Template,
 	}
 
-	if t.Values != nil {
+	if len(t.Values) != 0 {
 		yes, promptError := t.Prompter.AskForYesOrNo(ChangeValues)
 		if promptError != nil {
 			return nil, nil, promptError
@@ -60,7 +60,7 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 				return nil, nil, multilineError
 			}
 
-			var output interface{}
+			var output map[string]any
 			if unmarshallError := yaml.Unmarshal([]byte(multilineString), &output); unmarshallError != nil {
 				return nil, nil, unmarshallError
 			}
@@ -156,9 +156,9 @@ func (t *templateTask) templateDirectoryNames(folders []string) error {
 }
 
 func (t *templateTask) combineWithDefaultValues() {
-	combinedValues := map[string]interface{}{}
+	combinedValues := map[string]any{}
 	if t.Values != nil {
-		combinedValues = t.Values.(map[string]interface{})
+		combinedValues = t.Values
 	}
 
 	for key, value := range t.getDefaultValues() {
@@ -171,8 +171,8 @@ func (t *templateTask) combineWithDefaultValues() {
 	t.Values = combinedValues
 }
 
-func (t *templateTask) getDefaultValues() map[string]interface{} {
-	defaultValues := make(map[string]interface{}, 0)
+func (t *templateTask) getDefaultValues() map[string]any {
+	defaultValues := make(map[string]any, 0)
 
 	defaultValues[store.ProjectName] = t.Store.GetValue(store.ProjectName)
 	defaultValues[store.ProjectFullPath] = t.Store.GetValue(store.ProjectFullPath)

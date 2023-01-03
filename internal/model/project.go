@@ -34,9 +34,9 @@ type (
 	}
 
 	Resources struct {
-		Dependencies []interface{}          `yaml:"dependencies"`
-		Files        []*File                `yaml:"files"`
-		Values       map[string]interface{} `yaml:"values"`
+		Dependencies []any          `yaml:"dependencies"`
+		Files        []*File        `yaml:"files"`
+		Values       map[string]any `yaml:"values"`
 	}
 
 	File struct {

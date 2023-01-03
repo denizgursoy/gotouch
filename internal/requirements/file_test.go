@@ -80,7 +80,7 @@ func Test_fileTask_Complete(t *testing.T) {
 
 			mockManager := manager.NewMockManager(controller)
 
-			mockManager.EXPECT().CreateFile(gomock.Any(), gomock.Eq(arg.file.PathFromRoot)).DoAndReturn(func(arg1, arg2 interface{}) error {
+			mockManager.EXPECT().CreateFile(gomock.Any(), gomock.Eq(arg.file.PathFromRoot)).DoAndReturn(func(arg1, arg2 any) error {
 				closer := arg1.(io.ReadCloser)
 				all, err := io.ReadAll(closer)
 				if err != nil {

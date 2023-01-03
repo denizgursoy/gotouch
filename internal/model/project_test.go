@@ -50,7 +50,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 	choiceValidWithDependencies := &Choice{
 		Choice: "choice",
 		Resources: Resources{
-			Dependencies: []interface{}{choice1, choice2},
+			Dependencies: []any{choice1, choice2},
 			Files:        nil,
 		},
 	}
@@ -60,7 +60,7 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Resources: Resources{
 			Dependencies: nil,
 			Files:        nil,
-			Values: map[string]interface{}{
+			Values: map[string]any{
 				"key": "value",
 			},
 		},
@@ -482,7 +482,7 @@ func TestDependencyTest(t *testing.T) {
 		goDependencyChoice := &Choice{
 			Choice: "asdsd",
 			Resources: Resources{
-				Dependencies: []interface{}{"asdsad"},
+				Dependencies: []any{"asdsad"},
 			},
 		}
 
@@ -510,7 +510,7 @@ func TestDependencyTest(t *testing.T) {
 		wrongGoDependencyChoice := &Choice{
 			Choice: "asdsd",
 			Resources: Resources{
-				Dependencies: []interface{}{
+				Dependencies: []any{
 					"asdsa",
 					wrongType{
 						name:    "x",

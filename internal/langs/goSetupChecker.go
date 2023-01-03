@@ -46,7 +46,7 @@ func (g *golangSetupChecker) Setup() error {
 	return nil
 }
 
-func (g *golangSetupChecker) CheckDependency(dependency interface{}) error {
+func (g *golangSetupChecker) CheckDependency(dependency any) error {
 	val, ok := dependency.(string)
 	if !ok {
 		return fmt.Errorf("go dependecy must be string")
@@ -68,7 +68,7 @@ func (g *golangSetupChecker) CheckSetup() error {
 
 }
 
-func (g *golangSetupChecker) GetDependency(dependency interface{}) error {
+func (g *golangSetupChecker) GetDependency(dependency any) error {
 	val := dependency.(string)
 	url := val
 	version := latestVersion
