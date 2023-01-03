@@ -132,6 +132,14 @@ func (z *ZippingTestSuite) TestProjectWithNoUrl() {
 	z.checkFileExists("Makefile", true)
 }
 
+func (z *ZippingTestSuite) TestProjectWithFilesAndDependencies() {
+	z.setInputFile("project-with-files-and-dependencies.txt")
+	z.executeGotouch()
+
+	z.checkFileContent("Dockerfile", "Dockerfile")
+	z.checkFileContent("values.txt", "values.txt")
+}
+
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	directories := make([]string, 0)
 	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
