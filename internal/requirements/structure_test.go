@@ -38,8 +38,12 @@ var (
 		Reference: "go.dev",
 		URL:       "https://project1.com",
 		Questions: questions,
-		Values: map[string]interface{}{
-			"1": "23",
+		Resources: model.Resources{
+			Values: map[string]any{
+				"1": "23",
+			},
+			Dependencies: []any{"dep1", "dep2"},
+			Files:        []*model.File{&file1, &file2},
 		},
 	}
 	projectStructureWithGitRepository = model.ProjectStructureData{
@@ -48,26 +52,27 @@ var (
 		URL:       "a.git",
 		Branch:    "test",
 		Questions: questions,
-		Values: map[string]interface{}{
-			"1": "23",
+		Resources: model.Resources{
+			Values: map[string]any{
+				"1": "23",
+			},
 		},
 	}
 	projectStructure2 = model.ProjectStructureData{
 		Name:      "Project -2",
 		Reference: "go2.dev",
 		URL:       "https://project2.com",
-	}
-
-	projectStructureWithValues = model.ProjectStructureData{
-		Name:      "Project -2",
-		Reference: "go2.dev",
-		URL:       "https://project2.com",
-		Values: map[string]interface{}{
-			"x": "",
+		Resources: model.Resources{
+			Values: map[string]any{
+				"x": "",
+			},
 		},
 	}
 
-	testProjectData = []*model.ProjectStructureData{&projectStructure1, &projectStructure2}
+	testProjectData = []*model.ProjectStructureData{
+		&projectStructure1,
+		&projectStructure2,
+	}
 )
 
 func TestStructure_AskForInput(t *testing.T) {
@@ -97,13 +102,23 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
 
-		require.Len(t, tasks, 2)
+		require.Len(t, tasks, 6)
 		require.IsType(t, (*projectNameTask)(nil), tasks[0])
 
 		require.IsType(t, &projectStructureTask{}, tasks[1])
-		require.IsType(t, testProjectData[1], tasks[1].(*projectStructureTask).ProjectStructure)
+		require.Equal(t, testProjectData[0], tasks[1].(*projectStructureTask).ProjectStructure)
 
-		require.IsType(t, (*cleanupTask)(nil), tasks[2])
+		require.IsType(t, (*dependencyTask)(nil), tasks[2])
+		require.Equal(t, testProjectData[0].Resources.Dependencies[0], tasks[2].(*dependencyTask).Dependency)
+
+		require.IsType(t, (*dependencyTask)(nil), tasks[3])
+		require.Equal(t, testProjectData[0].Resources.Dependencies[1], tasks[3].(*dependencyTask).Dependency)
+
+		require.IsType(t, (*fileTask)(nil), tasks[4])
+		require.Equal(t, *testProjectData[0].Resources.Files[0], tasks[4].(*fileTask).File)
+
+		require.IsType(t, (*fileTask)(nil), tasks[5])
+		require.Equal(t, *testProjectData[0].Resources.Files[1], tasks[5].(*fileTask).File)
 
 		actualQuestions := make([]*model.Question, 0)
 

@@ -11,12 +11,12 @@ import (
 
 type (
 	ProjectStructureData struct {
+		Resources  `yaml:",inline"`
 		Name       string      `yaml:"name"`
 		Reference  string      `yaml:"reference"`
 		URL        string      `yaml:"url"`
 		Branch     string      `yaml:"branch"`
 		Questions  []*Question `yaml:"questions"`
-		Values     interface{} `yaml:"values"`
 		Language   string      `yaml:"language"`
 		Delimiters string      `yaml:"delimiters"`
 	}
@@ -29,10 +29,14 @@ type (
 	}
 
 	Choice struct {
-		Choice       string                 `yaml:"choice"`
-		Dependencies []interface{}          `yaml:"dependencies"`
-		Files        []*File                `yaml:"files"`
-		Values       map[string]interface{} `yaml:"values"`
+		Choice    string `yaml:"choice"`
+		Resources `yaml:",inline"`
+	}
+
+	Resources struct {
+		Dependencies []any          `yaml:"dependencies"`
+		Files        []*File        `yaml:"files"`
+		Values       map[string]any `yaml:"values"`
 	}
 
 	File struct {

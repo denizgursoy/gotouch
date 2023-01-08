@@ -1,5 +1,4 @@
 //go:build integration_test
-// +build integration_test
 
 package integration
 
@@ -131,6 +130,14 @@ func (z *ZippingTestSuite) TestProjectWithNoUrl() {
 	z.checkFileExists("app-deployment.yaml", true)
 	z.checkFileExists("Dockerfile", true)
 	z.checkFileExists("Makefile", true)
+}
+
+func (z *ZippingTestSuite) TestProjectWithFilesAndDependencies() {
+	z.setInputFile("project-with-files-and-dependencies.txt")
+	z.executeGotouch()
+
+	z.checkFileContent("Dockerfile", "Dockerfile")
+	z.checkFileContent("values.txt", "values.txt")
 }
 
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {

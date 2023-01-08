@@ -18,7 +18,7 @@ type (
 
 	testTask struct {
 		isAskCalled bool
-		returnValue interface{}
+		returnValue any
 		err         error
 	}
 )

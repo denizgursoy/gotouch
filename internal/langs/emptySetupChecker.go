@@ -16,7 +16,7 @@ func (e *emptySetupChecker) Setup() error {
 	return nil
 }
 
-func (e *emptySetupChecker) CheckDependency(dependency interface{}) error {
+func (e *emptySetupChecker) CheckDependency(dependency any) error {
 	return nil
 }
 
@@ -24,7 +24,7 @@ func (e *emptySetupChecker) CleanUp() error {
 	return nil
 }
 
-func (e *emptySetupChecker) GetDependency(dependency interface{}) error {
+func (e *emptySetupChecker) GetDependency(dependency any) error {
 	return nil
 }
 

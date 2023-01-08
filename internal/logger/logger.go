@@ -15,8 +15,8 @@ var (
 	Teal = Color("\033[1;36m%s\033[0m")
 )
 
-func Color(colorString string) func(...interface{}) string {
-	sprint := func(args ...interface{}) string {
+func Color(colorString string) func(...any) string {
+	sprint := func(args ...any) string {
 		return fmt.Sprintf(colorString,
 			fmt.Sprint(args...))
 	}

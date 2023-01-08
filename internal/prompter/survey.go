@@ -1,5 +1,4 @@
 //go:build !integration
-// +build !integration
 
 package prompter
 
@@ -8,6 +7,8 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 )
+
+var pageSize = survey.WithPageSize(20)
 
 func (s srv) AskForString(direction string, validator Validator) (string, error) {
 	result := ""
@@ -39,7 +40,7 @@ func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (any
 	err := survey.AskOne(&survey.Select{
 		Message: direction,
 		Options: keys,
-	}, &selectedChoice)
+	}, &selectedChoice, pageSize)
 
 	return options[selectedChoice], err
 }
@@ -63,7 +64,7 @@ func (s srv) AskForMultipleSelectionFromList(direction string, list []fmt.String
 	err := survey.AskOne(&survey.MultiSelect{
 		Message: direction,
 		Options: keys,
-	}, &selectedChoices)
+	}, &selectedChoices, pageSize)
 
 	results := make([]any, 0)
 	for i := range selectedChoices {

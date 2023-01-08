@@ -48,48 +48,72 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 	}
 
 	choiceValidWithDependencies := &Choice{
-		Choice:       "choice",
-		Dependencies: []interface{}{choice1, choice2},
-		Files:        nil,
+		Choice: "choice",
+		Resources: Resources{
+			Dependencies: []any{choice1, choice2},
+			Files:        nil,
+		},
 	}
 
 	choiceValidOnlyValue := &Choice{
-		Choice:       "choice",
-		Dependencies: nil,
-		Files:        nil,
-		Values: map[string]interface{}{
-			"key": "value",
+		Choice: "choice",
+		Resources: Resources{
+			Dependencies: nil,
+			Files:        nil,
+			Values: map[string]any{
+				"key": "value",
+			},
 		},
 	}
 
 	choiceValidWithFile := &Choice{
-		Choice:       "choice2",
-		Dependencies: nil,
-		Files:        []*File{fileValid},
+		Choice: "choice2",
+		Resources: Resources{
+			Dependencies: nil,
+			Files: []*File{
+				fileValid,
+			},
+		},
 	}
 
 	choiceInvalidEmptyChoice := &Choice{
-		Choice:       "",
-		Dependencies: nil,
-		Files:        []*File{fileValid},
+		Choice: "",
+		Resources: Resources{
+			Dependencies: nil,
+			Files: []*File{
+				fileValid,
+			},
+		},
 	}
 
 	choiceInvalidURL := &Choice{
-		Choice:       "choice",
-		Dependencies: nil,
-		Files:        []*File{fileInvalidUrl},
+		Choice: "choice",
+		Resources: Resources{
+			Dependencies: nil,
+			Files: []*File{
+				fileInvalidUrl,
+			},
+		},
 	}
 
 	choiceEmptyPathFromRoot := &Choice{
-		Choice:       "choice",
-		Dependencies: nil,
-		Files:        []*File{fileInvalidEmptyPathFromRoot},
+		Choice: "choice",
+		Resources: Resources{
+			Dependencies: nil,
+			Files: []*File{
+				fileInvalidEmptyPathFromRoot,
+			},
+		},
 	}
 
 	choiceInvalid1 := &Choice{
-		Choice:       "choice",
-		Dependencies: nil,
-		Files:        []*File{fileValid, fileInvalidHaveBothUrlAndContent},
+		Choice: "choice",
+		Resources: Resources{
+			Dependencies: nil,
+			Files: []*File{
+				fileValid, fileInvalidHaveBothUrlAndContent,
+			},
+		},
 	}
 
 	questionValid := &Question{
@@ -187,7 +211,9 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Reference: "",
 		URL:       validProjectURL,
 		Questions: []*Question{questionValid, questionInvalidWhenCanSelectMultipleTrue},
-		Values:    nil,
+		Resources: Resources{
+			Values: nil,
+		},
 	}
 
 	validProjectStructureWithChoiceHavingOnlyAValue := ProjectStructureData{
@@ -195,7 +221,9 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Reference: "",
 		URL:       validProjectURL,
 		Questions: []*Question{questionWithChoiceHavingOnlyValueField},
-		Values:    nil,
+		Resources: Resources{
+			Values: nil,
+		},
 	}
 
 	invalidProject2 := ProjectStructureData{
@@ -203,7 +231,9 @@ func TestProjectStructureData_IsValid(t *testing.T) {
 		Reference: "",
 		URL:       validProjectURL,
 		Questions: []*Question{questionValid, questionInvalidWhenCanSkipFalse},
-		Values:    nil,
+		Resources: Resources{
+			Values: nil,
+		},
 	}
 
 	invalidProject3 := ProjectStructureData{
@@ -450,8 +480,10 @@ func TestDependencyTest(t *testing.T) {
 		choices := make([]*Choice, 0)
 
 		goDependencyChoice := &Choice{
-			Choice:       "asdsd",
-			Dependencies: []interface{}{"asdsad"},
+			Choice: "asdsd",
+			Resources: Resources{
+				Dependencies: []any{"asdsad"},
+			},
 		}
 
 		choices = append(choices, goDependencyChoice)
@@ -477,12 +509,15 @@ func TestDependencyTest(t *testing.T) {
 
 		wrongGoDependencyChoice := &Choice{
 			Choice: "asdsd",
-			Dependencies: []interface{}{
-				"asdsa",
-				wrongType{
-					name:    "x",
-					version: "y",
-				}},
+			Resources: Resources{
+				Dependencies: []any{
+					"asdsa",
+					wrongType{
+						name:    "x",
+						version: "y",
+					},
+				},
+			},
 		}
 
 		choices = append(choices, wrongGoDependencyChoice)

@@ -7,7 +7,7 @@ import (
 
 type (
 	dependencyTask struct {
-		Dependency      interface{}   `validate:"required"`
+		Dependency      any           `validate:"required"`
 		LanguageChecker langs.Checker `validate:"required"`
 	}
 )

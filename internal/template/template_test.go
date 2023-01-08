@@ -22,7 +22,7 @@ func TestSet(t *testing.T) {
 	}{
 		{
 			name: "default",
-			values: map[string]interface{}{
+			values: map[string]any{
 				"Name": "Deniz",
 			},
 			content: []byte("Hello {{ .Name }}"),
@@ -36,7 +36,7 @@ func TestSet(t *testing.T) {
 				LeftDelim:  "<<",
 				RightDelim: ">>",
 			},
-			values:  map[string]interface{}{"Name": "Deniz"},
+			values:  map[string]any{"Name": "Deniz"},
 			content: []byte("Hello << .Name >>"),
 			want:    []byte("Hello Deniz"),
 			wantErr: false,

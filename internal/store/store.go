@@ -57,9 +57,9 @@ func (s *storeImpl) GetValue(key string) string {
 	return store[key].(string)
 }
 
-func (s *storeImpl) AddValues(key map[string]any) {
-	if key != nil {
-		for key, value := range key {
+func (s *storeImpl) AddValues(values map[string]any) {
+	if len(values) != 0 {
+		for key, value := range values {
 			questionValues[key] = value
 		}
 	}
