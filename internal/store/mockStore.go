@@ -33,6 +33,18 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// AddCustomValues mocks base method.
+func (m *MockStore) AddCustomValues(key map[string]any) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "AddCustomValues", key)
+}
+
+// AddCustomValues indicates an expected call of AddCustomValues.
+func (mr *MockStoreMockRecorder) AddCustomValues(key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddCustomValues", reflect.TypeOf((*MockStore)(nil).AddCustomValues), key)
+}
+
 // AddDependency mocks base method.
 func (m *MockStore) AddDependency(dependency any) {
 	m.ctrl.T.Helper()
@@ -55,6 +67,20 @@ func (m *MockStore) AddValues(key map[string]any) {
 func (mr *MockStoreMockRecorder) AddValues(key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddValues", reflect.TypeOf((*MockStore)(nil).AddValues), key)
+}
+
+// GetCustomValues mocks base method.
+func (m *MockStore) GetCustomValues() map[string]any {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCustomValues")
+	ret0, _ := ret[0].(map[string]any)
+	return ret0
+}
+
+// GetCustomValues indicates an expected call of GetCustomValues.
+func (mr *MockStoreMockRecorder) GetCustomValues() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomValues", reflect.TypeOf((*MockStore)(nil).GetCustomValues))
 }
 
 // GetValue mocks base method.

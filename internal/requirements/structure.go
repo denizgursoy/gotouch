@@ -82,6 +82,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	resourceTasks := getTasks(selectedPS.Resources, p.Logger, p.Manager, p.LanguageChecker, p.Store)
 	tasks = append(tasks, resourceTasks...)
 
+	p.Store.AddCustomValues(selectedPS.Values)
+
 	for _, question := range selectedPS.Questions {
 		requirements = append(requirements, p.getQuestionRequirement(question))
 	}
@@ -133,7 +135,6 @@ func (p *ProjectStructureRequirement) getTemplateRequirement(selectedPS *model.P
 	return &templateRequirement{
 		Prompter: p.Prompter,
 		Store:    p.Store,
-		Values:   selectedPS.Values,
 		Template: templateWithDelimiters,
 	}
 }

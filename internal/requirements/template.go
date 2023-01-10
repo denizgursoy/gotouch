@@ -24,7 +24,6 @@ type (
 	templateRequirement struct {
 		Prompter prompter.Prompter `validate:"required"`
 		Store    store.Store       `validate:"required"`
-		Values   map[string]any    `validate:"required"`
 		Template *template.Template
 	}
 
@@ -37,20 +36,23 @@ type (
 
 func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	tasks := make([]model.Task, 0)
+
+	values := t.Store.GetCustomValues()
+
 	templateTsk := &templateTask{
 		Store:    t.Store,
-		Values:   t.Values,
+		Values:   values,
 		Template: t.Template,
 	}
 
-	if len(t.Values) != 0 {
+	if len(values) != 0 {
 		yes, promptError := t.Prompter.AskForYesOrNo(ChangeValues)
 		if promptError != nil {
 			return nil, nil, promptError
 		}
 
 		if yes {
-			marshal, marshallError := yaml.Marshal(t.Values)
+			marshal, marshallError := yaml.Marshal(values)
 			if marshallError != nil {
 				return nil, nil, marshallError
 			}
