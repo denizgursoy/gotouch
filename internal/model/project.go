@@ -141,7 +141,7 @@ func (p *ProjectStructureData) validateChoice(choice *Choice, questionIndex int,
 		}
 	}
 
-	if len(choice.Files) == 0 && len(choice.Dependencies) == 0 && len(choice.Values) == 0 {
+	if len(choice.Files) == 0 && len(choice.Dependencies) == 0 && len(choice.Values) == 0 && len(choice.CustomValues) == 0 {
 		return ErrEmptyFileAndDependency{
 			projectName:   p.Name,
 			questionIndex: questionIndex,
@@ -311,7 +311,7 @@ func (e ErrEmptyChoice) Error() string {
 }
 
 func (e ErrEmptyFileAndDependency) Error() string {
-	return fmt.Sprintf("%s's %d. question %d. choice does not have any files,values or dependencies. Choice must have at least one file, value or dependency", e.projectName, e.questionIndex+1, e.choiceIndex+1)
+	return fmt.Sprintf("%s's %d. question %d. choice does not have any files,values,custom values or dependencies. Choice must have at least one file, value,custom value or dependency", e.projectName, e.questionIndex+1, e.choiceIndex+1)
 }
 
 func (e ErrEmptyUrlAndContent) Error() string {
