@@ -6,7 +6,7 @@
   url: https://github.com/denizgursoy/go-touch-projects.git # optional
   branch: empty # branch name of git repository to be cloned
   language: go # go, golang 
-  delimiter: "<< >>" # optional to replace default templating values
+  delimiters: "<< >>" # optional to replace default templating values
   values: # optional
     Port: 8080
   questions: #optional
@@ -35,7 +35,7 @@ all template projects in one git repository. This value is taken into considerat
 **`language`**: For Go project, it must be `go` or `golang`. For other languages, it can be omitted. Language is
 appended to name while prompting project's name.
 
-**`delimiter`**: Delimiter is an optional string field. It is used to replace go template library's default delimiter `{{`
+**`delimiters`**: Delimiter is an optional string field. It is used to replace go template library's default delimiter `{{`
 and `}}`. New left and write delimiter should be seperated by space.
 
 **`values`**: Values used to templating files' content or directories' name in the tempalte project. This filed can have

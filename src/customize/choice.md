@@ -10,6 +10,10 @@ location of the file inside project.
 Creator of this yaml might want to customize project if a specific choice is selected, so values written under a choice
 will be appended to general [values](./value). Values of choices cannot be changed by the user.
 
+If you want user to change some values, you can write them  under the **`customValues`**. Those values will 
+be prompted so that user can change.
+
+
 A choice can be written like:
 
 ```yaml
@@ -23,4 +27,6 @@ A choice can be written like:
         pathFromRoot: input.txt
     values:
       httpLibrary: echo
+    customValues:
+      port: 8080
 ```

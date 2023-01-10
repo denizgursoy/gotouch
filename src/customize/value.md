@@ -29,7 +29,8 @@ When you exit your the editor, gotouch will save the values and continue creatin
 project structure will be merged with all selected choices' values.
 
 ::: warning
-Be aware that only values under the selected project structure can be changed by users. Values of selected choices cannot be changed.
+Be aware that only **`values`** under the selected project structure can be changed by users. Values of selected choices cannot be changed.
+If you need some changeable values use  **`customValues`** of choices.
 :::
 
 ## Default Values
