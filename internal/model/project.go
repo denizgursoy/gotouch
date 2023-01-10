@@ -29,8 +29,9 @@ type (
 	}
 
 	Choice struct {
-		Choice    string `yaml:"choice"`
-		Resources `yaml:",inline"`
+		Choice       string `yaml:"choice"`
+		Resources    `yaml:",inline"`
+		CustomValues map[string]any `yaml:"customValues"`
 	}
 
 	Resources struct {

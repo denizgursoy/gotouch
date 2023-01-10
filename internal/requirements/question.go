@@ -81,6 +81,7 @@ func (q *QuestionRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 		choiceTasks := getTasks(selection.Resources, q.Logger, q.Manager, q.LanguageChecker, q.Store)
 		tasks = append(tasks, choiceTasks...)
 		q.Store.AddValues(selection.Values)
+		q.Store.AddCustomValues(selection.CustomValues)
 	}
 
 	return tasks, nil, nil

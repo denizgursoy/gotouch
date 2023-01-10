@@ -85,10 +85,11 @@ func TestStructure_AskForInput(t *testing.T) {
 			options = append(options, datum)
 		}
 
+		selectedProjectStructure := testProjectData[0]
 		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
 			AskForSelectionFromList(gomock.Eq(SelectProjectTypeDirection), gomock.Eq(options)).
-			Return(testProjectData[0], nil).
+			Return(selectedProjectStructure, nil).
 			Times(1)
 
 		requirement.Prompter.(*prompter.MockPrompter).
@@ -96,6 +97,16 @@ func TestStructure_AskForInput(t *testing.T) {
 			AskForString(gomock.Eq(ModuleNameDirection), gomock.Any()).
 			Return("", nil).
 			Times(1)
+
+		for _, dependency := range selectedProjectStructure.Dependencies {
+			requirement.Store.(*store.MockStore).
+				EXPECT().
+				AddDependency(gomock.Eq(dependency))
+		}
+
+		requirement.Store.(*store.MockStore).
+			EXPECT().
+			AddCustomValues(gomock.Eq(selectedProjectStructure.Values)).Times(1)
 
 		tasks, requirements, err := requirement.AskForInput()
 
@@ -106,19 +117,19 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.IsType(t, (*projectNameTask)(nil), tasks[0])
 
 		require.IsType(t, &projectStructureTask{}, tasks[1])
-		require.Equal(t, testProjectData[0], tasks[1].(*projectStructureTask).ProjectStructure)
+		require.Equal(t, selectedProjectStructure, tasks[1].(*projectStructureTask).ProjectStructure)
 
 		require.IsType(t, (*dependencyTask)(nil), tasks[2])
-		require.Equal(t, testProjectData[0].Resources.Dependencies[0], tasks[2].(*dependencyTask).Dependency)
+		require.Equal(t, selectedProjectStructure.Resources.Dependencies[0], tasks[2].(*dependencyTask).Dependency)
 
 		require.IsType(t, (*dependencyTask)(nil), tasks[3])
-		require.Equal(t, testProjectData[0].Resources.Dependencies[1], tasks[3].(*dependencyTask).Dependency)
+		require.Equal(t, selectedProjectStructure.Resources.Dependencies[1], tasks[3].(*dependencyTask).Dependency)
 
 		require.IsType(t, (*fileTask)(nil), tasks[4])
-		require.Equal(t, *testProjectData[0].Resources.Files[0], tasks[4].(*fileTask).File)
+		require.Equal(t, *selectedProjectStructure.Resources.Files[0], tasks[4].(*fileTask).File)
 
 		require.IsType(t, (*fileTask)(nil), tasks[5])
-		require.Equal(t, *testProjectData[0].Resources.Files[1], tasks[5].(*fileTask).File)
+		require.Equal(t, *selectedProjectStructure.Resources.Files[1], tasks[5].(*fileTask).File)
 
 		actualQuestions := make([]*model.Question, 0)
 
@@ -129,7 +140,6 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.Equal(t, questions, actualQuestions)
 
 		require.IsType(t, &templateRequirement{}, requirements[2])
-		require.IsType(t, testProjectData[0].Values, requirements[2].(*templateRequirement).Values)
 		require.IsType(t, (*cleanupRequirement)(nil), requirements[3])
 		require.IsType(t, (*initRequirement)(nil), requirements[4])
 	})
@@ -195,7 +205,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 	mockManager := manager.NewMockManager(controller)
 	mockExecutor := executor.NewMockExecutor(controller)
 	mockLogger := logger.NewLogger()
-	mockStore := store.GetInstance()
+	mockStore := store.NewMockStore(controller)
 	mockCloner := cloner.NewMockCloner(controller)
 	mockRunner := commandrunner.NewMockRunner(controller)
 

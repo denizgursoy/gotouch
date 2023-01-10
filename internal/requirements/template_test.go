@@ -16,12 +16,13 @@ func TestAskForInput(t *testing.T) {
 		defer controller.Finish()
 
 		mockPrompter := prompter.NewMockPrompter(controller)
-		mockStore := store.GetInstance()
+		mockStore := store.NewMockStore(controller)
+
+		mockStore.EXPECT().GetCustomValues().Times(1)
 
 		requirement := templateRequirement{
 			Prompter: mockPrompter,
 			Store:    mockStore,
-			Values:   nil,
 		}
 
 		input, requirements, err := requirement.AskForInput()

@@ -42,6 +42,9 @@ var (
 				"X": "sds",
 			},
 		},
+		CustomValues: map[string]any{
+			"foo": "bar",
+		},
 	}
 	choice2 = model.Choice{
 		Choice: "choice 2",
@@ -52,6 +55,9 @@ var (
 				"Y": "sds",
 			},
 		},
+		CustomValues: map[string]any{
+			"foo2": "bar2",
+		},
 	}
 	choice3 = model.Choice{
 		Choice: "choice 3",
@@ -61,6 +67,9 @@ var (
 			Values: map[string]any{
 				"Z": "sds",
 			},
+		},
+		CustomValues: map[string]any{
+			"foo3": "bar3",
 		},
 	}
 
@@ -98,6 +107,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		defer controller.Finish()
 
 		requirement.Store.(*store.MockStore).EXPECT().AddValues(gomock.Eq(yesNoQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddCustomValues(gomock.Eq(yesNoQuestion.Choices[0].CustomValues))
 		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Eq(dependency1))
 		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Eq(dependency2))
 		requirement.Prompter.(*prompter.MockPrompter).EXPECT().AskForYesOrNo(gomock.Eq(yesNoQuestion.Direction)).Return(true, nil).Times(1)
@@ -150,6 +160,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Times(1)
 
 		requirement.Store.(*store.MockStore).EXPECT().AddValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddCustomValues(gomock.Eq(multipleChoiceQuestion.Choices[0].CustomValues))
 		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Any()).AnyTimes()
 
 		_, _, _ = requirement.AskForInput()
@@ -172,6 +183,7 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 			Times(1)
 
 		requirement.Store.(*store.MockStore).EXPECT().AddValues(gomock.Eq(multipleChoiceQuestion.Choices[0].Values))
+		requirement.Store.(*store.MockStore).EXPECT().AddCustomValues(gomock.Eq(multipleChoiceQuestion.Choices[0].CustomValues))
 		requirement.Store.(*store.MockStore).EXPECT().AddDependency(gomock.Any()).AnyTimes()
 
 		_, _, _ = requirement.AskForInput()
@@ -213,10 +225,8 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		for _, selectedChoice := range selectedChoices {
 			chc := selectedChoice.(*model.Choice)
 
-			requirement.Store.(*store.MockStore).
-				EXPECT().
-				AddValues(gomock.Eq(chc.Values)).
-				Times(1)
+			requirement.Store.(*store.MockStore).EXPECT().AddValues(gomock.Eq(chc.Values)).Times(1)
+			requirement.Store.(*store.MockStore).EXPECT().AddCustomValues(gomock.Eq(chc.CustomValues)).Times(1)
 
 			for _, dependency := range chc.Dependencies {
 				requirement.Store.(*store.MockStore).

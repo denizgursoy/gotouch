@@ -18,6 +18,8 @@ type (
 		GetValue(key string) string
 		AddValues(key map[string]any)
 		GetValues() map[string]any
+		AddCustomValues(key map[string]any)
+		GetCustomValues() map[string]any
 		AddDependency(dependency any)
 	}
 
@@ -25,11 +27,12 @@ type (
 )
 
 var (
-	store          map[string]any
-	questionValues map[string]any
-	dependencies   []any
-	keyValueStore  Store
-	once           = sync.Once{}
+	store                map[string]any
+	questionValues       map[string]any
+	customQuestionValues map[string]any
+	dependencies         []any
+	keyValueStore        Store
+	once                 = sync.Once{}
 )
 
 func init() {
@@ -40,6 +43,7 @@ func GetInstance() Store {
 		keyValueStore = newStore()
 		dependencies = make([]any, 0)
 		questionValues = map[string]any{}
+		customQuestionValues = map[string]any{}
 		store = map[string]any{}
 	})
 	return keyValueStore
@@ -58,11 +62,7 @@ func (s *storeImpl) GetValue(key string) string {
 }
 
 func (s *storeImpl) AddValues(values map[string]any) {
-	if len(values) != 0 {
-		for key, value := range values {
-			questionValues[key] = value
-		}
-	}
+	appendToMap(questionValues, values)
 }
 
 func (s *storeImpl) GetValues() map[string]any {
@@ -72,4 +72,20 @@ func (s *storeImpl) GetValues() map[string]any {
 
 func (s *storeImpl) AddDependency(dependency any) {
 	dependencies = append(dependencies, dependency)
+}
+
+func (s *storeImpl) AddCustomValues(values map[string]any) {
+	appendToMap(customQuestionValues, values)
+}
+
+func (s *storeImpl) GetCustomValues() map[string]any {
+	return customQuestionValues
+}
+
+func appendToMap(target, source map[string]any) {
+	if len(source) != 0 {
+		for key, value := range source {
+			target[key] = value
+		}
+	}
 }
