@@ -1,6 +1,7 @@
 package requirements
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -88,7 +89,8 @@ func (t *templateTask) Complete() error {
 			}
 			if !info.IsDir() {
 				if err := t.AddSimpleTemplate(filePath); err != nil {
-					return err
+					prefix := strings.TrimPrefix(filePath, path)
+					return fmt.Errorf("could not template file=%s, error=%v\n", prefix, err)
 				}
 			}
 			paths = append(paths, filePath)

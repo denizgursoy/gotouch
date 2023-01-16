@@ -43,7 +43,7 @@ func (t *Template) Execute(v any, content string) (string, error) {
 	var b bytes.Buffer
 	// Execute the template and write the output to the buffer
 	if err := textTemplate.Must(t.template.Parse(content)).Execute(&b, v); err != nil {
-		return "", fmt.Errorf("Execute error: %w", err)
+		return "", fmt.Errorf("execute error: %w", err)
 	}
 
 	return b.String(), nil
@@ -51,7 +51,11 @@ func (t *Template) Execute(v any, content string) (string, error) {
 
 func (t *Template) ExecuteContent(writer io.Writer, v any, content []byte) error {
 	// Execute the template and write the output to the buffer
-	if err := textTemplate.Must(t.template.Parse(string(content))).Execute(writer, v); err != nil {
+	txtTemplate, err := t.template.Parse(string(content))
+	if err != nil {
+		return err
+	}
+	if err := txtTemplate.Execute(writer, v); err != nil {
 		return fmt.Errorf("ExecuteContent error: %w", err)
 	}
 
