@@ -7,6 +7,13 @@
   branch: empty # branch name of git repository to be cloned
   language: go # go, golang 
   delimiters: "<< >>" # optional to replace default templating values
+  dependencies: # optional 
+    - github.com/labstack/echo/v4
+  files: # optional 
+   - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+     pathFromRoot: Dockerfile
+   - content: "foo"
+     pathFromRoot: bar.txt
   values: # optional
     Port: 8080
   questions: #optional
@@ -36,6 +43,14 @@ all template projects in one git repository. This value is taken into considerat
 appended to name while prompting project's name.
 
 **`delimiters`**: Delimiter is an optional string field. It is used to replace go template library's default delimiter `{{`
+and `}}`. New left and write delimiter should be seperated by space.
+
+**`files`**: Same as files field of [choice](./choice.md). Allows you to create files when project structure is selected.
+
+**`dependencies`**: Same as dependencies field of [choice](./choice.md). Allows you to add dependencies when project structure is selected.
+It might be useful in some languages to get the latest version of a dependency.
+
+**`values`**: Delimiter is an optional string field. It is used to replace go template library's default delimiter `{{`
 and `}}`. New left and write delimiter should be seperated by space.
 
 **`values`**: Values used to templating files' content or directories' name in the tempalte project. This filed can have

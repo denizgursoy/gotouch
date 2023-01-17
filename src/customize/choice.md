@@ -24,7 +24,7 @@ A choice can be written like:
       - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
         pathFromRoot: Dockerfile
       - content: "foo"
-        pathFromRoot: input.txt
+        pathFromRoot: bar.txt
     values:
       httpLibrary: echo
     customValues:
