@@ -5,13 +5,12 @@
 you to the [repeatit.io](https://repeatit.io/).
 
 ### Use a value as text
-If you have a value, for example `Port`, and want to write its value as text, you should write it between delimiters `{{` `}}` with a leading `.` as
-::: v-pre`{{.Port}}`:::.
+If you have a value, for example `Port`, and want to write its value as text, you should write it between delimiters `{{` `}}` with a leading `.` as ::: v-pre`{{.Port}}`::: .
 See the examples:
 
-[Port Example](shorturl.at/HKL37)
+[Port Example](https://shorturl.at/HKL37)
 
-[Mail Example](shorturl.at/mwyJM)
+[Mail Example](https://shorturl.at/mwyJM)
 
 ### If, else if, else 
 Go template library allows you to do conditional rendering with `if` statements . You can use following keywords in `if` statements to compare values
@@ -33,9 +32,9 @@ ge
 
 See examples:
 
-[HTTP server example](shorturl.at/FHQW2)
+[HTTP server example](https://shorturl.at/FHQW2)
 
-[To check boolean](shorturl.at/hvxyz)
+[To check boolean](https://shorturl.at/hvxyz)
 
 ### Iterate an array
 Values:
