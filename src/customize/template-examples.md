@@ -6,9 +6,7 @@ you to the [repeatit.io](https://repeatit.io/).
 
 ### Use a value as text
 If you have a value, for example `Port`, and want to write its value as text, you should write it between delimiters `{{` `}}` with a leading `.` as
-::: v-pre
-`{{.Port}}`
-:::.
+::: v-pre`{{.Port}}`:::.
 See the examples:
 
 [Port Example](shorturl.at/HKL37)
