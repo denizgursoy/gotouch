@@ -32,9 +32,7 @@ ge
 
 See examples:
 
-[HTTP server example](shorturl.at/FHQW2)
 
-[To check boolean](shorturl.at/hvxyz)
 
 ### Iterate an array
 Values:
