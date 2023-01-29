@@ -1,4 +1,12 @@
-# Go template examples
+# Go template
+
+[Go template](https://pkg.go.dev/text/template) library is a powerful library. Some examples can be found below. 
+[repeatit.io](https://repeatit.io/) is a great place to learn/practice templating. Following examples will redirect
+you to the [repeatit.io](https://repeatit.io/).
+
+## Use a value
+
+[Example](https://repeatit.io/#/share/eyJ0ZW1wbGF0ZSI6InBhY2thZ2UgbWFpblxuXG5pbXBvcnQgKFxuICAgXCJpb1wiXG4gICBcImxvZ1wiXG4gICBcIm5ldC9odHRwXCJcbilcblxuZnVuYyBtYWluKCkge1xuICAgaHR0cC5IYW5kbGVGdW5jKFwiL1wiLCBnZXRSb290KVxuICAgbG9nLkZhdGFsbG4oaHR0cC5MaXN0ZW5BbmRTZXJ2ZShcIjp7eyAuUG9ydCB9fVwiLCBuaWwpKVxufVxuXG5mdW5jIGdldFJvb3QodyBodHRwLlJlc3BvbnNlV3JpdGVyLCByICpodHRwLlJlcXVlc3QpIHtcbiAgIGlvLldyaXRlU3RyaW5nKHcsIFwiU2VydmVyIGdvdCB0aGUgcmVxdWVzdFxcblwiKVxufSIsImlucHV0IjoiUG9ydDogODA4MCIsImNvbmZpZyI6eyJ0ZW1wbGF0ZSI6InRleHQiLCJmdWxsU2NyZWVuSFRNTCI6ZmFsc2UsImZ1bmN0aW9ucyI6WyJzcHJpZyJdLCJvcHRpb25zIjpbImxpdmUiXSwiaW5wdXRUeXBlIjoieWFtbCJ9fQ==)
 
 ## If, else if, else 
 You can use following keywords in if statements to compare values
