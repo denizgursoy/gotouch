@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
@@ -48,6 +49,7 @@ Gotouch will ask the questions in the selected project structure in order.`,
 
 	createCommand.AddCommand(CreatePackageCommand(cmdr))
 	createCommand.AddCommand(CreateValidateCommand(cmdr))
+	createCommand.AddCommand(CreateConfigCommand())
 
 	return createCommand
 }
@@ -87,4 +89,37 @@ See https://raw.githubusercontent.com/denizgursoy/gotouch/main/examples/complete
 	validateCommand.Flags().StringP(FileFlagName, "f", "", "input properties yaml")
 
 	return validateCommand
+}
+
+func CreateConfigCommand() *cobra.Command {
+	configCommand := &cobra.Command{
+		Use:   "config",
+		Short: "Set/Unset values",
+	}
+
+	configCommand.AddCommand(&cobra.Command{
+		Use:  "set",
+		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(2)),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return setConfig(args[0], args[1])
+		},
+	})
+	configCommand.AddCommand(&cobra.Command{
+		Use:  "unset",
+		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(1)),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return unsetConfig(args[0])
+		},
+	})
+	return configCommand
+}
+
+func isConfigurable(cmd *cobra.Command, args []string) error {
+	configurableSettings := []string{"url"}
+	for _, confArg := range configurableSettings {
+		if confArg == args[0] {
+			return nil
+		}
+	}
+	return fmt.Errorf("%s is not a valid argumet", args[0])
 }
