@@ -123,5 +123,5 @@ func isConfigurable(cmd *cobra.Command, args []string) error {
 			return nil
 		}
 	}
-	return fmt.Errorf("%s is not a valid argumet", args[0])
+	return fmt.Errorf("%s is not a valid argument", args[0])
 }

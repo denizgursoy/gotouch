@@ -14,7 +14,7 @@ type (
 	}
 )
 
-func (c *operator) CompressDirectory(opts *CompressDirectoryOptions) error {
+func (o *operator) CompressDirectory(opts *CompressDirectoryOptions) error {
 	targetDirectory := ""
 	if opts.TargetDirectory != nil {
 		targetDirectory = *opts.TargetDirectory

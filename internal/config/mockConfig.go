@@ -61,3 +61,17 @@ func (mr *MockConfigManagerMockRecorder) SetValueOf(key, value interface{}) *gom
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetValueOf", reflect.TypeOf((*MockConfigManager)(nil).SetValueOf), key, value)
 }
+
+// UnsetValuesOf mocks base method.
+func (m *MockConfigManager) UnsetValuesOf(key string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UnsetValuesOf", key)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UnsetValuesOf indicates an expected call of UnsetValuesOf.
+func (mr *MockConfigManagerMockRecorder) UnsetValuesOf(key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnsetValuesOf", reflect.TypeOf((*MockConfigManager)(nil).UnsetValuesOf), key)
+}

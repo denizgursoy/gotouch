@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
+	"github.com/denizgursoy/gotouch/internal/config"
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
@@ -53,6 +54,7 @@ func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 			Store:         appStore,
 			Cloner:        cloner.GetInstance(),
 			CommandRunner: commandrunner.GetInstance(appStore),
+			ConfigManager: config.NewConfigManager(newLogger),
 		}
 
 		err := cmdr.CreateNewProject(&options)

@@ -2,6 +2,7 @@ package commands
 
 import (
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
+	"github.com/denizgursoy/gotouch/internal/config"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
@@ -53,6 +54,7 @@ func TestGetCreateCommandHandler(t *testing.T) {
 				Store:         appStore,
 				Cloner:        cloner.GetInstance(),
 				CommandRunner: commandrunner.GetInstance(appStore),
+				ConfigManager: config.NewConfigManager(logger.NewLogger()),
 			}
 
 			mockCommander.EXPECT().CreateNewProject(gomock.Eq(expectedCall))
