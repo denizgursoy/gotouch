@@ -2,6 +2,8 @@ package commands
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/config"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"os"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
@@ -92,6 +94,7 @@ See https://raw.githubusercontent.com/denizgursoy/gotouch/main/examples/complete
 }
 
 func CreateConfigCommand() *cobra.Command {
+	manager := config.NewConfigManager(logger.NewLogger())
 	configCommand := &cobra.Command{
 		Use:   "config",
 		Short: "Set/Unset values",
@@ -101,22 +104,21 @@ func CreateConfigCommand() *cobra.Command {
 		Use:  "set",
 		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(2)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return setConfig(args[0], args[1])
+			return manager.SetValueOf(args[0], args[1])
 		},
 	})
 	configCommand.AddCommand(&cobra.Command{
 		Use:  "unset",
 		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(1)),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return unsetConfig(args[0])
+			return manager.UnsetValuesOf(args[0])
 		},
 	})
 	return configCommand
 }
 
 func isConfigurable(cmd *cobra.Command, args []string) error {
-	configurableSettings := []string{"url"}
-	for _, confArg := range configurableSettings {
+	for _, confArg := range config.ConfigurableSettings {
 		if confArg == args[0] {
 			return nil
 		}
