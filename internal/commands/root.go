@@ -1,6 +1,9 @@
 package commands
 
 import (
+	"fmt"
+	"github.com/denizgursoy/gotouch/internal/config"
+	"github.com/denizgursoy/gotouch/internal/logger"
 	"os"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
@@ -48,6 +51,7 @@ Gotouch will ask the questions in the selected project structure in order.`,
 
 	createCommand.AddCommand(CreatePackageCommand(cmdr))
 	createCommand.AddCommand(CreateValidateCommand(cmdr))
+	createCommand.AddCommand(CreateConfigCommand())
 
 	return createCommand
 }
@@ -87,4 +91,44 @@ See https://raw.githubusercontent.com/denizgursoy/gotouch/main/examples/complete
 	validateCommand.Flags().StringP(FileFlagName, "f", "", "input properties yaml")
 
 	return validateCommand
+}
+
+func CreateConfigCommand() *cobra.Command {
+	lgr := logger.NewLogger()
+	manager := config.NewConfigManager(logger.NewLogger())
+	configCommand := &cobra.Command{
+		Use:   "config",
+		Short: "Set/Unset values",
+	}
+
+	configCommand.AddCommand(&cobra.Command{
+		Use:  "set",
+		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(2)),
+		Run: func(cmd *cobra.Command, args []string) {
+			err := manager.SetValueOf(args[0], args[1])
+			if err != nil {
+				lgr.LogErrorIfExists(err)
+			}
+		},
+	})
+	configCommand.AddCommand(&cobra.Command{
+		Use:  "unset",
+		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(1)),
+		Run: func(cmd *cobra.Command, args []string) {
+			err := manager.UnsetValuesOf(args[0])
+			if err != nil {
+				lgr.LogErrorIfExists(err)
+			}
+		},
+	})
+	return configCommand
+}
+
+func isConfigurable(cmd *cobra.Command, args []string) error {
+	for _, confArg := range config.ConfigurableSettings {
+		if confArg == args[0] {
+			return nil
+		}
+	}
+	return fmt.Errorf("%s is not a valid argument", args[0])
 }

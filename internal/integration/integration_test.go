@@ -4,6 +4,7 @@ package integration
 
 import (
 	"fmt"
+	"github.com/denizgursoy/gotouch/internal/config"
 	"log"
 	"os"
 	"os/exec"
@@ -140,6 +141,23 @@ func (z *ZippingTestSuite) TestProjectWithFilesAndDependencies() {
 	z.checkFileContent("values.txt", "values.txt")
 }
 
+func (z *ZippingTestSuite) TestProjectConfig() {
+	name, err := config.GetFileName()
+	z.Nil(err)
+
+	if _, err = os.Stat(name); err == nil {
+		err = os.Remove(name)
+	}
+
+	z.executeGotouchWithArgs("config", "set", "url", "test-url")
+	expectedFilePath := fmt.Sprintf("%s/internal/testdata/%s", z.binaryDir, config.ConfigFileName)
+	z.checkFileContentsWithAbsPath(name, expectedFilePath)
+
+	z.executeGotouchWithArgs("config", "unset", "url")
+	expectedFilePath = fmt.Sprintf("%s/internal/testdata/%s", z.binaryDir, config.ConfigFileName+"-empty")
+	z.checkFileContentsWithAbsPath(name, expectedFilePath)
+}
+
 func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 	directories := make([]string, 0)
 	directories = append(directories, "api", "build", "cmd", "configs", "deployments", "web")
@@ -165,14 +183,16 @@ func (z *ZippingTestSuite) checkFileExists(fileName string, exists bool) {
 
 func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
 	actualFilePath := fmt.Sprintf("%s/%s", z.createdProjectPath, fileName)
+	expectedFilePath := fmt.Sprintf("%s/internal/testdata/%s", z.binaryDir, expectedFile)
+	z.checkFileContentsWithAbsPath(actualFilePath, expectedFilePath)
+}
+
+func (z *ZippingTestSuite) checkFileContentsWithAbsPath(actualFilePath, expectedFilePath string) {
 	actualFileContent, err := os.ReadFile(actualFilePath)
 	z.Nil(err)
-
-	expectedFilePath := fmt.Sprintf("%s/internal/testdata/%s", z.binaryDir, expectedFile)
 	expectedFileContent, err := os.ReadFile(expectedFilePath)
 	z.Nil(err)
-
-	z.EqualValues(expectedFileContent, actualFileContent)
+	z.EqualValues(actualFileContent, expectedFileContent)
 }
 
 func (z *ZippingTestSuite) checkModuleName(expectedModuleName string, dependencies []string) {
@@ -208,13 +228,7 @@ func (z *ZippingTestSuite) checkFilesExist(files []string) {
 }
 
 func (z *ZippingTestSuite) CmdExec(args ...string) {
-
-	baseCmd := args[0]
-	cmdArgs := args[1:]
-
-	cmdArgs = append(cmdArgs, "-f", PropertiesUrl)
-
-	cmd := exec.Command(baseCmd, cmdArgs...)
+	cmd := exec.Command(args[0], args[1:]...)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
@@ -235,7 +249,16 @@ func (z *ZippingTestSuite) CmdExec(args ...string) {
 }
 
 func (z *ZippingTestSuite) executeGotouch() {
-	z.CmdExec(z.binaryPath)
+	args := make([]string, 0)
+	args = append(args, z.binaryPath, "-f", PropertiesUrl)
+	z.CmdExec(args...)
+}
+
+func (z *ZippingTestSuite) executeGotouchWithArgs(gotouchArgs ...string) {
+	args := make([]string, 0)
+	args = append(args, z.binaryPath)
+	args = append(args, gotouchArgs...)
+	z.CmdExec(args...)
 }
 
 func (z *ZippingTestSuite) setInputFile(fileName string) {

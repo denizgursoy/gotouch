@@ -3,6 +3,8 @@ package operator
 import (
 	"errors"
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
+	"github.com/denizgursoy/gotouch/internal/config"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 
@@ -35,15 +37,23 @@ type (
 		Store         store.Store           `validate:"required"`
 		Cloner        cloner.Cloner         `validate:"required"`
 		CommandRunner commandrunner.Runner  `validate:"required"`
+		ConfigManager config.ConfigManager  `validate:"required"`
 	}
 )
 
-func (c *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
+func (o *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 	if validationError := isValid(opts); validationError != nil {
 		return validationError
 	}
 
 	newProjectRequirements := make(executor.Requirements, 0)
+	if opts.Path == nil || len(strings.TrimSpace(*opts.Path)) == 0 {
+		path, err := opts.ConfigManager.GetDefaultPath()
+		if err != nil {
+			return err
+		}
+		opts.Path = &path
+	}
 
 	projects, err := opts.Lister.GetProjectList(opts.Path)
 	if err != nil {

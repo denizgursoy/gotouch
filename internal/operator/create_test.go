@@ -2,6 +2,7 @@ package operator
 
 import (
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
+	"github.com/denizgursoy/gotouch/internal/config"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -31,10 +32,19 @@ func TestCreateNewProject(t *testing.T) {
 		defer controller.Finish()
 
 		expectedProjectData := []*model.ProjectStructureData{&project1}
+
+		defaultFilePath := "test-file-path"
+
 		options.Lister.(*lister.MockLister).
 			EXPECT().
-			GetProjectList(nil).
+			GetProjectList(&defaultFilePath).
 			Return(expectedProjectData, nil).
+			Times(1)
+
+		options.ConfigManager.(*config.MockConfigManager).
+			EXPECT().
+			GetDefaultPath().
+			Return(defaultFilePath, nil).
 			Times(1)
 
 		options.Executor.(*executor.MockExecutor).
@@ -116,6 +126,7 @@ func createTestNewProjectOptions(t *testing.T, path *string) (CreateNewProjectOp
 	mockStore := store.GetInstance()
 	mockCloner := cloner.NewMockCloner(controller)
 	mockRunner := commandrunner.NewMockRunner(controller)
+	mockConfigManager := config.NewMockConfigManager(controller)
 
 	return CreateNewProjectOptions{
 		Lister:        mockLister,
@@ -128,6 +139,7 @@ func createTestNewProjectOptions(t *testing.T, path *string) (CreateNewProjectOp
 		Path:          nil,
 		Cloner:        mockCloner,
 		CommandRunner: mockRunner,
+		ConfigManager: mockConfigManager,
 	}, controller
 
 }

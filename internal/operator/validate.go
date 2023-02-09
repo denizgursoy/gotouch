@@ -16,7 +16,7 @@ type (
 	}
 )
 
-func (c *operator) ValidateYaml(opts *ValidateYamlOptions) error {
+func (o *operator) ValidateYaml(opts *ValidateYamlOptions) error {
 	if validationError := isValidYaml(opts); validationError != nil {
 		return validationError
 	}
