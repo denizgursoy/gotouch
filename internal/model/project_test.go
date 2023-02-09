@@ -19,7 +19,6 @@ var (
 )
 
 func TestProjectStructureData_IsValid(t *testing.T) {
-
 	choice1 := "1"
 	choice2 := "2"
 

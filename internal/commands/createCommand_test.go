@@ -1,9 +1,10 @@
 package commands
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/config"
-	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
 

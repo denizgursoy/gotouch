@@ -1,10 +1,11 @@
 package requirements
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/langs"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func Test_cleanupTask_Complete(t *testing.T) {

@@ -3,12 +3,13 @@ package compressor
 import (
 	"errors"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/logger"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/denizgursoy/gotouch/internal/logger"
 
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/store"

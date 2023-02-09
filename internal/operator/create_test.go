@@ -1,9 +1,10 @@
 package operator
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/config"
-	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
@@ -141,5 +142,4 @@ func createTestNewProjectOptions(t *testing.T, path *string) (CreateNewProjectOp
 		CommandRunner: mockRunner,
 		ConfigManager: mockConfigManager,
 	}, controller
-
 }

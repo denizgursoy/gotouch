@@ -2,9 +2,10 @@ package commands
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/denizgursoy/gotouch/internal/config"
 	"github.com/denizgursoy/gotouch/internal/logger"
-	"os"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/spf13/cobra"

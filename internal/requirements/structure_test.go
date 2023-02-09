@@ -2,10 +2,11 @@ package requirements
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/langs"
-	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -221,7 +222,6 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 		Cloner:          mockCloner,
 		CommandRunner:   mockRunner,
 	}, controller
-
 }
 
 func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller) {

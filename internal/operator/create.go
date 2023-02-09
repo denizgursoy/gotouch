@@ -2,9 +2,10 @@ package operator
 
 import (
 	"errors"
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/config"
-	"strings"
 
 	"github.com/go-playground/validator/v10"
 

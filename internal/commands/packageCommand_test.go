@@ -1,17 +1,17 @@
 package commands
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestGetPackageCommandHandler(t *testing.T) {
 	t.Run("should package successfully", func(t *testing.T) {
-
 		type arg struct {
 			source         *string
 			target         *string

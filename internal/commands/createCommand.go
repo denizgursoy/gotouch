@@ -1,10 +1,11 @@
 package commands
 
 import (
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/config"
-	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/operator"
 

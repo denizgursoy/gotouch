@@ -28,7 +28,6 @@ func init() {
 	for _, line := range strings.Split(string(body), "\n") {
 		urls = append(urls, line)
 	}
-
 }
 
 func (s srv) AskForString(direction string, validator Validator) (string, error) {

@@ -3,8 +3,9 @@ package requirements
 import (
 	"errors"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/langs"
 	"testing"
+
+	"github.com/denizgursoy/gotouch/internal/langs"
 
 	"github.com/denizgursoy/gotouch/internal/store"
 
@@ -255,7 +256,6 @@ func TestQuestionRequirement_AskForInput(t *testing.T) {
 		require.Equal(t, choices[2].(*model.Choice).Dependencies[1], tasks[5].(*dependencyTask).Dependency)
 		require.Equal(t, *choices[2].(*model.Choice).Files[0], tasks[6].(*fileTask).File)
 	})
-
 }
 
 func getTestQuestionRequirement(t *testing.T, question model.Question) (*QuestionRequirement, *gomock.Controller) {

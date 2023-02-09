@@ -131,7 +131,7 @@ func (p *ProjectStructureData) validateQuestion(q *Question, questionIndex int) 
 	return nil
 }
 
-func (p *ProjectStructureData) validateChoice(choice *Choice, questionIndex int, choiceIndex int) error {
+func (p *ProjectStructureData) validateChoice(choice *Choice, questionIndex, choiceIndex int) error {
 	if len(strings.TrimSpace(choice.Choice)) == 0 {
 		return ErrEmptyChoice{
 			projectName:   p.Name,
@@ -218,7 +218,6 @@ func (p *ProjectStructureData) validateChoice(choice *Choice, questionIndex int,
 	}
 
 	if len(choice.Dependencies) > 0 {
-
 		for dependencyIndex, dependency := range choice.Dependencies {
 			if err := langs.GetChecker(p.Language, nil, nil, nil).CheckDependency(dependency); err != nil {
 				return ErrWrongDependencyFormat{

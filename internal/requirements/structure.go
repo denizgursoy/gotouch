@@ -2,9 +2,10 @@ package requirements
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/template"
-	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -59,7 +60,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, err
 	}
 
-	//TODO: test
+	// TODO: test
 	p.LanguageChecker = langs.GetChecker(selectedPS.Language, p.Logger, p.Store, p.CommandRunner)
 	if setupError := p.LanguageChecker.CheckSetup(); setupError != nil {
 		return nil, nil, setupError

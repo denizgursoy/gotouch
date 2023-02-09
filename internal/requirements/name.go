@@ -40,7 +40,7 @@ func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requiremen
 		return nil, nil, err
 	}
 
-	//TODO: move validateModuleName to langs
+	// TODO: move validateModuleName to langs
 	moduleName, err := p.Prompter.AskForString(ModuleNameDirection, p.validateModuleName)
 	if err != nil {
 		return nil, nil, err

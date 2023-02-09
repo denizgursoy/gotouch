@@ -96,7 +96,6 @@ func (t *templateTask) Complete() error {
 			paths = append(paths, filePath)
 			return nil
 		})
-
 	if err != nil {
 		return err
 	}
@@ -136,7 +135,6 @@ func (t *templateTask) templateDirectoryNames(folders []string) error {
 	for len(folders) > 0 {
 		oldName := folders[0]
 		newName, err := t.Template.Execute(t.Values, oldName)
-
 		if err != nil {
 			return err
 		}

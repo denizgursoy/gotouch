@@ -3,12 +3,13 @@ package langs
 import (
 	"errors"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/commandrunner"
-	"github.com/denizgursoy/gotouch/internal/logger"
-	"github.com/denizgursoy/gotouch/internal/store"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/denizgursoy/gotouch/internal/commandrunner"
+	"github.com/denizgursoy/gotouch/internal/logger"
+	"github.com/denizgursoy/gotouch/internal/store"
 )
 
 var (
@@ -65,7 +66,6 @@ func (g *golangSetupChecker) CheckSetup() error {
 		return fmt.Errorf("could not find %s in PATH. make sure that %s installed", "go", "go")
 	}
 	return nil
-
 }
 
 func (g *golangSetupChecker) GetDependency(dependency any) error {

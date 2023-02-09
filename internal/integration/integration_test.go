@@ -4,13 +4,14 @@ package integration
 
 import (
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/config"
 	"log"
 	"os"
 	"os/exec"
 	"runtime"
 	"strings"
 	"testing"
+
+	"github.com/denizgursoy/gotouch/internal/config"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -56,7 +57,7 @@ func (z *ZippingTestSuite) SetupTest() {
 		log.Fatalln("could not change directory")
 	}
 
-	//exec.Command("open", mkdirTemp).Start()
+	// exec.Command("open", mkdirTemp).Start()
 	fmt.Println("binaryDir          -->" + z.binaryDir)
 	fmt.Println("binaryPath         -->" + z.binaryPath)
 	fmt.Println("workingDir         -->" + z.workingDir)
@@ -207,7 +208,6 @@ func (z *ZippingTestSuite) checkModuleName(expectedModuleName string, dependenci
 	for _, dependency := range dependencies {
 		z.True(strings.Contains(moduleContent, dependency))
 	}
-
 }
 
 func (z *ZippingTestSuite) checkDirectoriesExist(directories []string) {
@@ -238,7 +238,7 @@ func (z *ZippingTestSuite) CmdExec(args ...string) {
 
 	env2 := fmt.Sprintf("%s=%s", "TARGET_FILE", file)
 
-	//fmt.Println(env1 + " " + env2 + " " + z.binaryPath)
+	// fmt.Println(env1 + " " + env2 + " " + z.binaryPath)
 
 	cmd.Env = append(cmd.Env, env2)
 

@@ -3,10 +3,11 @@
 package langs
 
 import (
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"strings"
 )
 
 type Checker interface {

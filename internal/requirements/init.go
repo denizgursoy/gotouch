@@ -2,14 +2,15 @@ package requirements
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
+
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-playground/validator/v10"
-	"os"
-	"path/filepath"
-	"runtime"
 )
 
 type (
@@ -30,9 +31,7 @@ const (
 	WindowsInitFile = "init.bat"
 )
 
-var (
-	InitFiles = []string{LinuxInitFile, WindowsInitFile}
-)
+var InitFiles = []string{LinuxInitFile, WindowsInitFile}
 
 func (i *initRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {
 	tasks := make([]model.Task, 0)
@@ -65,7 +64,7 @@ func (i *initTask) Complete() error {
 	_, err := os.Stat(initFileAddress)
 	if err == nil {
 		i.Logger.LogInfo("Executing " + initFile)
-		if err := os.Chmod(initFileAddress, 0777); err != nil {
+		if err := os.Chmod(initFileAddress, 0o777); err != nil {
 			return err
 		}
 		if err = i.CommandRunner.Run(getCommand()); err != nil {
@@ -78,7 +77,7 @@ func (i *initTask) Complete() error {
 }
 
 func deleteInitFiles(projectFullPath string) {
-	for i, _ := range InitFiles {
+	for i := range InitFiles {
 		initFileAddress := filepath.Join(projectFullPath, InitFiles[i])
 		err := os.Remove(initFileAddress)
 		if err != nil && !os.IsNotExist(err) {

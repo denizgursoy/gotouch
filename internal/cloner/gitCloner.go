@@ -2,13 +2,14 @@ package cloner
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
 const (
@@ -30,7 +31,6 @@ func newCloner() Cloner {
 }
 
 func (g *gitCloner) CloneFromUrl(url, branchName string) error {
-
 	projectName := g.Store.GetValue(store.ProjectName)
 
 	var name plumbing.ReferenceName
@@ -48,7 +48,6 @@ func (g *gitCloner) CloneFromUrl(url, branchName string) error {
 	}
 
 	_, err := git.PlainClone(projectName, false, cloneOptions)
-
 	if err != nil {
 		return err
 	}

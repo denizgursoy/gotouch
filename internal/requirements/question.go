@@ -2,8 +2,9 @@ package requirements
 
 import (
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/langs"
 	"net/http"
+
+	"github.com/denizgursoy/gotouch/internal/langs"
 
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -92,8 +93,8 @@ func (n NoneOfAboveChoice) String() string {
 }
 
 func getTasks(r model.Resources, l logger.Logger, m manager.Manager,
-	lc langs.Checker, s store.Store) []model.Task {
-
+	lc langs.Checker, s store.Store,
+) []model.Task {
 	tasks := make([]model.Task, 0)
 
 	for _, dependency := range r.Dependencies {

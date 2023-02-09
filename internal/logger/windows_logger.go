@@ -3,13 +3,12 @@
 package logger
 
 import (
-	"github.com/mattn/go-colorable"
 	"io"
+
+	"github.com/mattn/go-colorable"
 )
 
-var (
-	colorableStdout io.Writer
-)
+var colorableStdout io.Writer
 
 func init() {
 	colorableStdout = colorable.NewColorableStdout()

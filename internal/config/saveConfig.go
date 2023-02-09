@@ -3,10 +3,11 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/denizgursoy/gotouch/internal/logger"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/denizgursoy/gotouch/internal/logger"
 )
 
 type (
@@ -22,9 +23,7 @@ const (
 	URL = "url"
 )
 
-var (
-	ConfigurableSettings = []string{URL}
-)
+var ConfigurableSettings = []string{URL}
 
 func (c *configManager) SetValueOf(key, value string) error {
 	config, err := readConfig()
@@ -120,7 +119,7 @@ func saveConfig(config *Config) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile(name, marshal, 0644)
+	err = os.WriteFile(name, marshal, 0o644)
 	if err != nil {
 		return err
 	}

@@ -3,10 +3,11 @@
 package commandrunner
 
 import (
-	"github.com/denizgursoy/gotouch/internal/store"
 	"os"
 	"os/exec"
 	"sync"
+
+	"github.com/denizgursoy/gotouch/internal/store"
 )
 
 var (

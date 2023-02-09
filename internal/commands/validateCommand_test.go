@@ -1,17 +1,17 @@
 package commands
 
 import (
+	"testing"
+
 	"github.com/denizgursoy/gotouch/internal/lister"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestGetValidateCommandHandler(t *testing.T) {
 	t.Run("should validate successfully", func(t *testing.T) {
-
 		controller := gomock.NewController(t)
 		mockCommander := operator.NewMockOperator(controller)
 
