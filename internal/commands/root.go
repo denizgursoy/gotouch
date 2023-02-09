@@ -94,6 +94,7 @@ See https://raw.githubusercontent.com/denizgursoy/gotouch/main/examples/complete
 }
 
 func CreateConfigCommand() *cobra.Command {
+	lgr := logger.NewLogger()
 	manager := config.NewConfigManager(logger.NewLogger())
 	configCommand := &cobra.Command{
 		Use:   "config",
@@ -103,15 +104,21 @@ func CreateConfigCommand() *cobra.Command {
 	configCommand.AddCommand(&cobra.Command{
 		Use:  "set",
 		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(2)),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return manager.SetValueOf(args[0], args[1])
+		Run: func(cmd *cobra.Command, args []string) {
+			err := manager.SetValueOf(args[0], args[1])
+			if err != nil {
+				lgr.LogErrorIfExists(err)
+			}
 		},
 	})
 	configCommand.AddCommand(&cobra.Command{
 		Use:  "unset",
 		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(1)),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return manager.UnsetValuesOf(args[0])
+		Run: func(cmd *cobra.Command, args []string) {
+			err := manager.UnsetValuesOf(args[0])
+			if err != nil {
+				lgr.LogErrorIfExists(err)
+			}
 		},
 	})
 	return configCommand

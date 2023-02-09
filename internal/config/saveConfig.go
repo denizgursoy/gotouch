@@ -67,7 +67,7 @@ func (c *configManager) GetDefaultPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if config.DefaultPath == nil || len(strings.TrimSpace(*config.DefaultPath)) == 0 {
+	if config == nil || config.DefaultPath == nil || len(strings.TrimSpace(*config.DefaultPath)) == 0 {
 		return PropertiesUrlAddress, nil
 	} else {
 		return *config.DefaultPath, nil
@@ -75,12 +75,14 @@ func (c *configManager) GetDefaultPath() (string, error) {
 }
 
 func readConfig() (*Config, error) {
-	name, err := getFileName()
+	name, err := GetFileName()
 	if err != nil {
 		return nil, err
 	}
-	if _, err := os.Stat(name); err != nil {
-		return nil, err
+	_, err = os.Stat(name)
+
+	if err != nil {
+		return &Config{}, nil
 	}
 
 	file, err := os.ReadFile(name)
@@ -95,7 +97,7 @@ func readConfig() (*Config, error) {
 	return &config, nil
 }
 
-func getFileName() (string, error) {
+func GetFileName() (string, error) {
 	dir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
@@ -104,7 +106,7 @@ func getFileName() (string, error) {
 }
 
 func saveConfig(config *Config) error {
-	name, err := getFileName()
+	name, err := GetFileName()
 	if err != nil {
 		return err
 	}

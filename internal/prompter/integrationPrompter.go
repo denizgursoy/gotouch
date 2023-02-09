@@ -20,7 +20,8 @@ func init() {
 	getenv := os.Getenv("TARGET_FILE")
 	body, err := os.ReadFile(getenv)
 	if err != nil {
-		log.Fatalf("unable to read file: %v", err)
+		log.Println("skipping the TARGET_FILE")
+		return
 	}
 
 	urls = make([]string, 0)
