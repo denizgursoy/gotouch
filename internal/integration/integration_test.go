@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/denizgursoy/gotouch/internal/requirements"
+
 	"github.com/denizgursoy/gotouch/internal/config"
 
 	"github.com/stretchr/testify/suite"
@@ -142,6 +144,13 @@ func (z *ZippingTestSuite) TestProjectWithFilesAndDependencies() {
 	z.checkFileContent("values.txt", "values.txt")
 }
 
+func (z *ZippingTestSuite) TestProjectWithPropertiesYaml() {
+	z.setInputFile("project-with-files-and-dependencies.txt")
+	z.executeGotouch()
+
+	z.checkFileExists(requirements.PropertiesYamlName, false)
+}
+
 func (z *ZippingTestSuite) TestProjectConfig() {
 	name, err := config.GetFileName()
 	z.Nil(err)
@@ -182,6 +191,14 @@ func (z *ZippingTestSuite) checkFileExists(fileName string, exists bool) {
 	}
 }
 
+func (z *ZippingTestSuite) checkFilesExist(files []string) {
+	for _, file := range files {
+		stat, err := os.Stat(fmt.Sprintf("%s/%s", z.createdProjectPath, file))
+		z.Nil(err, "%s does not exists", file)
+		z.False(stat.IsDir(), "%s does not exists", file)
+	}
+}
+
 func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
 	actualFilePath := fmt.Sprintf("%s/%s", z.createdProjectPath, fileName)
 	expectedFilePath := fmt.Sprintf("%s/internal/testdata/%s", z.binaryDir, expectedFile)
@@ -216,14 +233,6 @@ func (z *ZippingTestSuite) checkDirectoriesExist(directories []string) {
 		stat, err := os.Stat(directoryPath)
 		z.Nil(err, "%s does not exists", directory)
 		z.True(stat.IsDir(), "%s does not exists", directory)
-	}
-}
-
-func (z *ZippingTestSuite) checkFilesExist(files []string) {
-	for _, file := range files {
-		stat, err := os.Stat(fmt.Sprintf("%s/%s", z.createdProjectPath, file))
-		z.Nil(err, "%s does not exists", file)
-		z.False(stat.IsDir(), "%s does not exists", file)
 	}
 }
 

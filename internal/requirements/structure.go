@@ -82,6 +82,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 
 	resourceTasks := getTasks(selectedPS.Resources, p.Logger, p.Manager, p.LanguageChecker, p.Store)
 	tasks = append(tasks, resourceTasks...)
+	tasks = append(tasks, p.getStartUpTask())
 
 	p.Store.AddCustomValues(selectedPS.Values)
 
@@ -102,6 +103,13 @@ func (p *ProjectStructureRequirement) getNameRequirement() *ProjectNameRequireme
 		Manager:  p.Manager,
 		Logger:   p.Logger,
 		Store:    p.Store,
+	}
+}
+
+func (p *ProjectStructureRequirement) getStartUpTask() *startupTask {
+	return &startupTask{
+		Store:  p.Store,
+		Logger: p.Logger,
 	}
 }
 
