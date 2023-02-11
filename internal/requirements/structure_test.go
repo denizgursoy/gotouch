@@ -114,7 +114,7 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, tasks)
 
-		require.Len(t, tasks, 6)
+		require.Len(t, tasks, 7)
 		require.IsType(t, (*projectNameTask)(nil), tasks[0])
 
 		require.IsType(t, &projectStructureTask{}, tasks[1])
@@ -131,6 +131,8 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		require.IsType(t, (*fileTask)(nil), tasks[5])
 		require.Equal(t, *selectedProjectStructure.Resources.Files[1], tasks[5].(*fileTask).File)
+
+		require.IsType(t, (*startupTask)(nil), tasks[6])
 
 		actualQuestions := make([]*model.Question, 0)
 
