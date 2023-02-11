@@ -18,13 +18,20 @@ var (
 	ErrDependencyIsNotValid = errors.New("dependency is not valid")
 )
 
-const GoCommand = "go"
+type (
+	Dependency struct {
+		Url     *string
+		Version *string
+	}
 
-type golangSetupChecker struct {
-	Logger        logger.Logger
-	Store         store.Store
-	CommandRunner commandrunner.Runner
-}
+	golangSetupChecker struct {
+		Logger        logger.Logger
+		Store         store.Store
+		CommandRunner commandrunner.Runner
+	}
+)
+
+const GoCommand = "go"
 
 func NewGolangSetupChecker(Logger logger.Logger, Store store.Store, runner commandrunner.Runner) Checker {
 	return &golangSetupChecker{
@@ -43,7 +50,6 @@ func (g *golangSetupChecker) Setup() error {
 		return err
 	}
 
-	g.Logger.LogInfo(fmt.Sprintf("module name was changed to -> %s", moduleName))
 	return nil
 }
 
@@ -84,24 +90,31 @@ func (g *golangSetupChecker) GetDependency(dependency any) error {
 		Version: &version,
 	}
 
-	g.Logger.LogInfo(fmt.Sprintf("Adding -> %s", goDependency.String()))
-
-	data := &commandrunner.CommandData{
-		Command: "go",
-		Args:    []string{"get", goDependency.String()},
-	}
-
-	if err := g.CommandRunner.Run(data); err != nil {
-		return err
-	}
-
-	g.Logger.LogInfo(fmt.Sprintf("Added  -> %s", goDependency.String()))
-
-	return nil
+	return g.addDependency(goDependency)
 }
 
 func (g *golangSetupChecker) CleanUp() error {
+	err := g.executeFmt()
+	if err != nil {
+		return err
+	}
+	err = g.executeTidy()
+	if err != nil {
+		return err
+	}
 	return nil
+}
+
+func (g *golangSetupChecker) addDependency(dependency Dependency) error {
+	g.Logger.LogInfo(fmt.Sprintf("Adding -> %s", dependency.String()))
+
+	data := &commandrunner.CommandData{
+		Command: "go",
+		Args:    []string{"get", dependency.String()},
+	}
+
+	return g.CommandRunner.Run(data)
+
 }
 
 func (g *golangSetupChecker) executeFmt() error {
@@ -109,15 +122,6 @@ func (g *golangSetupChecker) executeFmt() error {
 	formatTask := &commandrunner.CommandData{
 		Command: GoCommand,
 		Args:    []string{"fmt", "./..."},
-	}
-	return g.CommandRunner.Run(formatTask)
-}
-
-func (g *golangSetupChecker) downloadDependencies() error {
-	g.Logger.LogInfo("Executing go mod download")
-	formatTask := &commandrunner.CommandData{
-		Command: GoCommand,
-		Args:    []string{"mod", "download"},
 	}
 	return g.CommandRunner.Run(formatTask)
 }
@@ -130,13 +134,6 @@ func (g *golangSetupChecker) executeTidy() error {
 	}
 	return g.CommandRunner.Run(tidyTask)
 }
-
-type (
-	Dependency struct {
-		Url     *string
-		Version *string
-	}
-)
 
 func (d *Dependency) String() string {
 	return fmt.Sprintf("%s@%s", *d.Url, *d.Version)

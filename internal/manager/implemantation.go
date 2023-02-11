@@ -70,6 +70,5 @@ func (f *fManager) CreateFile(reader io.ReadCloser, path string) error {
 		return writeError
 	}
 
-	f.Logger.LogInfo(fmt.Sprintf("Created file  -> %s", fullPath))
 	return nil
 }
