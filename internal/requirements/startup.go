@@ -25,11 +25,14 @@ func (s *startupTask) Complete() error {
 	}
 	workingDirectory := s.Store.GetValue(store.ProjectFullPath)
 	propertiesYamlFullAddress := filepath.Join(workingDirectory, PropertiesYamlName)
-	err := os.Remove(propertiesYamlFullAddress)
-	if err != nil {
-		s.Logger.LogErrorIfExists(fmt.Errorf("couuld not delete %s, error=%w", propertiesYamlFullAddress, err))
-		return err
+	if _, err := os.Stat(propertiesYamlFullAddress); !os.IsNotExist(err) {
+		err := os.Remove(propertiesYamlFullAddress)
+		if err != nil {
+			s.Logger.LogErrorIfExists(fmt.Errorf("couuld not delete %s, error=%w", propertiesYamlFullAddress, err))
+			return err
+		}
+		s.Logger.LogInfo(fmt.Sprintf("Deleted %s succesfully", PropertiesYamlName))
 	}
-	s.Logger.LogInfo(fmt.Sprintf("Deleted %s succesfully", PropertiesYamlName))
+
 	return nil
 }
