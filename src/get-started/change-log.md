@@ -1,7 +1,16 @@
 # Change Log
 
+### v1.13.0
+Gotouch executes `go mod tidy` and `go fmt ./...` after a go project is created.
+
+### v1.12.0
+Deletes `properties.yaml` on the root directory if exists.
+
+### v1.11.0
+Adds [config command](../commands) to change default URL.
+
 ### v1.10.0
-Choices can have [custom values](../customize/choice)
+Choices can have [custom values](../customize/choice).
 
 ### v1.9.0
 Selected project can create files or add dependencies see [project structure](../customize/project-structure) files and dependencies sections.

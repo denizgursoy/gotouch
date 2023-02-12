@@ -34,3 +34,17 @@ Validate checks if your yaml is valid or not.
 `gotouch --version`
 
 Shows version of the binary
+
+## config
+
+`gotouch config`
+
+Allows you to change following configurations:
+
+**`url`**: Replaces the default URL. If changed, gotouch will display project structures in the URL without `-f` flag.
+
+Usage:
+
+`gotouch config set url path-to-new-url` changes to default URL
+
+`gotouch config unset url` removes the changed URL to default. 
