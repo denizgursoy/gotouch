@@ -54,9 +54,7 @@ pom.xml :
         <groupId>{{ .groupId }}</groupId>
         <artifactId>{{ .artifactId }}</artifactId>
         <version>{{ .version }}</version>
-        {{- if .scope }}
-        <scope>{{.scope}}</scope>
-        {{- end }}
+        {{ if .scope }}<scope>{{.scope}}</scope>{{- end }}
     </dependency>
     {{- end }}
 </dependencies>
@@ -98,19 +96,17 @@ package.json:
 ```json
 {
   "dependencies": {
-    {{- range .Dependencies }}
-    {{- if not .devDependency}}
-     "{{.name}}": "{{.version}}"
-    {{- end }}
-    {{- end }}
-  },
-    "devDependencies": {
-    {{- range .Dependencies }}
-    {{- if .devDependency}}
-     "{{.name}}": "{{.version}}"
-    {{- end }}
-    {{- end }}
-  }
+    {{ range .Dependencies }}
+    {{- if not .devDependency -}}"{{.name}}": "{{.version}}"
+    {{ end }}
+    {{- end -}}
+},
+"devDependencies": {
+    {{ range .Dependencies }}
+    {{- if .devDependency -}}"{{.name}}": "{{.version}}"
+    {{ end }}
+    {{- end -}}
+}
 }
 ```
 Result:
