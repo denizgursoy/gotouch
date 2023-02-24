@@ -91,8 +91,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	}
 
 	requirements = append(requirements, p.getTemplateRequirement(selectedPS))
-	requirements = append(requirements, p.getCleanupRequirement())
 	requirements = append(requirements, p.getInitRequirement())
+	requirements = append(requirements, p.getCleanupRequirement())
 
 	return tasks, requirements, nil
 }

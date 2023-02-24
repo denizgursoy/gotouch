@@ -143,8 +143,8 @@ func TestStructure_AskForInput(t *testing.T) {
 		require.Equal(t, questions, actualQuestions)
 
 		require.IsType(t, &templateRequirement{}, requirements[2])
-		require.IsType(t, (*cleanupRequirement)(nil), requirements[3])
-		require.IsType(t, (*initRequirement)(nil), requirements[4])
+		require.IsType(t, (*initRequirement)(nil), requirements[3])
+		require.IsType(t, (*cleanupRequirement)(nil), requirements[4])
 	})
 
 	t.Run("should return error from the prompt", func(t *testing.T) {
