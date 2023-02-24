@@ -114,7 +114,6 @@ func (g *golangSetupChecker) addDependency(dependency Dependency) error {
 	}
 
 	return g.CommandRunner.Run(data)
-
 }
 
 func (g *golangSetupChecker) executeFmt() error {
