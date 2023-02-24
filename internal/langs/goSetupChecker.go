@@ -94,14 +94,16 @@ func (g *golangSetupChecker) GetDependency(dependency any) error {
 }
 
 func (g *golangSetupChecker) CleanUp() error {
-	err := g.executeFmt()
+	err := g.executeTidy()
 	if err != nil {
 		return err
 	}
-	err = g.executeTidy()
+
+	err = g.executeFmt()
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
