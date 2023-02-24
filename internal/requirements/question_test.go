@@ -42,9 +42,9 @@ var (
 			Values: map[string]any{
 				"X": "sds",
 			},
-		},
-		CustomValues: map[string]any{
-			"foo": "bar",
+			CustomValues: map[string]any{
+				"foo": "bar",
+			},
 		},
 	}
 	choice2 = model.Choice{
@@ -55,9 +55,9 @@ var (
 			Values: map[string]any{
 				"Y": "sds",
 			},
-		},
-		CustomValues: map[string]any{
-			"foo2": "bar2",
+			CustomValues: map[string]any{
+				"foo2": "bar2",
+			},
 		},
 	}
 	choice3 = model.Choice{
@@ -68,9 +68,9 @@ var (
 			Values: map[string]any{
 				"Z": "sds",
 			},
-		},
-		CustomValues: map[string]any{
-			"foo3": "bar3",
+			CustomValues: map[string]any{
+				"foo3": "bar3",
+			},
 		},
 	}
 

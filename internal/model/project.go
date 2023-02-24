@@ -29,15 +29,15 @@ type (
 	}
 
 	Choice struct {
-		Choice       string `yaml:"choice"`
-		Resources    `yaml:",inline"`
-		CustomValues map[string]any `yaml:"customValues"`
+		Choice    string `yaml:"choice"`
+		Resources `yaml:",inline"`
 	}
 
 	Resources struct {
 		Dependencies []any          `yaml:"dependencies"`
 		Files        []*File        `yaml:"files"`
 		Values       map[string]any `yaml:"values"`
+		CustomValues map[string]any `yaml:"customValues"`
 	}
 
 	File struct {

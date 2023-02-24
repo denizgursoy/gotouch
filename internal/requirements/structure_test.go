@@ -43,6 +43,9 @@ var (
 			Values: map[string]any{
 				"1": "23",
 			},
+			CustomValues: map[string]any{
+				"2": "23",
+			},
 			Dependencies: []any{"dep1", "dep2"},
 			Files:        []*model.File{&file1, &file2},
 		},
@@ -107,7 +110,11 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		requirement.Store.(*store.MockStore).
 			EXPECT().
-			AddCustomValues(gomock.Eq(selectedProjectStructure.Values)).Times(1)
+			AddCustomValues(gomock.Eq(selectedProjectStructure.CustomValues)).Times(1)
+
+		requirement.Store.(*store.MockStore).
+			EXPECT().
+			AddValues(gomock.Eq(selectedProjectStructure.Values)).Times(1)
 
 		tasks, requirements, err := requirement.AskForInput()
 

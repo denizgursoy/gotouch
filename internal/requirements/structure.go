@@ -84,7 +84,8 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	tasks = append(tasks, resourceTasks...)
 	tasks = append(tasks, p.getStartUpTask())
 
-	p.Store.AddCustomValues(selectedPS.Values)
+	p.Store.AddCustomValues(selectedPS.CustomValues)
+	p.Store.AddValues(selectedPS.Values)
 
 	for _, question := range selectedPS.Questions {
 		requirements = append(requirements, p.getQuestionRequirement(question))
