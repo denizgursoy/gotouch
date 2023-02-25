@@ -28,10 +28,8 @@ module.exports = {
      * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
      */
     themeConfig: {
-        repo: '',
+        logo: 'icon.png',
         editLinks: false,
-        docsDir: '',
-        editLinkText: '',
         lastUpdated: false,
         nav: [
             {
@@ -53,7 +51,7 @@ module.exports = {
             {
                 title: 'Customize',
                 children: [
-                    '/customize',
+                    '/customize/',
                     '/customize/template-project.md',
                     '/customize/template-examples.md',
                     '/customize/properties-yaml.md',

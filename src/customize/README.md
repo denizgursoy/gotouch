@@ -1,4 +1,4 @@
-# Customize
+# Start customizing
 
 Follow the steps below to create your properties YAML.
 
