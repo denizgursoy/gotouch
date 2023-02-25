@@ -28,7 +28,6 @@ module.exports = {
      * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
      */
     themeConfig: {
-        logo: 'icon.png',
         editLinks: false,
         lastUpdated: false,
         nav: [
