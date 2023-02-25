@@ -42,8 +42,8 @@ module.exports = {
         sidebar: [
             {
                 title: 'Get Started',
-                path: '/get-started/',
                 children: [
+                    '/get-started/',
                     'get-started/installation.md',
                     'get-started/execute.md',
                     'get-started/how-it-works.md',

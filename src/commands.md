@@ -1,13 +1,13 @@
 # Commands
 
-## gotouch
+### gotouch
 
 gotouch command uses [properties yaml](./customize/properties-yaml) file for prompting user to enter name and select project
 structure. If file flag value is not provided, it is going to
 use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml).
 Firstly,The command asks for project name. Project name is written to go module and used for directory name.
 
-## package
+### package
 
 `gotouch package --source path-to-source --target path-to-target`
 
@@ -22,20 +22,13 @@ Package command ignores following files/directories:
 4. ***.vscode***
 5. ***.git***
 
-## validate
+### validate
 
 `gotouch validate --file path-to-yaml`
 
 Validate checks if your yaml is valid or not. 
 
-
-## version
-
-`gotouch --version`
-
-Shows version of the binary
-
-## config
+### config
 
 `gotouch config`
 
