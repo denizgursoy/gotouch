@@ -12,11 +12,13 @@ If following project structure is selected,
   url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
   language: go
-  values:
+  values: # optional, cannot be changed by the user
+    BaseURL: /v1
+  customValues:  # optional, can be changed by the user
     Port: 8080
 ```
 
-Gotouch will ask whether user wants to change the values under the selected project structure.
+Gotouch will ask whether user wants to change the **`custom values`** under the selected project structure.
 
 ![Edit Values](@images/edit-values.png)
 
@@ -25,12 +27,12 @@ If you want to change your editor, set **$VISUAL** or **$EDITOR** environment va
 
 ![Vim editor](@images/vim-editor.png)
 
-When you exit your the editor, gotouch will save the values and continue creating the project. Values under the selected
+When you exit the editor, gotouch will save the values and continue creating the project. Values under the selected
 project structure will be merged with all selected choices' values.
 
 ::: warning
-Be aware that only **`values`** under the selected project structure can be changed by users. Values of selected choices cannot be changed.
-If you need some changeable values use  **`customValues`** of choices.
+ **`values`** of selected choices and the selected project structure cannot be changed. If you need some changeable values
+use  **`customValues`** of choices.
 :::
 
 ## Default Values

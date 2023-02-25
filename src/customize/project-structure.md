@@ -14,7 +14,9 @@
      pathFromRoot: Dockerfile
    - content: "foo"
      pathFromRoot: bar.txt
-  values: # optional
+  values: # optional, cannot be changed by the user
+    BaseURL: /v1
+  customValues:  # optional, can be changed by the user
     Port: 8080
   questions: #optional
     - direction: Do you want Dockerfile? #mandatory
@@ -50,12 +52,13 @@ and `}}`. New left and write delimiter should be seperated by space.
 **`dependencies`**: Same as dependencies field of [choice](./choice.md). Allows you to add dependencies when project structure is selected.
 It might be useful in some languages to get the latest version of a dependency.
 
-**`values`**: Delimiter is an optional string field. It is used to replace go template library's default delimiter `{{`
-and `}}`. New left and write delimiter should be seperated by space.
-
-**`values`**: Values used to templating files' content or directories' name in the tempalte project. This filed can have
-any values. It can be omitted as well. If the field is not empty, users can also change it.
+**`values`**: Values used to templating files' content or directories' name in the template project. This filed can have
+any values. It can be omitted as well. User cannot change these values.
 See [value](./value) for more information.
+
+**`customValues`**: Same as values but these values are prompted to user for change
+See [value](./value) for more information.
+
 
 **`questions`**: List of questions to customize project in case that this project structure is selected.
 See [question](./question) for more information.
