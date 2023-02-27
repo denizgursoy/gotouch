@@ -85,7 +85,7 @@ use [raw URL](https://www.howtogeek.com/wp-content/uploads/csit/2021/11/0ad2a42a
 the files.
 :::
 
-## Default values in template project
+### Default values in template project
 
 You can use [default values](./values#default-values) in your templates. Let's assume that user entered module name
 `github.com/denigursoy/foo` and you create new packages in your template project. In order to import from other package,
@@ -137,14 +137,14 @@ func printProductColor() {
 </code-block>
 </code-group>
 
-## Templating directory and file names
+### Templating directory and file names
 
 You can use values in directory or file names in your template project. For example, you can use `ProjectName` default
 value in your files/directories of template project. If user enters module name as `github.com/denigursoy/foo` and
 then `ProjectName` default value will be `foo`. During the templating file with the name <code v-pre>{{ .ProjectName
 }}.txt</code> will be `foo.txt`.
 
-## Using sprig functions
+### Using sprig functions
 
 During templating, you can use [sprig functions](http://masterminds.github.io/sprig/). For example, You can use `uuidv4`
 function of spring to generate unique IDs.
@@ -179,7 +179,7 @@ func main() {
 </code-block>
 </code-group>
 
-## Templating with go template library
+### Templating with go template library
 
 You can also use other go template library's capabilities such as conditions, iterating array values, etc. For more
 information see [go template library](https://pkg.go.dev/text/template).

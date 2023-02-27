@@ -36,7 +36,7 @@ values
 use  **`customValues`** of choices.
 :::
 
-## Default Values
+### Default Values
 
 Apart from these values, you can use following predefined values :
 

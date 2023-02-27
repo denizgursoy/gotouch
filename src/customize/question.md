@@ -13,7 +13,7 @@ in one question. Question will be displayed as [multiple select question](#multi
 
 **`choices`**: Choices filed is a list of choices belonging to the question. It is mandatory field. See [choice](./choice) for more information.
 
-## Yes/No question
+### Yes/No question
 If a question has only one choice and `canSkip` is true, it is evaluated as Yes/No question
 
 ```yaml
@@ -34,7 +34,7 @@ Will be displayed like:
 
 ![Yes/No Question](@images/yes-no-question.png)
 
-## Multiple choice question
+### Multiple choice question
 
 If a question has more than one choice it is evaluated as Multiple choice question
 
@@ -61,7 +61,7 @@ Will be displayed like:
 
 ![Multiple Choice Question](@images/multiple-choice.png)
 
-## None of above question
+### None of above question
 
 If a question has more than one choice and `canSkip` is true, `None of above` option will be also added 
 as a choice. 
@@ -91,7 +91,7 @@ Will be displayed like:
 ![None of Above Question](@images/none-of-above.png)
 
 
-## Multiple Select Question
+### Multiple Select Question
 
 If a question's `canSelectMultiple` is set to true, user can select more than one choice.
 

@@ -1,8 +1,9 @@
-# Dependency
+# Dependencies
 
-Dependency can be in different formats depending on the language of selected project structure.
+Selected choice can create list of dependencies. A dependency can be in different formats depending on the language of 
+selected project structure.
 
-## Dependencies in Golang
+### Dependencies in Golang
 
 If the language of Selected project structure is `go` or `golang` then dependencies should be a list of strings. Check
 table to see which command is executed by gotouch
@@ -12,7 +13,7 @@ table to see which command is executed by gotouch
 | github.com/labstack/echo/v4        | go get github.com/labstack/echo/v4@latest |   
 | github.com/labstack/echo/v4@v4.9.1 | go get github.com/labstack/echo/v4@v4.9.1 |
 
-## Dependencies in Other Languages
+### Dependencies in Other Languages
 
 If the language of selected project structure is empty or any other value except `go` or `golang`, you can use any
 format in dependencies. Gotouch merges dependencies of all selected choices and add them as an array to values
@@ -23,7 +24,7 @@ Following examples are just suggestions. Do not forget that you can use any form
 them however you want. If the language you use is not in the examples, in this case you can use the examples as a guide.
 :::
 
-### Java Maven
+#### Java Maven
 
 In a Maven project, you can define your dependencies as object as seen below.
 
@@ -82,7 +83,7 @@ questions:
 </code-block>
 </code-group>
 
-### JS/Node.js
+#### JS/Node.js
 <code-group>
 <code-block title="Values">
 

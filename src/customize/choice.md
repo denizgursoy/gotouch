@@ -2,7 +2,7 @@
 
 If selected, a choice can create files, add dependencies and introduce new values.
 
-Dependencies are a list. See [dependency](./dependency) section
+Dependencies are a list. See [dependencies](./dependencies) section
 
 A choice can create files with address of source file, or content. A file entry must have `pathFromRoot` value is the
 location of the file inside project.

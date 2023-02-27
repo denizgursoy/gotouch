@@ -1,6 +1,6 @@
 # Examples
 
-## Go Project
+### Go Project
 
 ```yaml
 - name: Empty Project Layout
@@ -9,7 +9,7 @@
   branch: empty
   language: go
 ```
-## Projects in Other Languages
+### Projects in Other Languages
 
 ```yaml
 - name: Empty Project Layout
@@ -17,7 +17,7 @@
   url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
 ```
-## Yes/No Question
+### Yes/No Question
 
 ```yaml
 - name: Empty Project Layout
@@ -35,7 +35,7 @@
               pathFromRoot: Dockerfile
 ```
 
-## A Choice With All Fields
+### A Choice With All Fields
 ```yaml
 - name: Empty Project Layout
   reference: https://go.dev/

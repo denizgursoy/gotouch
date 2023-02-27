@@ -58,7 +58,7 @@ module.exports = {
                     '/customize/project-structure.md',
                     '/customize/question.md',
                     '/customize/choice.md',
-                    '/customize/dependency.md',
+                    '/customize/dependencies.md',
                     '/customize/files.md',
                     '/customize/values.md',
                     '/customize/init.md',
