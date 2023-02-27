@@ -3,7 +3,9 @@
 Selected choice can create list of files. A file content can be fetched from internet or provided in the YAML. A file
 must have `pathFromRoot` field to which Gotouch will create the file.
 
-### Files from Internet
+
+<code-group>
+<code-block title="Files from Internet">
 
 ```yaml
 questions: #optional
@@ -16,7 +18,9 @@ questions: #optional
             pathFromRoot: Dockerfile #mandatory
 ```
 
-### Files from Content
+</code-block>
+
+<code-block title="Files from Content">
 
 ```yaml
 questions: #optional
@@ -34,3 +38,6 @@ questions: #optional
               CMD ["/app/main"]
             pathFromRoot: Dockerfile #mandatory
 ```
+
+</code-block>
+</code-group>
