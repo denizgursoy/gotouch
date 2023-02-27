@@ -16,8 +16,7 @@ table to see which command is executed by gotouch
 
 If the language of selected project structure is empty or any other value except `go` or `golang`, you can use any
 format in dependencies. Gotouch merges dependencies of all selected choices and add them as an array to values
-with `Dependencies` key so that
-you can template with dependencies. You can find example templates for different languages.
+with `Dependencies` key so that you can template with dependencies. You can find example templates for different languages.
 
 ::: warning
 Following examples are just suggestions. Do not forget that you can use any format in dependencies, and you can template
@@ -27,7 +26,6 @@ them however you want. If the language you use is not in the examples, in this c
 ### Java Maven
 
 In a Maven project, you can define your dependencies as object as seen below.
-Properties.yaml:
 
 <code-group>
 <code-block title="Values">
@@ -55,7 +53,6 @@ questions:
 
 <code-block title="pom.xml">
 ```xml
-
 <dependencies>
     {{- range .Dependencies}}
     <dependency>
@@ -71,7 +68,6 @@ questions:
 
 <code-block title="Result">
 ```xml
-
 <dependencies>
     <dependency>
         <groupId>org.postgresql</groupId>
@@ -84,9 +80,8 @@ questions:
 </code-group>
 
 ### JS/Node.js
-
-Properties.yaml:
-
+<code-group>
+<code-block title="Values">
 ```yaml
 questions:
   - direction: Which Test framework do you want to use?
@@ -107,46 +102,28 @@ questions:
             version: 4.5.0
             devDependency: true
 ```
+</code-block>
 
-package.json:
-
+<code-block title="package.json">
 ```json
 {
   "dependencies": {
-{{
-  range
-  .Dependencies
-}}
-{{- if not .devDependency -}}"{{.name}}": "{{.version}}"
-{
-{
-end
-}
-}
-{
-{
-- end -}}
+    {{ range .Dependencies }}
+    {{- if not .devDependency -}}"{{.name}}": "{{.version}}"
+    {{ end }}
+    {{- end -}}
 },
 "devDependencies": {
-{{
-range .Dependencies
-}
-}
-{
-{
-- if .devDependency -}}"{{.name}}": "{{.version}}"
-{{end}}
-{
-{
-- end -
-}
-}
+    {{ range .Dependencies }}
+    {{- if .devDependency -}}"{{.name}}": "{{.version}}"
+    {{ end }}
+    {{- end -}}
 }
 }
 ```
+</code-block>
 
-Result:
-
+<code-block title="Result">
 ```json
 {
   "dependencies": {
@@ -156,3 +133,5 @@ Result:
   }
 }
 ```
+</code-block>
+</code-group>
