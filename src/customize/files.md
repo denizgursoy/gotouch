@@ -5,7 +5,7 @@ must have `pathFromRoot` field to which Gotouch will create the file.
 
 
 <code-group>
-<code-block title="Files from Internet">
+<code-block title="File from Internet">
 
 ```yaml
 questions: #optional
@@ -20,7 +20,7 @@ questions: #optional
 
 </code-block>
 
-<code-block title="Files from Content">
+<code-block title="File from Content">
 
 ```yaml
 questions: #optional
