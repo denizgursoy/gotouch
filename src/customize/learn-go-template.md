@@ -1,11 +1,13 @@
-# Go template
+# Learn Go template
 
-[Go template](https://pkg.go.dev/text/template) library is a powerful library. Some examples can be found below. 
-[repeatit.io](https://repeatit.io/) is a great place to learn/practice templating. Following examples will redirect
-you to the [repeatit.io](https://repeatit.io/).
+[Go template](https://pkg.go.dev/text/template) library is a powerful library. Some examples can be found
+below. [repeatit.io](https://repeatit.io/) is a great place to learn/practice templating. Following examples will
+redirect you to the [repeatit.io](https://repeatit.io/).
 
 ### Use a value as text
-If you have a value, for example `Port`, and want to write its value as text, you should write it between delimiters `{{` `}}` with a leading `.` as 
+
+If you have a value, for example `Port`, and want to write its value as text, you should write it between
+delimiters `{{` `}}` with a leading `.` as
 :::v-pre
 `{{.Port}}`
 :::
@@ -15,8 +17,10 @@ See the examples:
 
 [Mail Example](https://repeatit.io/#/share/eyJ0ZW1wbGF0ZSI6IkhlbGxvIHt7LlJlY2VpdmVyfX1cblxuSSB3YW50ZWQgdG8gaW5mb3JtIHlvdSB0aGF0IEkgbGVhcm4ge3suVG9waWN9fVxuXG5CZXN0IHJlZ2FyZHMuLi5cbnt7LlNlbmRlcn19IiwiaW5wdXQiOiJSZWNlaXZlcjogTXIuIFNtaXRoXG5TZW5kZXI6IE1ycy4gU21pdGhcblRvcGljOiBHbyBUZW1wbGF0ZSBMaWJyYXJ5IiwiY29uZmlnIjp7InRlbXBsYXRlIjoidGV4dCIsImZ1bGxTY3JlZW5IVE1MIjpmYWxzZSwiZnVuY3Rpb25zIjpbInNwcmlnIl0sIm9wdGlvbnMiOlsibGl2ZSJdLCJpbnB1dFR5cGUiOiJ5YW1sIn19)
 
-### If, else if, else 
-Go template library allows you to do conditional rendering with `if` statements . You can use following keywords in `if` statements to compare values
+### If, else if, else
+
+Go template library allows you to do conditional rendering with `if` statements . You can use following keywords in `if`
+statements to compare values
 
 ```
 eq
@@ -40,6 +44,7 @@ See examples:
 [To check boolean](https://repeatit.io/#/share/eyJ0ZW1wbGF0ZSI6ImZ1bmMgbWFpbigpe1xue3sgaWYgLklzRWNobyB9fVxuICAgIGUgOj0gZWNoby5OZXcoKVxuICAgIFxuICAgIGUuR0VUKFwiL1wiLCBmdW5jKGMgZWNoby5Db250ZXh0KSBlcnJvciB7XG4gICAgXHRyZXR1cm4gYy5TdHJpbmcoaHR0cC5TdGF0dXNPSywgXCJIZWxsbywgV29ybGQhXCIpXG4gICAgfSlcbiAgICBlLkxvZ2dlci5GYXRhbChlLlN0YXJ0KFwiOjgwODBcIikpXG57eyBlbmQgfX1cbn0iLCJpbnB1dCI6IklzRWNobzogdHJ1ZSIsImNvbmZpZyI6eyJ0ZW1wbGF0ZSI6InRleHQiLCJmdWxsU2NyZWVuSFRNTCI6ZmFsc2UsImZ1bmN0aW9ucyI6WyJzcHJpZyJdLCJvcHRpb25zIjpbImxpdmUiXSwiaW5wdXRUeXBlIjoieWFtbCJ9fQ==)
 
 ### Iterate an array and map
+
 Go template allows you to iterate an array or a map.
 
 See examples:

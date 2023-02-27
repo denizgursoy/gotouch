@@ -53,7 +53,7 @@ module.exports = {
                 children: [
                     '/customize/',
                     '/customize/template-project.md',
-                    '/customize/template-examples.md',
+                    '/customize/learn-go-template.md',
                     '/customize/properties-yaml.md',
                     '/customize/project-structure.md',
                     '/customize/question.md',

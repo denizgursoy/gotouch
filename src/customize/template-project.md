@@ -151,4 +151,4 @@ func main() {
 You can also use other go template library's capabilities such as conditions, iterating array values, etc. For more
 information see [go template library](https://pkg.go.dev/text/template).
 
-See [simple examples](./template-examples.md) to learn templating.
+See [simple examples](./learn-go-template.md) to learn templating.
