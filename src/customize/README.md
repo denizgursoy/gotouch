@@ -1,6 +1,6 @@
 # Start customizing
 
-Follow the steps below to create your properties YAML.
+Follow the steps below to create your templates.
 
 1. [Create your template project](./template-project)
 2. [Write your properties yaml file](./properties-yaml)

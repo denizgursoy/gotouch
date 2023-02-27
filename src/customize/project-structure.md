@@ -54,10 +54,10 @@ It might be useful in some languages to get the latest version of a dependency.
 
 **`values`**: Values used to templating files' content or directories' name in the template project. This filed can have
 any values. It can be omitted as well. User cannot change these values.
-See [value](./value) for more information.
+See [values](./values) for more information.
 
 **`customValues`**: Same as values but these values are prompted to user for change
-See [value](./value) for more information.
+See [values](./values) for more information.
 
 
 **`questions`**: List of questions to customize project in case that this project structure is selected.

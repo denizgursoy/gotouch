@@ -3,8 +3,8 @@
 Template project contains all the directories and files that you think you must have in every project. Files inside a
 template can have [actions](https://pkg.go.dev/text/template#hdr-Actions) which will
 be [templated](https://pkg.go.dev/text/template)
-with the [values](./value). For example, if you have an action like <code v-pre>{{ .Port }}</code> and `Port` key in
-your [values](./value), it will be replaced with the corresponding value.
+with the [values](./values). For example, if you have an action like <code v-pre>{{ .Port }}</code> and `Port` key in
+your [values](./values), it will be replaced with the corresponding value.
 
 Values:
 ```yaml
@@ -73,7 +73,7 @@ the files.
 
 ## Default values in template project
 
-You can use [default values](./value#default-values) in your templates. Let's assume that user entered module name
+You can use [default values](./values#default-values) in your templates. Let's assume that user entered module name
 `github.com/denigursoy/foo` and you create new packages in your template project. In order to import from other package,
 you need to know module name user entered. You can access it with `.ModuleName` value. See the following example:
 

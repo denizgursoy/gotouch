@@ -60,7 +60,7 @@ module.exports = {
                     '/customize/choice.md',
                     '/customize/dependency.md',
                     '/customize/file.md',
-                    '/customize/value.md',
+                    '/customize/values.md',
                     '/customize/init.md',
                     '/customize/examples.md',
                 ],

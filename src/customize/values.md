@@ -1,8 +1,8 @@
-# Value
+# Values
 
-If you want some part of the source code not to be hardcoded, you can define custom values under the `Project Strcuture`
-. The most common cases can be port numbers, service addresses, and some configuration values, etc. Gotouch will ask
-user to change the values if he/she wants.
+If you want some part of the source code not to be hardcoded, you can define custom values under
+the `Project Structure`. The most common cases can be port numbers, service addresses, and some configuration values,
+etc. Gotouch will ask user to change the values if he/she wants.
 
 If following project structure is selected,
 
@@ -14,7 +14,7 @@ If following project structure is selected,
   language: go
   values: # optional, cannot be changed by the user
     BaseURL: /v1
-  customValues:  # optional, can be changed by the user
+  customValues: # optional, can be changed by the user
     Port: 8080
 ```
 
@@ -31,7 +31,8 @@ When you exit the editor, gotouch will save the values and continue creating the
 project structure will be merged with all selected choices' values.
 
 ::: warning
- **`values`** of selected choices and the selected project structure cannot be changed. If you need some changeable values
+**`values`** of selected choices and the selected project structure cannot be changed. If you need some changeable
+values
 use  **`customValues`** of choices.
 :::
 
