@@ -16,27 +16,44 @@ in one question. Question will be displayed as [multiple select question](#multi
 ### Yes/No question
 If a question has only one choice and `canSkip` is true, it is evaluated as Yes/No question
 
+<code-group>
+<code-block title="Terminal">
+
+![Yes/No Question](@images/yes-no-question.png)
+
+</code-block>
+
+<code-block title="YAML">
+
 ```yaml
 - name: Api Gateway
   url: https://github.com/denizgursoy/go-touch-projects.git
   branch: empty
   language: go
   questions:
-  - direction: Do you want Dockerfile?
-    canSkip: true #if true, there must be at least one choice. 
-    choices: #mandatory
-      - choice: Yes # mandatory
-        files:
-          - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
-            pathFromRoot: Dockerfile # mandatory
+    - direction: Do you want Dockerfile?
+      canSkip: true #if true, there must be at least one choice. 
+      choices: #mandatory
+        - choice: Yes # mandatory
+          files:
+            - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+              pathFromRoot: Dockerfile # mandatory
 ```
-Will be displayed like:
 
-![Yes/No Question](@images/yes-no-question.png)
-
+</code-block>
+</code-group>
 ### Multiple choice question
 
 If a question has more than one choice it is evaluated as Multiple choice question
+
+<code-group>
+<code-block title="Terminal">
+
+![Multiple Choice Question](@images/multiple-choice.png)
+
+</code-block>
+
+<code-block title="YAML">
 
 ```yaml
 - name: Api Gateway
@@ -57,15 +74,24 @@ If a question has more than one choice it is evaluated as Multiple choice questi
             - github.com/gin-gonic/gin
 ```
 
-Will be displayed like:
+</code-block>
+</code-group>
 
-![Multiple Choice Question](@images/multiple-choice.png)
 
 ### None of above question
 
 If a question has more than one choice and `canSkip` is true, `None of above` option will be also added 
 as a choice. 
 
+<code-group>
+<code-block title="Terminal">
+
+![None of Above Question](@images/none-of-above.png)
+
+</code-block>
+
+<code-block title="YAML">
+
 ```yaml
 - name: Api Gateway
   url: https://github.com/denizgursoy/go-touch-projects.git
@@ -85,15 +111,22 @@ as a choice.
             - github.com/gin-gonic/gin
 ```
 
-Will be displayed like:
-
-
-![None of Above Question](@images/none-of-above.png)
+</code-block>
+</code-group>
 
 
 ### Multiple Select Question
 
 If a question's `canSelectMultiple` is set to true, user can select more than one choice.
+
+<code-group>
+<code-block title="Terminal">
+
+![Multiple Select Question](@images/multiple-select.png)
+
+</code-block>
+
+<code-block title="YAML">
 
 ```yaml
 - name: Api Gateway
@@ -115,7 +148,5 @@ If a question's `canSelectMultiple` is set to true, user can select more than on
             isKeycloak: true
 ```
 
-Will be displayed like:
-
-
-![Multiple Select Question](@images/multiple-select.png)
+</code-block>
+</code-group>
