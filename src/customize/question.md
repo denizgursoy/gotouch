@@ -42,6 +42,7 @@ If a question has only one choice and `canSkip` is true, it is evaluated as Yes/
 
 </code-block>
 </code-group>
+
 ### Multiple choice question
 
 If a question has more than one choice it is evaluated as Multiple choice question
