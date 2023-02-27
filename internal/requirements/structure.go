@@ -164,6 +164,10 @@ func (p *ProjectStructureRequirement) getInitRequirement() *initRequirement {
 }
 
 func (p *ProjectStructureRequirement) SelectProject() (*model.ProjectStructureData, error) {
+	if len(p.ProjectsData) == 1 {
+		return p.ProjectsData[0], nil
+	}
+
 	options := make([]fmt.Stringer, 0)
 	for _, datum := range p.ProjectsData {
 		options = append(options, datum)
