@@ -59,7 +59,7 @@ module.exports = {
                     '/customize/question.md',
                     '/customize/choice.md',
                     '/customize/dependency.md',
-                    '/customize/file.md',
+                    '/customize/files.md',
                     '/customize/values.md',
                     '/customize/init.md',
                     '/customize/examples.md',

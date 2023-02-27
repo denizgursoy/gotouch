@@ -1,9 +1,10 @@
-# File
+# Files
 
-File content can be fetched from internet or provided in the YAML. A file must have `pathFromRoot` field to which Gotouch 
-will create the file.
+Selected choice can create list of files. A file content can be fetched from internet or provided in the YAML. A file
+must have `pathFromRoot` field to which Gotouch will create the file.
 
 ## Files from Internet
+
 ```yaml
 questions: #optional
   - direction: Do you want Dockerfile? #mandatory
@@ -24,12 +25,12 @@ questions: #optional
     choices: #mandatory
       - choice: Yes # mandatory
         files: # content is mandatory
-          - content: | 
-                FROM golang:1.12.0-alpine3.9
-                RUN mkdir /app
-                COPY . /app
-                WORKDIR /app
-                RUN go build -o main .
-                CMD ["/app/main"]
+          - content: |
+              FROM golang:1.12.0-alpine3.9
+              RUN mkdir /app
+              COPY . /app
+              WORKDIR /app
+              RUN go build -o main .
+              CMD ["/app/main"]
             pathFromRoot: Dockerfile #mandatory
 ```
