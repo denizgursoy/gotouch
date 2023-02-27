@@ -1,28 +1,43 @@
 # Change Log
 
+### v1.14.0
+
+Added `customValues` to [project structure](../customize/project-structure).
+
 ### v1.13.0
+
 Gotouch executes `go mod tidy` and `go fmt ./...` after a go project is created.
 
 ### v1.12.0
+
 Deletes `properties.yaml` on the root directory if exists.
 
 ### v1.11.0
+
 Adds [config command](../commands) to change default URL.
 
 ### v1.10.0
+
 Choices can have [custom values](../customize/choice).
 
 ### v1.9.0
-Selected project can create files or add dependencies see [project structure](../customize/project-structure) files and dependencies sections.
+
+Selected project can create files or add dependencies see [project structure](../customize/project-structure) files and
+dependencies sections.
 
 ### v1.8.0
-Gotouch can checkout custom [branch](../customize/project-structure) on git. See the branch field description.
+
+Gotouch can check out custom [branch](../customize/project-structure) on git. See the branch field description.
 
 ### v1.7.0
+
 Add [init file](../customize/init) execution.
 
 ### v1.6.0
+
 Add [spring](http://masterminds.github.io/sprig/) functions to templating.
 
 ### v1.5.0
-[Delimiter](../customize/project-structure) for templating can be changed on project structure. See the delimiter field description.
+
+[Delimiter](../customize/project-structure) for templating can be changed on project structure. See the delimiter field
+description.
