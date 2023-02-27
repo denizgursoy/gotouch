@@ -29,6 +29,7 @@ In a Maven project, you can define your dependencies as object as seen below.
 
 <code-group>
 <code-block title="Values">
+
 ```yaml
 questions:
   - direction: Which DB do you want to use?
@@ -52,6 +53,7 @@ questions:
 </code-block>
 
 <code-block title="pom.xml">
+
 ```xml
 <dependencies>
     {{- range .Dependencies}}
@@ -67,6 +69,7 @@ questions:
 </code-block>
 
 <code-block title="Result">
+
 ```xml
 <dependencies>
     <dependency>
@@ -82,6 +85,7 @@ questions:
 ### JS/Node.js
 <code-group>
 <code-block title="Values">
+
 ```yaml
 questions:
   - direction: Which Test framework do you want to use?
@@ -105,6 +109,7 @@ questions:
 </code-block>
 
 <code-block title="package.json">
+
 ```json
 {
   "dependencies": {
@@ -124,6 +129,7 @@ questions:
 </code-block>
 
 <code-block title="Result">
+
 ```json
 {
   "dependencies": {
