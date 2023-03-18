@@ -13,6 +13,11 @@ Install, run on CLI, make your selections and start development.
 <a href="https://asciinema.org/a/534755" target="_blank"><img alt="Asciiname" src="https://asciinema.org/a/534755.svg" /></a>
 </p>
 
+## Run inside a docker container
+```bash
+docker run -it -v $(pwd):/out --rm ghcr.io/denizgursoy/gotouch:latest
+```
+
 ## Installation
 ```bash
 go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
