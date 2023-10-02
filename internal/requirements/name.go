@@ -4,15 +4,17 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
+	"golang.org/x/mod/module"
 
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/go-playground/validator/v10"
-	"golang.org/x/mod/module"
 )
 
 type (
@@ -69,16 +71,24 @@ func (p *projectNameTask) Complete() error {
 	p.Store.SetValue(store.ModuleName, p.ModuleName)
 	p.Store.SetValue(store.ProjectName, projectName)
 
+	inline, inlineParseError := strconv.ParseBool(p.Store.GetValue(store.Inline))
+	if inlineParseError != nil {
+		return inlineParseError
+	}
+
 	workingDirectory := p.Manager.GetExtractLocation()
-	projectFullPath := fmt.Sprintf("%s/%s", workingDirectory, projectName)
-	dirCreationErr := p.Manager.CreateDirectoryIfNotExist(projectFullPath)
+	projectFullPath := workingDirectory
+	if !inline {
+		projectFullPath = filepath.Join(workingDirectory, projectName)
+
+		dirCreationErr := p.Manager.CreateDirectoryIfNotExist(projectFullPath)
+		if dirCreationErr != nil {
+			return dirCreationErr
+		}
+	}
 
 	p.Store.SetValue(store.WorkingDirectory, workingDirectory)
 	p.Store.SetValue(store.ProjectFullPath, projectFullPath)
-
-	if dirCreationErr != nil {
-		return dirCreationErr
-	}
 
 	p.Logger.LogInfo(fmt.Sprintf("%s is created", projectFullPath))
 	return nil
@@ -98,9 +108,18 @@ func (p *ProjectNameRequirement) validateModuleName(name any) error {
 		}
 	}
 
+	inline, parseBoolError := strconv.ParseBool(p.Store.GetValue(store.Inline))
+	if parseBoolError != nil {
+		return parseBoolError
+	}
+
+	if inline {
+		return nil
+	}
+
 	projectName := filepath.Base(moduleName)
 	workingDirectory := p.Manager.GetExtractLocation()
-	projectFullPath := fmt.Sprintf("%s/%s", workingDirectory, projectName)
+	projectFullPath := filepath.Join(workingDirectory, projectName)
 	if _, err := os.Stat(projectFullPath); !os.IsNotExist(err) {
 		return fmt.Errorf("directory %s exists, select another name", projectName)
 	}

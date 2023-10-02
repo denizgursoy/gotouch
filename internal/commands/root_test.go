@@ -3,10 +3,11 @@ package commands
 import (
 	"testing"
 
-	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/require"
+
+	"github.com/denizgursoy/gotouch/internal/operator"
 )
 
 type (
@@ -29,6 +30,10 @@ func TestCreateRootCommand(t *testing.T) {
 				{
 					shortName: "f",
 					name:      "file",
+				},
+				{
+					shortName: "i",
+					name:      "inline",
 				},
 			},
 		}
