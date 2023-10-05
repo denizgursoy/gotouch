@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"net/url"
 	"os"
 	"strings"
@@ -15,6 +14,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"gopkg.in/yaml.v3"
 
+	"github.com/denizgursoy/gotouch/internal/auth"
 	"github.com/denizgursoy/gotouch/internal/model"
 )
 
@@ -44,7 +44,7 @@ func GetInstance() Lister {
 	once.Do(func() {
 		uri, _ := url.ParseRequestURI(PropertiesUrl)
 		lister = &mainLister{
-			DefaultStrategy: NewUrlReader(uri, &http.Client{}),
+			DefaultStrategy: NewUrlReader(uri, auth.NewAuthenticatedHTTPClient()),
 		}
 	})
 	return lister
@@ -114,7 +114,7 @@ func determineReadStrategy(path string) ReadStrategy {
 		if err != nil {
 			fmt.Println(err)
 		}
-		return NewUrlReader(uri, &http.Client{})
+		return NewUrlReader(uri, auth.NewAuthenticatedHTTPClient())
 	} else {
 		return NewFileReader(path)
 	}

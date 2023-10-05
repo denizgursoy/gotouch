@@ -2,7 +2,7 @@ package lister
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"testing"
@@ -51,7 +51,7 @@ func Test_urlReader_ReadProjectStructures(t *testing.T) {
 		client := NewTestClient(func(req *http.Request) *http.Response {
 			marshal, _ := yaml.Marshal(testProjectStructures)
 			return &http.Response{
-				Body: ioutil.NopCloser(bytes.NewReader(marshal)),
+				Body: io.NopCloser(bytes.NewReader(marshal)),
 			}
 		})
 		parse, _ := url.Parse(PropertiesUrl)

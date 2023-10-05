@@ -8,6 +8,7 @@ require (
 	github.com/go-git/go-git/v5 v5.5.2
 	github.com/go-playground/validator/v10 v10.11.2
 	github.com/golang/mock v1.6.0
+	github.com/jdx/go-netrc v1.0.0
 	github.com/mattn/go-colorable v0.1.13
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5

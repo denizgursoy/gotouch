@@ -37,7 +37,7 @@ func Test_determineReadStrategy(t *testing.T) {
 	strategy := determineReadStrategy("")
 	require.IsType(t, &urlReader{}, strategy)
 
-	// TODO add file stragety test
+	// TODO add file strategy test
 
 	strategy = determineReadStrategy(PropertiesUrl)
 	require.IsType(t, &urlReader{}, strategy)

@@ -2,9 +2,11 @@ package requirements
 
 import (
 	"fmt"
-	"net/http"
 
+	"github.com/denizgursoy/gotouch/internal/auth"
 	"github.com/denizgursoy/gotouch/internal/langs"
+
+	"github.com/go-playground/validator/v10"
 
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -12,7 +14,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/go-playground/validator/v10"
 )
 
 type (
@@ -110,7 +111,7 @@ func getTasks(r model.Resources, l logger.Logger, m manager.Manager,
 			File:    *file,
 			Logger:  l,
 			Manager: m,
-			Client:  &http.Client{},
+			Client:  auth.NewAuthenticatedHTTPClient(),
 		})
 	}
 	return tasks
