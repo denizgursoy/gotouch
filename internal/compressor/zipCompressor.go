@@ -9,15 +9,18 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/denizgursoy/gotouch/internal/auth"
 	"github.com/denizgursoy/gotouch/internal/logger"
+
+	"github.com/go-playground/validator/v10"
 
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/go-playground/validator/v10"
 )
 
 type (
 	compressor struct {
+		Client   *http.Client
 		Manager  manager.Manager `validate:"required"`
 		Store    store.Store     `validate:"required"`
 		Strategy ZipStrategy     `validate:"required"`
@@ -27,6 +30,7 @@ type (
 
 func newCompressor() Compressor {
 	return &compressor{
+		Client:   auth.NewAuthenticatedHTTPClient(),
 		Manager:  manager.GetInstance(),
 		Store:    store.GetInstance(),
 		Strategy: newTarStrategy(),
@@ -41,8 +45,7 @@ func (z *compressor) UncompressFromUrl(url string) error {
 
 	z.Logger.LogInfo("Extracting files...")
 
-	client := http.Client{}
-	response, httpErr := client.Get(url)
+	response, httpErr := z.Client.Get(url)
 	if httpErr != nil {
 		return httpErr
 	}
