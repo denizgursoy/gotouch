@@ -19,11 +19,15 @@ func GetPackageCommandHandler(cmdr operator.Operator) CommandHandler {
 		lgr := logger.NewLogger()
 
 		flags := cmd.Flags()
-		sourceDirectoryPath, inputError := flags.GetString(SourceDirectoryFlagName)
-		targetDirectoryPath, inputError := flags.GetString(TargetDirectoryFlagName)
+		sourceDirectoryPath, err := flags.GetString(SourceDirectoryFlagName)
+		if err != nil {
+			lgr.LogErrorIfExists(err)
+			return
+		}
 
-		if inputError != nil {
-			lgr.LogErrorIfExists(inputError)
+		targetDirectoryPath, err := flags.GetString(TargetDirectoryFlagName)
+		if err != nil {
+			lgr.LogErrorIfExists(err)
 			return
 		}
 
@@ -43,7 +47,7 @@ func GetPackageCommandHandler(cmdr operator.Operator) CommandHandler {
 			SourceDirectory: sourcePointer,
 			TargetDirectory: targetPointer,
 		}
-		err := cmdr.CompressDirectory(&options)
+		err = cmdr.CompressDirectory(&options)
 		lgr.LogErrorIfExists(err)
 	}
 }

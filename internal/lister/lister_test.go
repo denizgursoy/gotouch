@@ -2,7 +2,7 @@ package lister
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -11,7 +11,7 @@ import (
 
 func TestParseToProjectStructureData(t *testing.T) {
 	t.Run("should return ProjectDataParseError if body cannot be parsed properly", func(t *testing.T) {
-		closer := ioutil.NopCloser(bytes.NewReader([]byte("parse-error-only-string")))
+		closer := io.NopCloser(bytes.NewReader([]byte("parse-error-only-string")))
 		projects, err := ParseToProjectStructureData(closer)
 
 		require.Nil(t, projects)
@@ -22,7 +22,7 @@ func TestParseToProjectStructureData(t *testing.T) {
 
 	t.Run("should return NoProjectError if body cannot be parsed properly", func(t *testing.T) {
 		marshal, _ := yaml.Marshal(nil)
-		closer := ioutil.NopCloser(bytes.NewReader(marshal))
+		closer := io.NopCloser(bytes.NewReader(marshal))
 
 		projects, err := ParseToProjectStructureData(closer)
 

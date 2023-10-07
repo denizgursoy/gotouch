@@ -113,7 +113,7 @@ func saveConfig(config *Config) error {
 		return err
 	}
 
-	err = createFileIfNotExists(err, name)
+	err = createFileIfNotExists(name)
 	if err != nil {
 		return err
 	}
@@ -129,8 +129,8 @@ func saveConfig(config *Config) error {
 	return nil
 }
 
-func createFileIfNotExists(err error, name string) error {
-	if _, err = os.Stat(name); os.IsNotExist(err) {
+func createFileIfNotExists(name string) error {
+	if _, err := os.Stat(name); os.IsNotExist(err) {
 		_, err = os.Create(name)
 		if err != nil {
 			return err

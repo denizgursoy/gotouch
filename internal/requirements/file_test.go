@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"reflect"
 	"testing"
@@ -118,7 +117,7 @@ func Test_fileTask_Complete(t *testing.T) {
 			Logger:  logger.NewLogger(),
 			Manager: mockManager,
 			Client: NewTestClient(func(req *http.Request) (*http.Response, error) {
-				return &http.Response{Body: ioutil.NopCloser(bytes.NewReader([]byte("")))}, unexpectedError
+				return &http.Response{Body: io.NopCloser(bytes.NewReader([]byte("")))}, unexpectedError
 			}),
 		}
 
