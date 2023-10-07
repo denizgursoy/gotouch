@@ -70,7 +70,7 @@ func TestNetrcTransport_RoundTrip_NoNetRCFile(t *testing.T) {
 	}
 }
 
-func writeNetrcFile(tb testing.TB, filePath string, host string) {
+func writeNetrcFile(tb testing.TB, filePath, host string) {
 	tb.Helper()
 	netRc := netrc.New(filePath)
 	netRc.AddMachine(host, sampleUsername, samplePassword)
