@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -80,8 +81,10 @@ func readConfig() (*Config, error) {
 	}
 	_, err = os.Stat(name)
 
-	if err != nil {
+	if errors.Is(err, os.ErrNotExist) {
 		return &Config{}, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("could not read the setting file error=%w", err)
 	}
 
 	file, err := os.ReadFile(name)
@@ -91,7 +94,7 @@ func readConfig() (*Config, error) {
 	config := Config{}
 	err = json.Unmarshal(file, &config)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not parse config file %w", err)
 	}
 	return &config, nil
 }
