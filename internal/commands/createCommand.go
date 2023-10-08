@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
@@ -9,6 +10,8 @@ import (
 
 	"github.com/denizgursoy/gotouch/internal/operator"
 
+	"github.com/spf13/cobra"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -16,11 +19,11 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/spf13/cobra"
 )
 
 const (
-	FileFlagName = "file"
+	FileFlagName   = "file"
+	InlineFlagName = "inline"
 )
 
 type (
@@ -43,7 +46,15 @@ func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 			pointer = nil
 		}
 
+		inline, inlineError := flags.GetBool(InlineFlagName)
+		if inlineError != nil {
+			newLogger.LogErrorIfExists(inlineError)
+			return
+		}
+
 		appStore := store.GetInstance()
+		appStore.SetValue(store.Inline, strconv.FormatBool(inline))
+
 		options := operator.CreateNewProjectOptions{
 			Lister:        lister.GetInstance(),
 			Prompter:      prompter.GetInstance(),

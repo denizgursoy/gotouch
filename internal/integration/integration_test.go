@@ -7,13 +7,13 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
 
-	"github.com/denizgursoy/gotouch/internal/requirements"
-
 	"github.com/denizgursoy/gotouch/internal/config"
+	"github.com/denizgursoy/gotouch/internal/requirements"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -35,6 +35,7 @@ type ZippingTestSuite struct {
 	binaryPath         string
 	binaryDir          string
 	createdProjectPath string
+	inline             bool
 }
 
 func TestUnzipping(t *testing.T) {
@@ -45,14 +46,18 @@ func (z *ZippingTestSuite) SetupSuite() {
 	err := os.Chdir("../../")
 	getwd, _ := os.Getwd()
 	z.binaryDir = getwd
-	z.binaryPath = getwd + "/gotouch-" + runtime.GOOS
+	z.binaryPath = filepath.Join(getwd, "gotouch-"+runtime.GOOS)
 	z.Nil(err, "could not change directory")
 }
 
 func (z *ZippingTestSuite) SetupTest() {
-	mkdirTemp, _ := os.MkdirTemp("", "gotouch-test*")
-	z.createdProjectPath = mkdirTemp + "/" + "testapp"
+	mkdirTemp, _ := os.MkdirTemp(z.T().TempDir(), "gotouch-test*")
+
+	z.createdProjectPath = filepath.Join(mkdirTemp, "testapp")
 	z.workingDir = mkdirTemp
+
+	// reset inline
+	z.inline = false
 
 	err := os.Chdir(mkdirTemp)
 	if err != nil {
@@ -144,6 +149,15 @@ func (z *ZippingTestSuite) TestProjectWithFilesAndDependencies() {
 	z.checkFileContent("values.txt", "values.txt")
 }
 
+func (z *ZippingTestSuite) TestProjectWithFilesInline() {
+	z.setInputFile("project-with-files-inline.txt")
+	z.setInline()
+	z.executeGotouch()
+
+	z.checkFileContent("Dockerfile", "Dockerfile")
+	z.checkFileContent("values.txt", "values.txt")
+}
+
 func (z *ZippingTestSuite) TestProjectWithPropertiesYaml() {
 	z.setInputFile("project-with-files-and-dependencies.txt")
 	z.executeGotouch()
@@ -182,39 +196,43 @@ func (z *ZippingTestSuite) checkDefaultProjectStructure() {
 }
 
 func (z *ZippingTestSuite) checkFileExists(fileName string, exists bool) {
-	actualFilePath := fmt.Sprintf("%s/%s", z.createdProjectPath, fileName)
-	_, err2 := os.Stat(actualFilePath)
+	_, err2 := os.Stat(filepath.Join(z.createdProjectPath, fileName))
 	if exists {
-		z.Nil(err2)
+		z.NoError(err2)
 	} else {
-		z.NotNil(err2)
+		z.Error(err2)
 	}
 }
 
 func (z *ZippingTestSuite) checkFilesExist(files []string) {
 	for _, file := range files {
-		stat, err := os.Stat(fmt.Sprintf("%s/%s", z.createdProjectPath, file))
-		z.Nil(err, "%s does not exists", file)
-		z.False(stat.IsDir(), "%s does not exists", file)
+		z.FileExists(filepath.Join(z.createdProjectPath, file))
 	}
 }
 
 func (z *ZippingTestSuite) checkFileContent(fileName, expectedFile string) {
-	actualFilePath := fmt.Sprintf("%s/%s", z.createdProjectPath, fileName)
-	expectedFilePath := fmt.Sprintf("%s/internal/testdata/%s", z.binaryDir, expectedFile)
+	var actualFilePath string
+	if z.inline {
+		dir, _ := filepath.Split(z.createdProjectPath)
+		actualFilePath = filepath.Join(dir, fileName)
+	} else {
+		actualFilePath = filepath.Join(z.createdProjectPath, fileName)
+	}
+
+	expectedFilePath := filepath.Join(z.binaryDir, "internal", "testdata", expectedFile)
 	z.checkFileContentsWithAbsPath(actualFilePath, expectedFilePath)
 }
 
 func (z *ZippingTestSuite) checkFileContentsWithAbsPath(actualFilePath, expectedFilePath string) {
 	actualFileContent, err := os.ReadFile(actualFilePath)
-	z.Nil(err)
+	z.NoError(err)
 	expectedFileContent, err := os.ReadFile(expectedFilePath)
-	z.Nil(err)
+	z.NoError(err)
 	z.EqualValues(actualFileContent, expectedFileContent)
 }
 
 func (z *ZippingTestSuite) checkModuleName(expectedModuleName string, dependencies []string) {
-	open, err := os.ReadFile(fmt.Sprintf("%s/go.mod", z.createdProjectPath))
+	open, err := os.ReadFile(filepath.Join(z.createdProjectPath, "go.mod"))
 	z.Nil(err, "go module file not found")
 
 	moduleContent := string(open)
@@ -229,7 +247,7 @@ func (z *ZippingTestSuite) checkModuleName(expectedModuleName string, dependenci
 
 func (z *ZippingTestSuite) checkDirectoriesExist(directories []string) {
 	for _, directory := range directories {
-		directoryPath := fmt.Sprintf("%s/%s", z.createdProjectPath, directory)
+		directoryPath := filepath.Join(z.createdProjectPath, directory)
 		stat, err := os.Stat(directoryPath)
 		z.Nil(err, "%s does not exists", directory)
 		z.True(stat.IsDir(), "%s does not exists", directory)
@@ -260,6 +278,9 @@ func (z *ZippingTestSuite) CmdExec(args ...string) {
 func (z *ZippingTestSuite) executeGotouch() {
 	args := make([]string, 0)
 	args = append(args, z.binaryPath, "-f", PropertiesUrl)
+	if z.inline {
+		args = append(args, "-i")
+	}
 	z.CmdExec(args...)
 }
 
@@ -271,6 +292,9 @@ func (z *ZippingTestSuite) executeGotouchWithArgs(gotouchArgs ...string) {
 }
 
 func (z *ZippingTestSuite) setInputFile(fileName string) {
-	source := fmt.Sprintf("%s/internal/testdata/%s", z.binaryDir, fileName)
-	file = source
+	file = filepath.Join(z.binaryDir, "internal", "testdata", fileName)
+}
+
+func (z *ZippingTestSuite) setInline() {
+	z.inline = true
 }

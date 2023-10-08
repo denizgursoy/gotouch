@@ -9,7 +9,6 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/go-git/go-git/v5/plumbing/transport"
 
 	"github.com/denizgursoy/gotouch/internal/auth"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -35,14 +34,12 @@ func newCloner() Cloner {
 }
 
 func (g *gitCloner) CloneFromUrl(rawUrl, branchName string) error {
-	projectName := g.Store.GetValue(store.ProjectName)
+	projectFullPath := g.Store.GetValue(store.ProjectFullPath)
 
-	var name plumbing.ReferenceName
-	if len(strings.TrimSpace(branchName)) != 0 {
-		name = plumbing.NewBranchReferenceName(branchName)
-		g.Logger.LogInfo(fmt.Sprintf("Cloning branch %s from   -> %s", branchName, rawUrl))
-	} else {
-		g.Logger.LogInfo("Cloning repository  -> " + rawUrl)
+	cloneOptions := &git.CloneOptions{
+		Depth:    1,
+		URL:      rawUrl,
+		Progress: os.Stdout,
 	}
 
 	gitURL, urlParseError := url.Parse(rawUrl)
@@ -50,26 +47,25 @@ func (g *gitCloner) CloneFromUrl(rawUrl, branchName string) error {
 		return urlParseError
 	}
 
-	var gitAuth transport.AuthMethod
-
 	switch gitURL.Scheme {
 	case "http", "https":
-		gitAuth = auth.NewGitNetrcHTTPAuth()
+		cloneOptions.Auth = auth.NewGitNetrcHTTPAuth()
 	}
 
-	cloneOptions := &git.CloneOptions{
-		Auth:          gitAuth,
-		URL:           rawUrl,
-		Progress:      os.Stdout,
-		ReferenceName: name,
+	if len(strings.TrimSpace(branchName)) != 0 {
+		cloneOptions.ReferenceName = plumbing.NewBranchReferenceName(branchName)
+		cloneOptions.SingleBranch = true
+		g.Logger.LogInfo(fmt.Sprintf("Cloning branch %s from   -> %s", branchName, rawUrl))
+	} else {
+		g.Logger.LogInfo("Cloning repository  -> " + rawUrl)
 	}
 
-	_, err := git.PlainClone(projectName, false, cloneOptions)
+	_, err := git.PlainClone(projectFullPath, false, cloneOptions)
 	if err != nil {
 		return err
 	}
 
-	gitDirectory := projectName + string(filepath.Separator) + GitDirectory
+	gitDirectory := filepath.Join(projectFullPath, GitDirectory)
 	if err = os.RemoveAll(gitDirectory); err != nil {
 		return err
 	}

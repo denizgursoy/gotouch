@@ -7,8 +7,9 @@ import (
 	"github.com/denizgursoy/gotouch/internal/config"
 	"github.com/denizgursoy/gotouch/internal/logger"
 
-	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/spf13/cobra"
+
+	"github.com/denizgursoy/gotouch/internal/operator"
 )
 
 type BuildInfo struct {
@@ -49,6 +50,7 @@ Gotouch will ask the questions in the selected project structure in order.`,
 		Run: GetCreateCommandHandler(cmdr),
 	}
 	createCommand.Flags().StringP(FileFlagName, "f", "", "input properties yaml")
+	createCommand.Flags().BoolP(InlineFlagName, "i", false, "create files in the current directory instead of creating a subdirectory")
 
 	createCommand.AddCommand(CreatePackageCommand(cmdr))
 	createCommand.AddCommand(CreateValidateCommand(cmdr))
