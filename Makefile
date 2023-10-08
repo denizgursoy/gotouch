@@ -30,7 +30,7 @@ mock:
 	go generate -v ./...
 
 release:
-	goreleaser release --snapshot --rm-dist
+	goreleaser release --snapshot --clean
 
 install-semver:
 	go install github.com/maykonlf/semver-cli/cmd/semver@latest

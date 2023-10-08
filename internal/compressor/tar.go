@@ -155,6 +155,7 @@ func Untar(dst string, r io.Reader) error {
 		// if its a dir and it doesn't exist create it
 		case tar.TypeDir:
 			if _, err := os.Stat(target); err != nil {
+				return err
 			}
 
 		// if it's a file create it

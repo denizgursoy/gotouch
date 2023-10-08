@@ -236,6 +236,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 			mockStore := store.NewMockStore(controller)
 
 			mockStore.EXPECT().SetValue(gomock.Any(), gomock.Any()).AnyTimes()
+			mockStore.EXPECT().GetValue(store.Inline).Times(1).Return("false")
 
 			mockManager.
 				EXPECT().
@@ -267,7 +268,7 @@ func Test_projectNameTask_Complete(t *testing.T) {
 		mockStore := store.NewMockStore(controller)
 
 		mockStore.EXPECT().SetValue(gomock.Any(), gomock.Any()).AnyTimes()
-
+		mockStore.EXPECT().GetValue(store.Inline).Times(1).Return("false")
 		mockManager.
 			EXPECT().
 			GetExtractLocation().
@@ -290,5 +291,36 @@ func Test_projectNameTask_Complete(t *testing.T) {
 		err := task.Complete()
 
 		require.NotNil(t, err)
+	})
+	t.Run("should not create directory if inline flag is present", func(t *testing.T) {
+		controller := gomock.NewController(t)
+		defer controller.Finish()
+
+		mockManager := manager.NewMockManager(controller)
+		mockLogger := logger.NewLogger()
+		mockStore := store.NewMockStore(controller)
+
+		mockStore.EXPECT().SetValue(store.ModuleName, testProjectName).Times(1)
+		mockStore.EXPECT().SetValue(store.ProjectName, testProjectName).Times(1)
+		mockStore.EXPECT().SetValue(store.WorkingDirectory, extractLocation).Times(1)
+		mockStore.EXPECT().SetValue(store.ProjectFullPath, extractLocation).Times(1)
+		mockStore.EXPECT().GetValue(store.Inline).Times(1).Return("true")
+
+		mockManager.
+			EXPECT().
+			GetExtractLocation().
+			Return(extractLocation).
+			Times(1)
+
+		task := projectNameTask{
+			ModuleName: testProjectName,
+			Manager:    mockManager,
+			Logger:     mockLogger,
+			Store:      mockStore,
+		}
+
+		err := task.Complete()
+
+		require.NoError(t, err)
 	})
 }

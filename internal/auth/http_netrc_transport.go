@@ -6,9 +6,7 @@ import (
 	"github.com/jdx/go-netrc"
 )
 
-var (
-	_ http.RoundTripper = (*NetrcTransport)(nil)
-)
+var _ http.RoundTripper = (*NetrcTransport)(nil)
 
 func NewAuthenticatedHTTPClient() *http.Client {
 	return &http.Client{

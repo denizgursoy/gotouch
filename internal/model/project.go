@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/langs"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type (
@@ -50,7 +52,9 @@ type (
 func (p *ProjectStructureData) String() string {
 	projectName := p.Name
 	if len(strings.TrimSpace(p.Language)) != 0 {
-		projectName += fmt.Sprintf(" ( %s )", strings.Title(p.Language))
+		englishCaser := cases.Title(language.English)
+		projectNameTitle := englishCaser.String(p.Language)
+		projectName += fmt.Sprintf(" ( %s )", projectNameTitle)
 	}
 	if len(strings.TrimSpace(p.Reference)) != 0 {
 		projectName += fmt.Sprintf(" ( %s )", p.Reference)
@@ -110,12 +114,12 @@ func (p *ProjectStructureData) validateQuestion(q *Question, questionIndex int) 
 			index:       questionIndex,
 			field:       "Choices",
 		}
-	} else if len(q.Choices) == 1 && q.CanSelectMultiple == true {
+	} else if len(q.Choices) == 1 && q.CanSelectMultiple {
 		return ErrCanSelectMultiple{
 			projectName: p.Name,
 			index:       questionIndex,
 		}
-	} else if len(q.Choices) == 1 && q.CanSkip == false {
+	} else if len(q.Choices) == 1 && !q.CanSkip {
 		return ErrCanSkip{
 			projectName: p.Name,
 			index:       questionIndex,

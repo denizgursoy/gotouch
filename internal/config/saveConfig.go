@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -80,8 +81,10 @@ func readConfig() (*Config, error) {
 	}
 	_, err = os.Stat(name)
 
-	if err != nil {
+	if errors.Is(err, os.ErrNotExist) {
 		return &Config{}, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("could not read the setting file error=%w", err)
 	}
 
 	file, err := os.ReadFile(name)
@@ -91,7 +94,7 @@ func readConfig() (*Config, error) {
 	config := Config{}
 	err = json.Unmarshal(file, &config)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not parse config file %w", err)
 	}
 	return &config, nil
 }
@@ -110,7 +113,7 @@ func saveConfig(config *Config) error {
 		return err
 	}
 
-	err = createFileIfNotExists(err, name)
+	err = createFileIfNotExists(name)
 	if err != nil {
 		return err
 	}
@@ -126,8 +129,8 @@ func saveConfig(config *Config) error {
 	return nil
 }
 
-func createFileIfNotExists(err error, name string) error {
-	if _, err = os.Stat(name); os.IsNotExist(err) {
+func createFileIfNotExists(name string) error {
+	if _, err := os.Stat(name); os.IsNotExist(err) {
 		_, err = os.Create(name)
 		if err != nil {
 			return err

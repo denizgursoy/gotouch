@@ -68,5 +68,4 @@ func TestGitNetrcHTTPAuth_SetAuth_DummyNetrcFile(t *testing.T) {
 			}
 		})
 	}
-
 }
