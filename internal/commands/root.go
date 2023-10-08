@@ -62,7 +62,7 @@ Gotouch will ask the questions in the selected project structure in order.`,
 func CreatePackageCommand(cmdr operator.Operator) *cobra.Command {
 	packageCommand := &cobra.Command{
 		Use:   "package",
-		Short: "Create archive file from directory compatible with gotouch",
+		Short: "Create archive file from directory compatible with Gotouch",
 		Long: `Creates a tar file with gzip compression. Ignores following files/directories:
 
 __MACOS
@@ -86,7 +86,7 @@ func CreateValidateCommand(cmdr operator.Operator) *cobra.Command {
 	validateCommand := &cobra.Command{
 		Use:   "validate",
 		Short: "Validation Check for YAML files",
-		Long: `Checks if properties yaml can be used by gotouch.
+		Long: `Checks if properties yaml can be used by Gotouch.
 See https://raw.githubusercontent.com/denizgursoy/gotouch/main/examples/complete-choice-example.yaml as a guide.`,
 		Run: GetValidateCommandHandler(cmdr),
 	}
@@ -106,28 +106,38 @@ func CreateConfigCommand() *cobra.Command {
 
 	configCommand.AddCommand(&cobra.Command{
 		Use:  "set",
-		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(2)),
+		Args: cobra.MatchAll(cobra.ExactArgs(2), isConfigurableParameter),
 		Run: func(cmd *cobra.Command, args []string) {
 			err := manager.SetValueOf(args[0], args[1])
 			if err != nil {
 				lgr.LogErrorIfExists(err)
 			}
 		},
+		Short: "Set config parameters' values and store it in your OS's config directory",
+		Long: `Expects a config parameter with value seperated by space. For example: url path-to-properties-yaml
+Possible config parameters are:
+url: replaces the base url. Whenever Gotouch is executed with no argument, it will use the properties yaml in the url value
+`,
 	})
 	configCommand.AddCommand(&cobra.Command{
 		Use:  "unset",
-		Args: cobra.MatchAll(isConfigurable, cobra.ExactArgs(1)),
+		Args: cobra.MatchAll(cobra.ExactArgs(1), isConfigurableParameter),
 		Run: func(cmd *cobra.Command, args []string) {
 			err := manager.UnsetValuesOf(args[0])
 			if err != nil {
 				lgr.LogErrorIfExists(err)
 			}
 		},
+		Short: "Removes the value from the config",
+		Long: `Expects config parameter to be unset
+Possible config parameters are:
+url
+`,
 	})
 	return configCommand
 }
 
-func isConfigurable(cmd *cobra.Command, args []string) error {
+func isConfigurableParameter(cmd *cobra.Command, args []string) error {
 	for _, confArg := range config.ConfigurableSettings {
 		if confArg == args[0] {
 			return nil
