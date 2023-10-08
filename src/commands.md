@@ -7,6 +7,8 @@ structure. If file flag value is not provided, it is going to
 use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml).
 Firstly,The command asks for project name. Project name is written to go module and used for directory name.
 
+**`inline`**: Inline flag allows you to create projects in your current directory.
+
 ### package
 
 `gotouch package --source path-to-source --target path-to-target`
@@ -34,7 +36,7 @@ Validate checks if your yaml is valid or not.
 
 Allows you to change following configurations:
 
-**`url`**: Replaces the default URL. If changed, gotouch will display project structures in the URL without `-f` flag.
+**`url`**: Replaces the default URL. If changed, Gotouch will display project structures in the URL without `-f` flag.
 
 Usage:
 
