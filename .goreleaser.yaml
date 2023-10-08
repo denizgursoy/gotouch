@@ -22,12 +22,14 @@ builds:
       - goos:  windows
         goarch: arm64
 archives:
-  - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
+  - name_template: >-
+      {{- .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
     files:
       - none*
 checksum:
@@ -67,7 +69,7 @@ brews:
 - name: gotouch
   homepage: https://denizgursoy.github.io/gotouch/
   description: "customizable project creator"
-  tap:
+  repository:
     owner: brew-tools
     name: homebrew-tap
     token: "{{ .Env.BREW_TOKEN }}"
