@@ -7,7 +7,7 @@ structure. If file flag value is not provided, it is going to
 use [default properties yaml](https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/package.yaml).
 Firstly,The command asks for project name. Project name is written to go module and used for directory name.
 
-**`inline`**: Inline flag allows you to create projects in your current directory.
+**`inline`**: Inline flag allows you to create projects in the working directory.
 
 ### package
 

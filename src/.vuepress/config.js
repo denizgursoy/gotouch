@@ -65,6 +65,13 @@ module.exports = {
                     '/customize/examples.md',
                 ],
             },
+            {
+                title: 'Features',
+                children: [
+                    '/features/',
+                    '/features/authentication.md',
+                ],
+            },
             "share.md",
             "commands.md",
         ]
