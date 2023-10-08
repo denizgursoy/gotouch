@@ -10,6 +10,7 @@ const (
 	WorkingDirectory = "WorkingDirectory"
 	ProjectFullPath  = "ProjectFullPath"
 	Dependencies     = "Dependencies"
+	Inline           = "Inline"
 )
 
 type (

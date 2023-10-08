@@ -4,12 +4,13 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -123,11 +124,16 @@ func Test_validateProjectName(t *testing.T) {
 			wantErr: true,
 		},
 	}
+
 	mockManager := manager.NewMockManager(gomock.NewController(t))
 	mockManager.EXPECT().GetExtractLocation().AnyTimes()
 
+	mockStore := store.NewMockStore(gomock.NewController(t))
+	mockStore.EXPECT().GetValue(store.Inline).Return("false").AnyTimes()
+
 	req := &ProjectNameRequirement{
 		Manager: mockManager,
+		Store:   mockStore,
 	}
 
 	for _, tt := range tests {
