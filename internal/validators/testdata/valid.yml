@@ -1,0 +1,10 @@
+hello: world
+sum: 23
+nested:
+  object:
+    value: asdf
+
+array:
+  - 1
+  - 2
+  - 3
