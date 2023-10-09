@@ -6,6 +6,7 @@ import (
 
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/config"
+	"github.com/denizgursoy/gotouch/internal/validators"
 
 	"github.com/go-playground/validator/v10"
 
@@ -34,7 +35,7 @@ type (
 		Compressor    compressor.Compressor `validate:"required"`
 		Executor      executor.Executor     `validate:"required"`
 		Logger        logger.Logger         `validate:"required"`
-		Path          *string               `validate:"omitempty,endswith=.yaml,url|file"`
+		Path          *string               `validate:"omitempty,yaml_url|yaml_file"`
 		Store         store.Store           `validate:"required"`
 		Cloner        cloner.Cloner         `validate:"required"`
 		CommandRunner commandrunner.Runner  `validate:"required"`
@@ -78,7 +79,16 @@ func (o *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 }
 
 func isValid(opts *CreateNewProjectOptions) error {
-	err := validator.New().Struct(opts)
+	validate := validator.New()
+	if err := validators.AddYamlUrlValidator(validate); err != nil {
+		return err
+	}
+
+	if err := validators.AddYamlFileValidator(validate); err != nil {
+		return err
+	}
+
+	err := validate.Struct(opts)
 	if err != nil {
 		fieldErrors := err.(validator.ValidationErrors)
 		fieldError := fieldErrors[0]

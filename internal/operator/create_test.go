@@ -94,7 +94,7 @@ func Test_isValid_PathTest(t *testing.T) {
 		arg.Path = &path
 		err := isValid(&arg)
 		require.NotNil(t, err)
-		require.ErrorIs(t, err, ErrNotYamlFile)
+		require.ErrorIs(t, err, ErrNotValidUrlOrFilePath)
 	})
 
 	t.Run("should return no error if yaml file exists", func(t *testing.T) {
