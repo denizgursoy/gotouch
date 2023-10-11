@@ -2,6 +2,9 @@ package requirements
 
 import (
 	"github.com/denizgursoy/gotouch/internal/langs"
+
+	"context"
+
 	"github.com/go-playground/validator/v10"
 )
 
@@ -12,8 +15,8 @@ type (
 	}
 )
 
-func (d *dependencyTask) Complete() error {
-	if err := validator.New().Struct(d); err != nil {
+func (d *dependencyTask) Complete(ctx context.Context) error {
+	if err := validator.New().StructCtx(ctx, d); err != nil {
 		return err
 	}
 	return d.LanguageChecker.GetDependency(d.Dependency)

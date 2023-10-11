@@ -2,15 +2,17 @@ package requirements
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"net/http"
 	"path/filepath"
 	"strings"
 
+	"github.com/go-playground/validator/v10"
+
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/go-playground/validator/v10"
 )
 
 type (
@@ -22,8 +24,8 @@ type (
 	}
 )
 
-func (f *fileTask) Complete() error {
-	if err := validator.New().Struct(f); err != nil {
+func (f *fileTask) Complete(ctx context.Context) error {
+	if err := validator.New().StructCtx(ctx, f); err != nil {
 		return err
 	}
 	url := f.File.Url

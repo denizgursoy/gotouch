@@ -8,6 +8,9 @@ import (
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
 	"github.com/denizgursoy/gotouch/internal/lister"
@@ -16,8 +19,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/operator"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGetCreateCommandHandler(t *testing.T) {
@@ -58,7 +59,7 @@ func TestGetCreateCommandHandler(t *testing.T) {
 				ConfigManager: config.NewConfigManager(logger.NewLogger()),
 			}
 
-			mockCommander.EXPECT().CreateNewProject(gomock.Eq(expectedCall))
+			mockCommander.EXPECT().CreateNewProject(gomock.Any(), gomock.Eq(expectedCall))
 
 			command := CreateRootCommand(mockCommander, BuildInfo{})
 			command.SetArgs(getCreateTestArguments(argument.flag))

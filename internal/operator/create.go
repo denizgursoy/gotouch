@@ -1,6 +1,7 @@
 package operator
 
 import (
+	"context"
 	"errors"
 	"strings"
 
@@ -43,8 +44,8 @@ type (
 	}
 )
 
-func (o *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
-	if validationError := isValid(opts); validationError != nil {
+func (o *operator) CreateNewProject(ctx context.Context, opts *CreateNewProjectOptions) error {
+	if validationError := isValid(ctx, opts); validationError != nil {
 		return validationError
 	}
 
@@ -75,10 +76,10 @@ func (o *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 	}
 	newProjectRequirements = append(newProjectRequirements, &requirement)
 
-	return opts.Executor.Execute(newProjectRequirements)
+	return opts.Executor.Execute(ctx, newProjectRequirements)
 }
 
-func isValid(opts *CreateNewProjectOptions) error {
+func isValid(ctx context.Context, opts *CreateNewProjectOptions) error {
 	validate := validator.New()
 	if err := validators.AddYamlUrlValidator(validate); err != nil {
 		return err
@@ -88,7 +89,7 @@ func isValid(opts *CreateNewProjectOptions) error {
 		return err
 	}
 
-	err := validate.Struct(opts)
+	err := validate.StructCtx(ctx, opts)
 	if err != nil {
 		fieldErrors := err.(validator.ValidationErrors)
 		fieldError := fieldErrors[0]

@@ -5,6 +5,7 @@
 package compressor
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -48,17 +49,17 @@ func (mr *MockCompressorMockRecorder) CompressDirectory(source, target interface
 }
 
 // UncompressFromUrl mocks base method.
-func (m *MockCompressor) UncompressFromUrl(url string) error {
+func (m *MockCompressor) UncompressFromUrl(ctx context.Context, url string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UncompressFromUrl", url)
+	ret := m.ctrl.Call(m, "UncompressFromUrl", ctx, url)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UncompressFromUrl indicates an expected call of UncompressFromUrl.
-func (mr *MockCompressorMockRecorder) UncompressFromUrl(url interface{}) *gomock.Call {
+func (mr *MockCompressorMockRecorder) UncompressFromUrl(ctx, url interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromUrl", reflect.TypeOf((*MockCompressor)(nil).UncompressFromUrl), url)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromUrl", reflect.TypeOf((*MockCompressor)(nil).UncompressFromUrl), ctx, url)
 }
 
 // MockZipStrategy is a mock of ZipStrategy interface.

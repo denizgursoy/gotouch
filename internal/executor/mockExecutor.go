@@ -5,6 +5,7 @@
 package executor
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -34,15 +35,15 @@ func (m *MockExecutor) EXPECT() *MockExecutorMockRecorder {
 }
 
 // Execute mocks base method.
-func (m *MockExecutor) Execute(requirements Requirements) error {
+func (m *MockExecutor) Execute(ctx context.Context, requirements Requirements) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Execute", requirements)
+	ret := m.ctrl.Call(m, "Execute", ctx, requirements)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Execute indicates an expected call of Execute.
-func (mr *MockExecutorMockRecorder) Execute(requirements interface{}) *gomock.Call {
+func (mr *MockExecutorMockRecorder) Execute(ctx, requirements interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Execute", reflect.TypeOf((*MockExecutor)(nil).Execute), requirements)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Execute", reflect.TypeOf((*MockExecutor)(nil).Execute), ctx, requirements)
 }

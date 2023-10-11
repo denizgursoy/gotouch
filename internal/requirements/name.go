@@ -1,6 +1,7 @@
 package requirements
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -61,8 +62,8 @@ func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requiremen
 	return tasks, nil, nil
 }
 
-func (p *projectNameTask) Complete() error {
-	if err := validator.New().Struct(p); err != nil {
+func (p *projectNameTask) Complete(ctx context.Context) error {
+	if err := validator.New().StructCtx(ctx, p); err != nil {
 		return err
 	}
 

@@ -69,7 +69,7 @@ func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 			ConfigManager: config.NewConfigManager(newLogger),
 		}
 
-		err := cmdr.CreateNewProject(&options)
+		err := cmdr.CreateNewProject(cmd.Context(), &options)
 		options.Logger.LogErrorIfExists(err)
 	}
 }

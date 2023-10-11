@@ -1,16 +1,18 @@
 package requirements
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 
+	"github.com/go-playground/validator/v10"
+
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/go-playground/validator/v10"
 )
 
 type (
@@ -44,8 +46,8 @@ func (i *initRequirement) AskForInput() ([]model.Task, []model.Requirement, erro
 	return tasks, nil, nil
 }
 
-func (i *initTask) Complete() error {
-	if err := validator.New().Struct(i); err != nil {
+func (i *initTask) Complete(ctx context.Context) error {
+	if err := validator.New().StructCtx(ctx, i); err != nil {
 		return err
 	}
 

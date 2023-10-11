@@ -2,10 +2,13 @@
 
 package cloner
 
-import "sync"
+import (
+	"context"
+	"sync"
+)
 
 type Cloner interface {
-	CloneFromUrl(url, branchName string) error
+	CloneFromUrl(ctx context.Context, url, branchName string) error
 }
 
 var (

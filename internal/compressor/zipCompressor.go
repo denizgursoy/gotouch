@@ -1,6 +1,7 @@
 package compressor
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -8,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"golang.org/x/net/context/ctxhttp"
 
 	"github.com/denizgursoy/gotouch/internal/auth"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -38,14 +41,14 @@ func newCompressor() Compressor {
 	}
 }
 
-func (z *compressor) UncompressFromUrl(url string) error {
-	if err := validator.New().Struct(z); err != nil {
+func (z *compressor) UncompressFromUrl(ctx context.Context, url string) error {
+	if err := validator.New().StructCtx(ctx, z); err != nil {
 		return err
 	}
 
 	z.Logger.LogInfo("Extracting files...")
 
-	response, httpErr := z.Client.Get(url)
+	response, httpErr := ctxhttp.Get(ctx, z.Client, url)
 	if httpErr != nil {
 		return httpErr
 	}

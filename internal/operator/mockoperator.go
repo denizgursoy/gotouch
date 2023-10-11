@@ -5,6 +5,7 @@
 package operator
 
 import (
+	context "context"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -48,17 +49,17 @@ func (mr *MockOperatorMockRecorder) CompressDirectory(opts interface{}) *gomock.
 }
 
 // CreateNewProject mocks base method.
-func (m *MockOperator) CreateNewProject(opts *CreateNewProjectOptions) error {
+func (m *MockOperator) CreateNewProject(ctx context.Context, opts *CreateNewProjectOptions) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateNewProject", opts)
+	ret := m.ctrl.Call(m, "CreateNewProject", ctx, opts)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateNewProject indicates an expected call of CreateNewProject.
-func (mr *MockOperatorMockRecorder) CreateNewProject(opts interface{}) *gomock.Call {
+func (mr *MockOperatorMockRecorder) CreateNewProject(ctx, opts interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewProject", reflect.TypeOf((*MockOperator)(nil).CreateNewProject), opts)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewProject", reflect.TypeOf((*MockOperator)(nil).CreateNewProject), ctx, opts)
 }
 
 // ValidateYaml mocks base method.

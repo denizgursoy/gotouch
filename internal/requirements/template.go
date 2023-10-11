@@ -1,6 +1,7 @@
 package requirements
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -76,7 +77,7 @@ func (t *templateRequirement) AskForInput() ([]model.Task, []model.Requirement, 
 	return tasks, nil, nil
 }
 
-func (t *templateTask) Complete() error {
+func (t *templateTask) Complete(context.Context) error {
 	path := t.Store.GetValue(store.ProjectFullPath)
 	t.combineWithDefaultValues()
 

@@ -1,6 +1,7 @@
 package executor
 
 import (
+	"context"
 	"errors"
 
 	"github.com/denizgursoy/gotouch/internal/store"
@@ -20,7 +21,7 @@ func newExecutor() Executor {
 	}
 }
 
-func (e executor) Execute(requirements Requirements) error {
+func (e executor) Execute(ctx context.Context, requirements Requirements) error {
 	if requirements == nil {
 		return EmptyRequirementError
 	}
@@ -37,7 +38,7 @@ func (e executor) Execute(requirements Requirements) error {
 	}
 
 	for _, task := range tasks {
-		err := task.Complete()
+		err := task.Complete(ctx)
 		if err != nil {
 			return err
 		}

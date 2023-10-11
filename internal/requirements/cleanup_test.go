@@ -1,11 +1,13 @@
 package requirements
 
 import (
+	"context"
 	"testing"
 
-	"github.com/denizgursoy/gotouch/internal/langs"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+
+	"github.com/denizgursoy/gotouch/internal/langs"
 )
 
 func Test_cleanupTask_Complete(t *testing.T) {
@@ -19,7 +21,7 @@ func Test_cleanupTask_Complete(t *testing.T) {
 
 		mockChecker.EXPECT().CleanUp().Times(1)
 
-		err := testCleanupTask.Complete()
+		err := testCleanupTask.Complete(context.Background())
 
 		require.Nil(t, err)
 	})
