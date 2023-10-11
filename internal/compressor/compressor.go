@@ -3,12 +3,13 @@
 package compressor
 
 import (
+	"context"
 	"sync"
 )
 
 type (
 	Compressor interface {
-		UncompressFromUrl(url string) error
+		UncompressFromUrl(ctx context.Context, url string) error
 		CompressDirectory(source, target string) error
 	}
 

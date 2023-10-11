@@ -1,8 +1,10 @@
 package commands
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 
 	"github.com/denizgursoy/gotouch/internal/config"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -19,8 +21,10 @@ type BuildInfo struct {
 }
 
 func Execute(info BuildInfo) {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	rootCommand := CreateRootCommand(operator.GetInstance(), info)
-	err := rootCommand.Execute()
+	err := rootCommand.ExecuteContext(ctx)
+	cancel()
 	if err != nil {
 		os.Exit(1)
 	}

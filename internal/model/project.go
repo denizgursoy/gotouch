@@ -1,14 +1,23 @@
 package model
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
 
-	"github.com/denizgursoy/gotouch/internal/langs"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+
+	"github.com/denizgursoy/gotouch/internal/auth"
+	"github.com/denizgursoy/gotouch/internal/langs"
+)
+
+const (
+	GitUploadPackContentType   = "application/x-git-upload-pack-advertisement"
+	GitDiscoveryReferencesPath = "/info/refs?service=git-upload-pack"
 )
 
 type (
@@ -46,6 +55,10 @@ type (
 		Url          string `yaml:"url"`
 		Content      string `yaml:"content"`
 		PathFromRoot string `yaml:"pathFromRoot"`
+	}
+
+	HttpRequester interface {
+		Do(req *http.Request) (*http.Response, error)
 	}
 )
 
@@ -98,6 +111,35 @@ func (p *ProjectStructureData) IsValid() error {
 	}
 
 	return nil
+}
+
+func (p *ProjectStructureData) IsGit(ctx context.Context, requester HttpRequester) (bool, error) {
+	if requester == nil {
+		requester = auth.NewAuthenticatedHTTPClient()
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s%s", p.URL, GitDiscoveryReferencesPath), nil)
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := requester.Do(req)
+	if err != nil {
+		return false, nil
+	}
+
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		return false, nil
+	}
+
+	if resp.Header.Get("Content-Type") != GitUploadPackContentType {
+		return false, nil
+	}
+
+	return true, nil
 }
 
 func (p *ProjectStructureData) validateQuestion(q *Question, questionIndex int) error {
