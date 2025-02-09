@@ -1,8 +1,6 @@
 package prompter
 
 import (
-	"fmt"
-
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,15 +11,15 @@ var (
 	appStyle = lipgloss.NewStyle().Padding(1, 2)
 
 	titleStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FFFDF5")).
-		Background(lipgloss.Color("#25A065")).
-		Padding(0, 1)
+			Foreground(lipgloss.Color("#FFFDF5")).
+			Background(lipgloss.Color("#25A065")).
+			Padding(0, 1)
 )
 
 type item struct {
 	title       string
 	description string
-	userData    fmt.Stringer
+	userData    any
 }
 
 func (i item) Title() string       { return i.title }
@@ -65,30 +63,19 @@ type listModel struct {
 	list         *list.Model
 	keys         *listKeyMap
 	delegateKeys *delegateKeyMap
-	selectedItem fmt.Stringer
 }
 
-func newListModel(direction string, selections []fmt.Stringer) *listModel {
+func newListModel(direction string, items []list.Item) *listModel {
 	var (
 		delegateKeys = newDelegateKeyMap()
 		listKeys     = newListKeyMap()
 	)
 
-	items := make([]list.Item, 0)
-	for _, selection := range selections {
-		items = append(items, item{
-			title:       selection.String(),
-			description: "test",
-			userData:    selection,
-		})
-	}
-
-	// Setup list
 	delegate := newItemDelegate(delegateKeys)
-	groceryList := list.New(items, delegate, 0, 0)
-	groceryList.Title = direction
-	groceryList.Styles.Title = titleStyle
-	groceryList.AdditionalFullHelpKeys = func() []key.Binding {
+	listView := list.New(items, delegate, 0, 0)
+	listView.Title = direction
+	listView.Styles.Title = titleStyle
+	listView.AdditionalFullHelpKeys = func() []key.Binding {
 		return []key.Binding{
 			listKeys.toggleSpinner,
 			listKeys.toggleTitleBar,
@@ -99,7 +86,7 @@ func newListModel(direction string, selections []fmt.Stringer) *listModel {
 	}
 
 	return &listModel{
-		list:         &groceryList,
+		list:         &listView,
 		keys:         listKeys,
 		delegateKeys: delegateKeys,
 	}

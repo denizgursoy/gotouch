@@ -6,8 +6,8 @@ import (
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/config"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/compressor"

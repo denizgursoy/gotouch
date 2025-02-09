@@ -7,7 +7,7 @@ import (
 
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 )
 
 func TestAskForInput(t *testing.T) {

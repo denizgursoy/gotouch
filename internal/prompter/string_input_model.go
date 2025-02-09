@@ -20,12 +20,13 @@ type model struct {
 	err       error
 }
 
-func initialModel(direction string, validator textinput.ValidateFunc) *model {
+func initialModel(direction, defaultValue string, validator textinput.ValidateFunc) *model {
 	ti := textinput.New()
-	ti.Placeholder = "Pikachu"
+	ti.SetValue(defaultValue)
 	ti.Focus()
 	ti.CharLimit = 156
 	ti.Width = 20
+	ti.Validate = validator
 
 	return &model{
 		textInput: &ti,

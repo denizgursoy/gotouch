@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
@@ -157,7 +157,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 
 		mockPrompter.
 			EXPECT().
-			AskForString(gomock.Any(), gomock.Any()).
+			AskForString(gomock.Any(), "", gomock.Any()).
 			Return(testProjectName, nil).
 			Times(1)
 
@@ -195,7 +195,7 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		inputErr := errors.New("input error")
 		mockPrompter.
 			EXPECT().
-			AskForString(gomock.Any(), gomock.Any()).
+			AskForString(gomock.Any(), "", gomock.Any()).
 			Return("", inputErr).
 			Times(1)
 

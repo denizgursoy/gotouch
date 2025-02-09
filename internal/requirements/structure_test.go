@@ -15,8 +15,8 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 var (
@@ -98,7 +98,7 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
-			AskForString(gomock.Eq(ModuleNameDirection), gomock.Any()).
+			AskForString(gomock.Eq(ModuleNameDirection), "", gomock.Any()).
 			Return("", nil).
 			Times(1)
 
