@@ -44,16 +44,28 @@ type terminalPrompter struct {
 }
 
 func (tp *terminalPrompter) AskForString(direction string, validator Validator) (string, error) {
-	panic("")
+	model := initialModel(direction, func(s string) error {
+		return validator(s)
+	})
+	if _, err := tea.NewProgram(model, tea.WithAltScreen()).Run(); err != nil {
+		return "nil", fmt.Errorf("error running prompter: %w", err)
+	}
+
+	return model.textInput.Value(), nil
+
 }
 
 func (tp *terminalPrompter) AskForSelectionFromList(direction string, list []fmt.Stringer) (any, error) {
-	model := newModel(direction, list)
+	model := newListModel(direction, list)
 	if _, err := tea.NewProgram(model, tea.WithAltScreen()).Run(); err != nil {
 		return nil, fmt.Errorf("error running prompter: %w", err)
 	}
+	i, ok := model.list.SelectedItem().(item)
+	if !ok {
+		return nil, EmptyList
+	}
 
-	return model.selectedItem, nil
+	return i.userData, nil
 }
 
 func (tp *terminalPrompter) AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]any, error) {

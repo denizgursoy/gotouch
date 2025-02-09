@@ -2,7 +2,6 @@ package prompter
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -69,7 +68,7 @@ type listModel struct {
 	selectedItem fmt.Stringer
 }
 
-func newModel(direction string, selections []fmt.Stringer) *listModel {
+func newListModel(direction string, selections []fmt.Stringer) *listModel {
 	var (
 		delegateKeys = newDelegateKeyMap()
 		listKeys     = newListKeyMap()
@@ -148,13 +147,6 @@ func (m *listModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.list.SetShowHelp(!m.list.ShowHelp())
 			return m, nil
 		case key.Matches(msg, newDelegateKeyMap().choose):
-			it, ok := m.list.SelectedItem().(item)
-			if !ok {
-				return m, nil
-			}
-			m.selectedItem = it.userData
-			fmt.Printf("%#v", m.selectedItem)
-			time.Sleep(10 * time.Second)
 			return m, tea.Quit
 		}
 
