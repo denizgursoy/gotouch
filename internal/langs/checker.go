@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./checker.go -destination=mockChecker.go -package=langs
+//go:generate mockgen -source=./checker.go -destination=mockChecker.go -package=langs --typed
 
 package langs
 

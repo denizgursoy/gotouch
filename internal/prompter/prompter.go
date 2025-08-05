@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./prompter.go -destination=mockPrompter.go -package=prompter
+//go:generate mockgen -source=./prompter.go -destination=mockPrompter.go -package=prompter --typed
 
 package prompter
 

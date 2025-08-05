@@ -7,13 +7,15 @@ require (
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/go-git/go-git/v5 v5.16.2
 	github.com/go-playground/validator/v10 v10.27.0
-	github.com/golang/mock v1.6.0
 	github.com/jdx/go-netrc v1.0.0
 	github.com/mattn/go-colorable v0.1.14
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.7
 	github.com/stretchr/testify v1.10.0
+	go.uber.org/mock v0.2.0
+	golang.org/x/crypto v0.39.0
 	golang.org/x/mod v0.26.0
+	golang.org/x/net v0.41.0
 	golang.org/x/text v0.26.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -52,8 +54,6 @@ require (
 	github.com/skeema/knownhosts v1.3.1 // indirect
 	github.com/spf13/cast v1.7.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	golang.org/x/crypto v0.39.0 // indirect
-	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect

@@ -2,17 +2,14 @@ package requirements
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"io"
-	"net/http"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/langs"
+	"go.uber.org/mock/gomock"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
@@ -184,7 +181,7 @@ func TestStructure_Complete(t *testing.T) {
 
 		task.VCSDetector.(*cloner.MockVCSDetector).
 			EXPECT().
-			DetectVCS(gomock.Any(), gomock.Any(), gomock.Eq(projectStructure1.URL)).
+			DetectVCS(gomock.Any(), gomock.Eq(projectStructure1.URL)).
 			Return(cloner.VCSNone, nil)
 
 		task.Compressor.(*compressor.MockCompressor).
@@ -193,9 +190,6 @@ func TestStructure_Complete(t *testing.T) {
 			Return(nil)
 
 		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
-		task.Client = MockHttpRequester(func(req *http.Request) (*http.Response, error) {
-			return nil, errors.New("something")
-		})
 
 		err := task.Complete(context.Background())
 		require.Nil(t, err)
@@ -207,21 +201,12 @@ func TestStructure_Complete(t *testing.T) {
 		task.ProjectStructure = &projectStructureWithGitRepository
 		task.VCSDetector.(*cloner.MockVCSDetector).
 			EXPECT().
-			DetectVCS(gomock.Any(), gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL)).
+			DetectVCS(gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL)).
 			Return(cloner.VCSGit, nil)
 		task.Cloner.(*cloner.MockCloner).
 			EXPECT().
 			CloneFromUrl(gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL), gomock.Eq(projectStructureWithGitRepository.Branch)).
 			Return(nil)
-
-		task.Client = MockHttpRequester(func(req *http.Request) (*http.Response, error) {
-			return &http.Response{
-				StatusCode: http.StatusOK,
-				Header: http.Header{
-					"Content-Type": []string{model.GitUploadPackContentType},
-				},
-			}, nil
-		})
 
 		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
 
@@ -282,19 +267,4 @@ func getTestProjectTask(t *testing.T) projectStructureTask {
 		Cloner:           mockCloner,
 		VCSDetector:      mockVCSDetector,
 	}
-}
-
-type MockHttpRequester func(req *http.Request) (*http.Response, error)
-
-func (r MockHttpRequester) Do(req *http.Request) (*http.Response, error) {
-	resp, err := r(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp != nil && resp.Body == nil {
-		resp.Body = io.NopCloser(nil)
-	}
-
-	return resp, err
 }

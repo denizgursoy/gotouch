@@ -1,4 +1,4 @@
-//go:generate mockgen -source=$GOFILE -destination=mockVCSDetector.go -package=cloner
+//go:generate mockgen -source=$GOFILE -destination=mockVCSDetector.go -package=cloner --typed
 
 package cloner
 
@@ -23,7 +23,7 @@ const (
 )
 
 type VCSDetector interface {
-	DetectVCS(ctx context.Context, requester RequestExecutor, path string) (VCS, error)
+	DetectVCS(ctx context.Context, path string) (VCS, error)
 }
 
 type RequestExecutor interface {
@@ -33,7 +33,9 @@ type RequestExecutor interface {
 var _ VCSDetector = (*defaultVCSDetector)(nil)
 
 func NewDefaultVCSDetector() defaultVCSDetector {
-	return defaultVCSDetector{}
+	return defaultVCSDetector{
+		requester: auth.NewAuthenticatedHTTPClient(),
+	}
 }
 
 type defaultVCSDetector struct {
@@ -41,11 +43,8 @@ type defaultVCSDetector struct {
 }
 
 // DetectVCS implements VCSDetector.
-func (d defaultVCSDetector) DetectVCS(ctx context.Context, requester RequestExecutor, rawURL string) (VCS, error) {
-	if requester == nil {
-		requester = auth.NewAuthenticatedHTTPClient()
-	}
-	isGit, err := d.isGit(ctx, requester, rawURL)
+func (d defaultVCSDetector) DetectVCS(ctx context.Context, rawURL string) (VCS, error) {
+	isGit, err := d.isGit(ctx, rawURL)
 	if err != nil {
 		return VCSNone, err
 	}
@@ -57,7 +56,7 @@ func (d defaultVCSDetector) DetectVCS(ctx context.Context, requester RequestExec
 	return VCSNone, nil
 }
 
-func (d defaultVCSDetector) isGit(ctx context.Context, requester RequestExecutor, rawURL string) (bool, error) {
+func (d defaultVCSDetector) isGit(ctx context.Context, rawURL string) (bool, error) {
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,

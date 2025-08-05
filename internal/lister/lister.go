@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./lister.go -destination=mockLister.go -package=lister
+//go:generate mockgen -source=./lister.go -destination=mockLister.go -package=lister --typed
 
 package lister
 

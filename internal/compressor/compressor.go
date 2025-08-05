@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./compressor.go -destination=mockCompressor.go -package=compressor
+//go:generate mockgen -source=./compressor.go -destination=mockCompressor.go -package=compressor --typed
 
 package compressor
 

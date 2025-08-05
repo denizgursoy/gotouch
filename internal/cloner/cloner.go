@@ -1,4 +1,4 @@
-//go:generate mockgen -source=$GOFILE -destination=mockCloner.go -package=cloner
+//go:generate mockgen -source=$GOFILE -destination=mockCloner.go -package=cloner --typed
 
 package cloner
 
