@@ -65,6 +65,7 @@ func GetCreateCommandHandler(cmdr operator.Operator) CommandHandler {
 			Path:          pointer,
 			Store:         appStore,
 			Cloner:        cloner.GetInstance(),
+			VCSDetector:   cloner.NewDefaultVCSDetector(),
 			CommandRunner: commandrunner.GetInstance(appStore),
 			ConfigManager: config.NewConfigManager(newLogger),
 		}

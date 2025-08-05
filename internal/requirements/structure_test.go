@@ -182,6 +182,11 @@ func TestStructure_Complete(t *testing.T) {
 	t.Run("should call uncompress with the URL", func(t *testing.T) {
 		task := getTestProjectTask(t)
 
+		task.VCSDetector.(*cloner.MockVCSDetector).
+			EXPECT().
+			DetectVCS(gomock.Any(), gomock.Any(), gomock.Eq(projectStructure1.URL)).
+			Return(cloner.VCSNone, nil)
+
 		task.Compressor.(*compressor.MockCompressor).
 			EXPECT().
 			UncompressFromUrl(gomock.Any(), gomock.Eq(projectStructure1.URL)).
@@ -200,6 +205,10 @@ func TestStructure_Complete(t *testing.T) {
 		task := getTestProjectTask(t)
 
 		task.ProjectStructure = &projectStructureWithGitRepository
+		task.VCSDetector.(*cloner.MockVCSDetector).
+			EXPECT().
+			DetectVCS(gomock.Any(), gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL)).
+			Return(cloner.VCSGit, nil)
 		task.Cloner.(*cloner.MockCloner).
 			EXPECT().
 			CloneFromUrl(gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL), gomock.Eq(projectStructureWithGitRepository.Branch)).
@@ -232,6 +241,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 	mockLogger := logger.NewLogger()
 	mockStore := store.NewMockStore(controller)
 	mockCloner := cloner.NewMockCloner(controller)
+	mockVCSDetector := cloner.NewMockVCSDetector(controller)
 	mockRunner := commandrunner.NewMockRunner(controller)
 
 	return ProjectStructureRequirement{
@@ -244,6 +254,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 		Store:           mockStore,
 		LanguageChecker: langs.NewMockChecker(controller),
 		Cloner:          mockCloner,
+		VCSDetector:     mockVCSDetector,
 		CommandRunner:   mockRunner,
 	}, controller
 }
@@ -258,6 +269,7 @@ func getTestProjectTask(t *testing.T) projectStructureTask {
 	mockStore := store.NewMockStore(controller)
 	mockChecker := langs.NewMockChecker(controller)
 	mockCloner := cloner.NewMockCloner(controller)
+	mockVCSDetector := cloner.NewMockVCSDetector(controller)
 
 	return projectStructureTask{
 		ProjectStructure: &projectStructure1,
@@ -268,6 +280,7 @@ func getTestProjectTask(t *testing.T) projectStructureTask {
 		Store:            mockStore,
 		LanguageChecker:  mockChecker,
 		Cloner:           mockCloner,
+		VCSDetector:      mockVCSDetector,
 	}
 }
 

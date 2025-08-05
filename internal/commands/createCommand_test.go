@@ -55,6 +55,7 @@ func TestGetCreateCommandHandler(t *testing.T) {
 				Path:          argument.pointer,
 				Store:         appStore,
 				Cloner:        cloner.GetInstance(),
+				VCSDetector:   cloner.NewDefaultVCSDetector(),
 				CommandRunner: commandrunner.GetInstance(appStore),
 				ConfigManager: config.NewConfigManager(logger.NewLogger()),
 			}

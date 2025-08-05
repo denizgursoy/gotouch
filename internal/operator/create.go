@@ -25,7 +25,7 @@ import (
 var (
 	ErrNotYamlFile           = errors.New("file should be a yaml file")
 	ErrNotValidUrlOrFilePath = errors.New("file or url is not valid")
-	ErrAllFieldsAreRequired  = errors.New("all filed are required")
+	ErrAllFieldsAreRequired  = errors.New("all fields are required")
 )
 
 type (
@@ -39,6 +39,7 @@ type (
 		Path          *string               `validate:"omitempty,yaml_url|yaml_file"`
 		Store         store.Store           `validate:"required"`
 		Cloner        cloner.Cloner         `validate:"required"`
+		VCSDetector   cloner.VCSDetector    `validate:"required"`
 		CommandRunner commandrunner.Runner  `validate:"required"`
 		ConfigManager config.ConfigManager  `validate:"required"`
 	}

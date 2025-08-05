@@ -127,6 +127,7 @@ func createTestNewProjectOptions(t *testing.T, path *string) (CreateNewProjectOp
 	mockLogger := logger.NewLogger()
 	mockStore := store.GetInstance()
 	mockCloner := cloner.NewMockCloner(controller)
+	vcsDetector := cloner.NewMockVCSDetector(controller)
 	mockRunner := commandrunner.NewMockRunner(controller)
 	mockConfigManager := config.NewMockConfigManager(controller)
 
@@ -140,6 +141,7 @@ func createTestNewProjectOptions(t *testing.T, path *string) (CreateNewProjectOp
 		Store:         mockStore,
 		Path:          nil,
 		Cloner:        mockCloner,
+		VCSDetector:   vcsDetector,
 		CommandRunner: mockRunner,
 		ConfigManager: mockConfigManager,
 	}, controller
