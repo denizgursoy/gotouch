@@ -128,6 +128,7 @@ func (p *ProjectStructureRequirement) getProjectStructureTask(selectedPS *model.
 		Store:            p.Store,
 		LanguageChecker:  p.LanguageChecker,
 		Cloner:           p.Cloner,
+		VCSDetector:      p.VCSDetector,
 	}
 }
 

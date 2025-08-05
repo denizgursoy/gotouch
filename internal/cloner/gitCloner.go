@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -45,14 +44,12 @@ func (g *gitCloner) CloneFromUrl(ctx context.Context, rawUrl, branchName string)
 		Progress: os.Stdout,
 	}
 
-	gitURL, urlParseError := url.Parse(rawUrl)
-	if urlParseError != nil {
-		return urlParseError
-	}
-
-	switch gitURL.Scheme {
-	case "http", "https":
+	if isSSH(rawUrl) {
+		cloneOptions.Auth = auth.FindFirstAvailableSSHKey()
+	} else if isHTTP(rawUrl) {
 		cloneOptions.Auth = auth.NewGitNetrcHTTPAuth()
+	} else {
+		return errors.New("unsupported protocol")
 	}
 
 	if len(strings.TrimSpace(branchName)) != 0 {
@@ -75,5 +72,14 @@ func (g *gitCloner) CloneFromUrl(ctx context.Context, rawUrl, branchName string)
 		return err
 	}
 	g.Logger.LogInfo("Cloned successfully")
+
 	return err
+}
+
+func isSSH(url string) bool {
+	return strings.HasPrefix(url, "git@") || strings.HasPrefix(url, "ssh://")
+}
+
+func isHTTP(url string) bool {
+	return strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://")
 }
