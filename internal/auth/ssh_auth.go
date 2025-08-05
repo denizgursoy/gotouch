@@ -26,7 +26,7 @@ func FindFirstAvailableSSHKey() ssh.AuthMethod {
 	// Check environment variable first
 	password := os.Getenv("SSH_PASSWORD")
 	sshKeyFilePath := strings.TrimSpace(os.Getenv("GIT_SSH_KEY"))
-	if envKey := sshKeyFilePath; envKey != "" {
+	if sshKeyFilePath != "" {
 		sshAuth := getSshAuthFromFile(sshKeyFilePath, password)
 		if sshAuth != nil {
 			return sshAuth
