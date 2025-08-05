@@ -89,10 +89,8 @@ func (p *ProjectStructureData) IsValid() error {
 		return ErrProjectNameIsEmpty
 	}
 
-	if strings.HasPrefix(p.URL, "git") {
-
-	} else {
-		projectUrl := strings.TrimSpace(p.URL)
+	projectUrl := strings.TrimSpace(p.URL)
+	if !strings.HasPrefix(projectUrl, "git@") {
 		if len(projectUrl) != 0 {
 			if _, err := url.ParseRequestURI(projectUrl); err != nil {
 				return ErrProjectURLIsNotValid
