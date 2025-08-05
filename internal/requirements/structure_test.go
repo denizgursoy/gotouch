@@ -1,12 +1,19 @@
 package requirements
 
 import (
+	"context"
+	"errors"
 	"fmt"
+	"io"
+	"net/http"
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/langs"
+
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
 
 	"github.com/denizgursoy/gotouch/internal/compressor"
 	"github.com/denizgursoy/gotouch/internal/executor"
@@ -15,8 +22,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
 	"github.com/denizgursoy/gotouch/internal/store"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -175,33 +180,52 @@ func TestStructure_AskForInput(t *testing.T) {
 
 func TestStructure_Complete(t *testing.T) {
 	t.Run("should call uncompress with the URL", func(t *testing.T) {
-		task, controller := getTestProjectTask(t)
-		defer controller.Finish()
+		task := getTestProjectTask(t)
+
+		task.VCSDetector.(*cloner.MockVCSDetector).
+			EXPECT().
+			DetectVCS(gomock.Any(), gomock.Any(), gomock.Eq(projectStructure1.URL)).
+			Return(cloner.VCSNone, nil)
 
 		task.Compressor.(*compressor.MockCompressor).
 			EXPECT().
-			UncompressFromUrl(gomock.Eq(projectStructure1.URL)).
+			UncompressFromUrl(gomock.Any(), gomock.Eq(projectStructure1.URL)).
 			Return(nil)
 
 		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
+		task.Client = MockHttpRequester(func(req *http.Request) (*http.Response, error) {
+			return nil, errors.New("something")
+		})
 
-		err := task.Complete()
+		err := task.Complete(context.Background())
 		require.Nil(t, err)
 	})
 
 	t.Run("should call cloner with branch name", func(t *testing.T) {
-		task, controller := getTestProjectTask(t)
-		defer controller.Finish()
+		task := getTestProjectTask(t)
 
 		task.ProjectStructure = &projectStructureWithGitRepository
+		task.VCSDetector.(*cloner.MockVCSDetector).
+			EXPECT().
+			DetectVCS(gomock.Any(), gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL)).
+			Return(cloner.VCSGit, nil)
 		task.Cloner.(*cloner.MockCloner).
 			EXPECT().
-			CloneFromUrl(gomock.Eq(projectStructureWithGitRepository.URL), gomock.Eq(projectStructureWithGitRepository.Branch)).
+			CloneFromUrl(gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL), gomock.Eq(projectStructureWithGitRepository.Branch)).
 			Return(nil)
+
+		task.Client = MockHttpRequester(func(req *http.Request) (*http.Response, error) {
+			return &http.Response{
+				StatusCode: http.StatusOK,
+				Header: http.Header{
+					"Content-Type": []string{model.GitUploadPackContentType},
+				},
+			}, nil
+		})
 
 		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
 
-		err := task.Complete()
+		err := task.Complete(context.Background())
 		require.Nil(t, err)
 	})
 }
@@ -217,6 +241,7 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 	mockLogger := logger.NewLogger()
 	mockStore := store.NewMockStore(controller)
 	mockCloner := cloner.NewMockCloner(controller)
+	mockVCSDetector := cloner.NewMockVCSDetector(controller)
 	mockRunner := commandrunner.NewMockRunner(controller)
 
 	return ProjectStructureRequirement{
@@ -229,11 +254,12 @@ func getTestProjectRequirement(t *testing.T, projectData []*model.ProjectStructu
 		Store:           mockStore,
 		LanguageChecker: langs.NewMockChecker(controller),
 		Cloner:          mockCloner,
+		VCSDetector:     mockVCSDetector,
 		CommandRunner:   mockRunner,
 	}, controller
 }
 
-func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller) {
+func getTestProjectTask(t *testing.T) projectStructureTask {
 	controller := gomock.NewController(t)
 
 	mockUncompressor := compressor.NewMockCompressor(controller)
@@ -243,6 +269,7 @@ func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller)
 	mockStore := store.NewMockStore(controller)
 	mockChecker := langs.NewMockChecker(controller)
 	mockCloner := cloner.NewMockCloner(controller)
+	mockVCSDetector := cloner.NewMockVCSDetector(controller)
 
 	return projectStructureTask{
 		ProjectStructure: &projectStructure1,
@@ -253,5 +280,21 @@ func getTestProjectTask(t *testing.T) (projectStructureTask, *gomock.Controller)
 		Store:            mockStore,
 		LanguageChecker:  mockChecker,
 		Cloner:           mockCloner,
-	}, controller
+		VCSDetector:      mockVCSDetector,
+	}
+}
+
+type MockHttpRequester func(req *http.Request) (*http.Response, error)
+
+func (r MockHttpRequester) Do(req *http.Request) (*http.Response, error) {
+	resp, err := r(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp != nil && resp.Body == nil {
+		resp.Body = io.NopCloser(nil)
+	}
+
+	return resp, err
 }

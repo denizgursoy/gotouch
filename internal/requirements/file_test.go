@@ -2,17 +2,19 @@ package requirements
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io"
 	"net/http"
 	"reflect"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/require"
+
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/require"
 )
 
 type RoundTripFunction func(req *http.Request) (*http.Response, error)
@@ -98,7 +100,7 @@ func Test_fileTask_Complete(t *testing.T) {
 				Client:  arg.client,
 			}
 
-			err := task.Complete()
+			err := task.Complete(context.Background())
 			require.NoError(t, err)
 		}
 	})
@@ -121,7 +123,7 @@ func Test_fileTask_Complete(t *testing.T) {
 			}),
 		}
 
-		err := task.Complete()
+		err := task.Complete(context.Background())
 		require.Error(t, err)
 	})
 
@@ -142,7 +144,7 @@ func Test_fileTask_Complete(t *testing.T) {
 			Client:  &http.Client{},
 		}
 
-		err := task.Complete()
+		err := task.Complete(context.Background())
 		require.Error(t, err)
 		require.ErrorIs(t, unexpectedError, err)
 	})

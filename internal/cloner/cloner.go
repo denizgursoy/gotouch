@@ -1,11 +1,14 @@
-//go:generate mockgen -source=./cloner.go -destination=mockCloner.go -package=cloner
+//go:generate mockgen -source=$GOFILE -destination=mockCloner.go -package=cloner
 
 package cloner
 
-import "sync"
+import (
+	"context"
+	"sync"
+)
 
 type Cloner interface {
-	CloneFromUrl(url, branchName string) error
+	CloneFromUrl(ctx context.Context, url, branchName string) error
 }
 
 var (

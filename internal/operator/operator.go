@@ -3,12 +3,13 @@
 package operator
 
 import (
+	"context"
 	"sync"
 )
 
 type (
 	Operator interface {
-		CreateNewProject(opts *CreateNewProjectOptions) error
+		CreateNewProject(ctx context.Context, opts *CreateNewProjectOptions) error
 		CompressDirectory(opts *CompressDirectoryOptions) error
 		ValidateYaml(opts *ValidateYamlOptions) error
 	}
