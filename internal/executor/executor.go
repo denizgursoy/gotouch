@@ -3,6 +3,7 @@
 package executor
 
 import (
+	"context"
 	"sync"
 
 	"github.com/denizgursoy/gotouch/internal/model"
@@ -14,7 +15,7 @@ type (
 	Requirements []model.Requirement
 
 	Executor interface {
-		Execute(requirements Requirements) error
+		Execute(ctx context.Context, requirements Requirements) error
 	}
 )
 

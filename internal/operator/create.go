@@ -1,6 +1,7 @@
 package operator
 
 import (
+	"context"
 	"errors"
 	"strings"
 
@@ -24,7 +25,7 @@ import (
 var (
 	ErrNotYamlFile           = errors.New("file should be a yaml file")
 	ErrNotValidUrlOrFilePath = errors.New("file or url is not valid")
-	ErrAllFieldsAreRequired  = errors.New("all filed are required")
+	ErrAllFieldsAreRequired  = errors.New("all fields are required")
 )
 
 type (
@@ -38,13 +39,14 @@ type (
 		Path          *string               `validate:"omitempty,yaml_url|yaml_file"`
 		Store         store.Store           `validate:"required"`
 		Cloner        cloner.Cloner         `validate:"required"`
+		VCSDetector   cloner.VCSDetector    `validate:"required"`
 		CommandRunner commandrunner.Runner  `validate:"required"`
 		ConfigManager config.ConfigManager  `validate:"required"`
 	}
 )
 
-func (o *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
-	if validationError := isValid(opts); validationError != nil {
+func (o *operator) CreateNewProject(ctx context.Context, opts *CreateNewProjectOptions) error {
+	if validationError := isValid(ctx, opts); validationError != nil {
 		return validationError
 	}
 
@@ -75,10 +77,10 @@ func (o *operator) CreateNewProject(opts *CreateNewProjectOptions) error {
 	}
 	newProjectRequirements = append(newProjectRequirements, &requirement)
 
-	return opts.Executor.Execute(newProjectRequirements)
+	return opts.Executor.Execute(ctx, newProjectRequirements)
 }
 
-func isValid(opts *CreateNewProjectOptions) error {
+func isValid(ctx context.Context, opts *CreateNewProjectOptions) error {
 	validate := validator.New()
 	if err := validators.AddYamlUrlValidator(validate); err != nil {
 		return err
@@ -88,7 +90,7 @@ func isValid(opts *CreateNewProjectOptions) error {
 		return err
 	}
 
-	err := validate.Struct(opts)
+	err := validate.StructCtx(ctx, opts)
 	if err != nil {
 		fieldErrors := err.(validator.ValidationErrors)
 		fieldError := fieldErrors[0]

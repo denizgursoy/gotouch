@@ -1,6 +1,8 @@
 package cloner
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"os"
@@ -9,6 +11,7 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/transport"
 
 	"github.com/denizgursoy/gotouch/internal/auth"
 	"github.com/denizgursoy/gotouch/internal/logger"
@@ -33,7 +36,7 @@ func newCloner() Cloner {
 	}
 }
 
-func (g *gitCloner) CloneFromUrl(rawUrl, branchName string) error {
+func (g *gitCloner) CloneFromUrl(ctx context.Context, rawUrl, branchName string) error {
 	projectFullPath := g.Store.GetValue(store.ProjectFullPath)
 
 	cloneOptions := &git.CloneOptions{
@@ -60,9 +63,11 @@ func (g *gitCloner) CloneFromUrl(rawUrl, branchName string) error {
 		g.Logger.LogInfo("Cloning repository  -> " + rawUrl)
 	}
 
-	_, err := git.PlainClone(projectFullPath, false, cloneOptions)
+	_, err := git.PlainCloneContext(ctx, projectFullPath, false, cloneOptions)
 	if err != nil {
-		return err
+		if !errors.Is(err, transport.ErrEmptyRemoteRepository) {
+			return err
+		}
 	}
 
 	gitDirectory := filepath.Join(projectFullPath, GitDirectory)

@@ -1,6 +1,7 @@
 package requirements
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -31,6 +32,7 @@ type (
 		Store           store.Store           `validate:"required"`
 		LanguageChecker langs.Checker
 		Cloner          cloner.Cloner        `validate:"required"`
+		VCSDetector     cloner.VCSDetector   `validate:"required"`
 		CommandRunner   commandrunner.Runner `validate:"required"`
 	}
 
@@ -43,6 +45,8 @@ type (
 		Store            store.Store                 `validate:"required"`
 		LanguageChecker  langs.Checker               `validate:"required"`
 		Cloner           cloner.Cloner               `validate:"required"`
+		VCSDetector      cloner.VCSDetector          `validate:"required"`
+		Client           model.HttpRequester
 	}
 )
 
@@ -182,20 +186,26 @@ func (p *ProjectStructureRequirement) SelectProject() (*model.ProjectStructureDa
 	return projectStructureData, nil
 }
 
-func (p *projectStructureTask) Complete() error {
-	if err := validator.New().Struct(p); err != nil {
+func (p *projectStructureTask) Complete(ctx context.Context) error {
+	if err := validator.New().StructCtx(ctx, p); err != nil {
 		return err
 	}
 
 	url := p.ProjectStructure.URL
 
 	if len(strings.TrimSpace(url)) != 0 {
-		if strings.HasSuffix(url, ".git") {
-			if err := p.Cloner.CloneFromUrl(url, p.ProjectStructure.Branch); err != nil {
+		vcs, err := p.VCSDetector.DetectVCS(ctx, p.Client, url)
+		if err != nil {
+			return err
+		}
+
+		switch vcs {
+		case cloner.VCSGit:
+			if err := p.Cloner.CloneFromUrl(ctx, url, p.ProjectStructure.Branch); err != nil {
 				return err
 			}
-		} else {
-			if err := p.Compressor.UncompressFromUrl(url); err != nil {
+		default:
+			if err := p.Compressor.UncompressFromUrl(ctx, url); err != nil {
 				return err
 			}
 		}
