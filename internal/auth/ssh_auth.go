@@ -52,7 +52,7 @@ func FindFirstAvailableSSHKey() ssh.AuthMethod {
 	return nil
 }
 
-func getSshAuthFromFile(keyFilePath string, password string) ssh.AuthMethod {
+func getSshAuthFromFile(keyFilePath, password string) ssh.AuthMethod {
 	if _, err := os.Stat(keyFilePath); err == nil {
 		if auth, err := ssh.NewPublicKeysFromFile(GitUser, keyFilePath, password); err == nil {
 			auth.HostKeyCallbackHelper = ssh.HostKeyCallbackHelper{
