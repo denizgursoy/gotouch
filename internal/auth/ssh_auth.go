@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -59,7 +58,6 @@ func getSshAuthFromFile(keyFilePath string, password string) ssh.AuthMethod {
 			auth.HostKeyCallbackHelper = ssh.HostKeyCallbackHelper{
 				HostKeyCallback: gossh.InsecureIgnoreHostKey(),
 			}
-			fmt.Printf("Using SSH key from environment: %s\n", keyFilePath)
 
 			return auth
 		}
