@@ -68,8 +68,8 @@ func (p *projectNameTask) Complete(ctx context.Context) error {
 		return err
 	}
 
-	projectName := filepath.Base(p.ModuleName)
-
+	projectName := filepath.Base(strings.TrimSpace(p.ModuleName))
+	projectName = sanitizeProjectName(projectName)
 	p.Store.SetValue(store.ModuleName, p.ModuleName)
 	p.Store.SetValue(store.ProjectName, projectName)
 
@@ -127,4 +127,11 @@ func (p *ProjectNameRequirement) validateModuleName(name any) error {
 	}
 
 	return nil
+}
+
+func sanitizeProjectName(projectName string) string {
+	suffix := strings.TrimSuffix(projectName, ".git")
+	suffix = strings.ReplaceAll(suffix, " ", "_")
+
+	return suffix
 }
