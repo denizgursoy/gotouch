@@ -66,12 +66,12 @@ dockers:
       - "--platform=linux/amd64"
       - "--build-arg=ALPINE=alpine:3.16.2"
 
-brews:
-- name: gotouch
-  homepage: https://denizgursoy.github.io/gotouch/
-  description: "customizable project creator"
-  repository:
-    owner: brew-tools
-    name: homebrew-tap
-    token: "{{ .Env.BREW_TOKEN }}"
-  folder: Formula
+#brews:
+#- name: gotouch
+#  homepage: https://denizgursoy.github.io/gotouch/
+#  description: "customizable project creator"
+#  repository:
+#    owner: brew-tools
+#    name: homebrew-tap
+#    token: "{{ .Env.BREW_TOKEN }}"
+#  folder: Formula
