@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./config.go -destination=mockConfig.go -package=config
+//go:generate mockgen -source=./config.go -destination=mockConfig.go -package=config --typed
 package config
 
 import "github.com/denizgursoy/gotouch/internal/logger"

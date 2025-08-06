@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./store.go -destination=mockStore.go -package=store
+//go:generate mockgen -source=./store.go -destination=mockStore.go -package=store --typed
 
 package store
 

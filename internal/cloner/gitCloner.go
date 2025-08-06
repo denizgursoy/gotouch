@@ -4,18 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/go-git/go-git/v5/plumbing/transport"
-
 	"github.com/denizgursoy/gotouch/internal/auth"
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/store"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/transport"
 )
 
 const (
@@ -43,16 +41,7 @@ func (g *gitCloner) CloneFromUrl(ctx context.Context, rawUrl, branchName string)
 		Depth:    1,
 		URL:      rawUrl,
 		Progress: os.Stdout,
-	}
-
-	gitURL, urlParseError := url.Parse(rawUrl)
-	if urlParseError != nil {
-		return urlParseError
-	}
-
-	switch gitURL.Scheme {
-	case "http", "https":
-		cloneOptions.Auth = auth.NewGitNetrcHTTPAuth()
+		Auth:     getAuth(rawUrl),
 	}
 
 	if len(strings.TrimSpace(branchName)) != 0 {
@@ -75,5 +64,24 @@ func (g *gitCloner) CloneFromUrl(ctx context.Context, rawUrl, branchName string)
 		return err
 	}
 	g.Logger.LogInfo("Cloned successfully")
+
 	return err
+}
+
+func getAuth(rawUrl string) transport.AuthMethod {
+	if IsSSH(rawUrl) {
+		return auth.FindFirstAvailableSSHKey()
+	} else if IsHTTP(rawUrl) {
+		return auth.NewGitNetrcHTTPAuth()
+	}
+
+	return nil
+}
+
+func IsSSH(url string) bool {
+	return strings.HasPrefix(url, "git@") || strings.HasPrefix(url, "ssh://")
+}
+
+func IsHTTP(url string) bool {
+	return strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://")
 }

@@ -20,10 +20,11 @@ import (
 
 type (
 	ProjectNameRequirement struct {
-		Prompter prompter.Prompter `validate:"required"`
-		Manager  manager.Manager   `validate:"required"`
-		Logger   logger.Logger     `validate:"required"`
-		Store    store.Store       `validate:"required"`
+		Prompter     prompter.Prompter `validate:"required"`
+		Manager      manager.Manager   `validate:"required"`
+		Logger       logger.Logger     `validate:"required"`
+		Store        store.Store       `validate:"required"`
+		InitialValue string
 	}
 
 	projectNameTask struct {
@@ -44,7 +45,7 @@ func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requiremen
 	}
 
 	// TODO: move validateModuleName to langs
-	moduleName, err := p.Prompter.AskForString(ModuleNameDirection, p.validateModuleName)
+	moduleName, err := p.Prompter.AskForString(ModuleNameDirection, p.InitialValue, p.validateModuleName)
 	if err != nil {
 		return nil, nil, err
 	}

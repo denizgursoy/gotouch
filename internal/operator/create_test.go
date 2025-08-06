@@ -6,8 +6,8 @@ import (
 
 	"github.com/denizgursoy/gotouch/internal/commandrunner"
 	"github.com/denizgursoy/gotouch/internal/config"
+	"go.uber.org/mock/gomock"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 
 	"github.com/denizgursoy/gotouch/internal/cloner"
@@ -52,8 +52,7 @@ func TestCreateNewProject(t *testing.T) {
 		options.Executor.(*executor.MockExecutor).
 			EXPECT().
 			Execute(gomock.Any(), gomock.Any()).
-			Do(func(ctx, arg any) {
-				execRequirements := arg.(executor.Requirements)
+			Do(func(ctx context.Context, execRequirements executor.Requirements) error {
 				require.Len(t, execRequirements, 1)
 				structure := execRequirements[0].(*requirements.ProjectStructureRequirement)
 
@@ -63,6 +62,7 @@ func TestCreateNewProject(t *testing.T) {
 
 				require.IsType(t, (*requirements.ProjectStructureRequirement)(nil), structure)
 				require.EqualValues(t, expectedProjectData, structure.ProjectsData)
+				return nil
 			})
 
 		err := GetInstance().CreateNewProject(context.Background(), &options)
