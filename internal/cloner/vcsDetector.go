@@ -54,16 +54,7 @@ func (d defaultVCSDetector) DetectVCS(ctx context.Context, rawURL string) (VCS, 
 		return checkByListingRemotes(rawURL)
 	}
 
-	isGit, err := d.isGit(ctx, rawURL)
-	if err != nil {
-		return VCSNone, err
-	}
-
-	if isGit {
-		return VCSGit, nil
-	}
-
-	return VCSNone, nil
+	return d.checkByHttpCall(ctx, rawURL)
 }
 
 func checkByListingRemotes(rawURL string) (VCS, error) {
@@ -90,7 +81,7 @@ func checkByListingRemotes(rawURL string) (VCS, error) {
 	return VCSNone, errors.New("could not find any git repository")
 }
 
-func (d defaultVCSDetector) isGit(ctx context.Context, rawURL string) (bool, error) {
+func (d defaultVCSDetector) checkByHttpCall(ctx context.Context, rawURL string) (VCS, error) {
 	req, err := http.NewRequestWithContext(
 		ctx,
 		http.MethodGet,
@@ -98,12 +89,12 @@ func (d defaultVCSDetector) isGit(ctx context.Context, rawURL string) (bool, err
 		http.NoBody,
 	)
 	if err != nil {
-		return false, err
+		return VCSNone, err
 	}
 
 	resp, err := d.requester.Do(req)
 	if err != nil {
-		return false, nil
+		return VCSNone, err
 	}
 
 	defer func() {
@@ -111,12 +102,12 @@ func (d defaultVCSDetector) isGit(ctx context.Context, rawURL string) (bool, err
 	}()
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
-		return false, nil
+		return VCSNone, nil
 	}
 
 	if resp.Header.Get("Content-Type") != gitUploadPackContentType {
-		return false, nil
+		return VCSNone, nil
 	}
 
-	return true, nil
+	return VCSGit, nil
 }
