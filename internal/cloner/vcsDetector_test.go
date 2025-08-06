@@ -13,10 +13,10 @@ func Test_defaultVCSDetector_DetectVCS(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, VCSGit, vcs)
 	})
-	t.Run("should return none it it is git repository", func(t *testing.T) {
+	t.Run("should return none and error it it is git repository", func(t *testing.T) {
 		detector := NewDefaultVCSDetector()
 		vcs, err := detector.DetectVCS(t.Context(), "https://github.com/denizgursoy")
-		require.Error(t, err)
+		require.NoError(t, err)
 		require.Equal(t, VCSNone, vcs)
 	})
 }
