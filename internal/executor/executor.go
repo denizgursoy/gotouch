@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./executor.go -destination=mockExecutor.go -package=executor
+//go:generate mockgen -source=./executor.go -destination=mockExecutor.go -package=executor --typed
 
 package executor
 

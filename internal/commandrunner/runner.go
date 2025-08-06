@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./runner.go -destination=mockCommandrunner.go -package=commandrunner
+//go:generate mockgen -source=./runner.go -destination=mockCommandrunner.go -package=commandrunner --typed
 
 package commandrunner
 

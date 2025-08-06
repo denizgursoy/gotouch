@@ -1,8 +1,9 @@
 package validators
 
 import (
-	"gopkg.in/yaml.v3"
 	"io"
+
+	"gopkg.in/yaml.v3"
 )
 
 func isYaml(r io.Reader) bool {

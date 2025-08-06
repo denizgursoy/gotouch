@@ -73,6 +73,7 @@ func (o *operator) CreateNewProject(ctx context.Context, opts *CreateNewProjectO
 		Executor:      opts.Executor,
 		Store:         opts.Store,
 		Cloner:        opts.Cloner,
+		VCSDetector:   opts.VCSDetector,
 		CommandRunner: opts.CommandRunner,
 	}
 	newProjectRequirements = append(newProjectRequirements, &requirement)

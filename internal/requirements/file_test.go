@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	"github.com/denizgursoy/gotouch/internal/logger"
 	"github.com/denizgursoy/gotouch/internal/manager"
@@ -81,17 +81,18 @@ func Test_fileTask_Complete(t *testing.T) {
 
 			mockManager := manager.NewMockManager(controller)
 
-			mockManager.EXPECT().CreateFile(gomock.Any(), gomock.Eq(arg.file.PathFromRoot)).DoAndReturn(func(arg1, arg2 any) error {
-				closer := arg1.(io.ReadCloser)
-				all, err := io.ReadAll(closer)
-				if err != nil {
-					return err
-				}
-				if !reflect.DeepEqual(all, arg.ExpectedBytes) {
-					return errors.New("does not match")
-				}
-				return nil
-			})
+			mockManager.EXPECT().
+				CreateFile(gomock.Any(), gomock.Eq(arg.file.PathFromRoot)).
+				DoAndReturn(func(closer io.ReadCloser, s string) error {
+					all, err := io.ReadAll(closer)
+					if err != nil {
+						return err
+					}
+					if !reflect.DeepEqual(all, arg.ExpectedBytes) {
+						return errors.New("does not match")
+					}
+					return nil
+				})
 
 			task := &fileTask{
 				File:    arg.file,

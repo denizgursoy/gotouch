@@ -1,4 +1,4 @@
-//go:generate mockgen -source=./manager.go -destination=mockManager.go -package=manager
+//go:generate mockgen -source=./manager.go -destination=mockManager.go -package=manager --typed
 
 package manager
 

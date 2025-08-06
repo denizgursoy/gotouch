@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/denizgursoy/gotouch/internal/langs"
+	"go.uber.org/mock/gomock"
 
 	"github.com/denizgursoy/gotouch/internal/store"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/denizgursoy/gotouch/internal/manager"
 	"github.com/denizgursoy/gotouch/internal/model"
 	"github.com/denizgursoy/gotouch/internal/prompter"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
 

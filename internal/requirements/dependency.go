@@ -1,9 +1,9 @@
 package requirements
 
 import (
-	"github.com/denizgursoy/gotouch/internal/langs"
-
 	"context"
+
+	"github.com/denizgursoy/gotouch/internal/langs"
 
 	"github.com/go-playground/validator/v10"
 )

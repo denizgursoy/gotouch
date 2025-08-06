@@ -30,7 +30,7 @@ func init() {
 	}
 }
 
-func (s srv) AskForString(direction string, validator Validator) (string, error) {
+func (s srv) AskForString(direction, _ string, validator Validator) (string, error) {
 	all, err := io.ReadAll(getStream())
 	if err != nil {
 		return "", err

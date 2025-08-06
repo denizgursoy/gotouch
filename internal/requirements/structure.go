@@ -46,7 +46,6 @@ type (
 		LanguageChecker  langs.Checker               `validate:"required"`
 		Cloner           cloner.Cloner               `validate:"required"`
 		VCSDetector      cloner.VCSDetector          `validate:"required"`
-		Client           model.HttpRequester
 	}
 )
 
@@ -70,7 +69,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, setupError
 	}
 
-	nameRequirement := p.getNameRequirement()
+	nameRequirement := p.getNameRequirement(selectedPS.InitialModuleName)
 
 	nameTasks, nameRequirements, err := nameRequirement.AskForInput()
 	if err != nil {
@@ -102,12 +101,13 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	return tasks, requirements, nil
 }
 
-func (p *ProjectStructureRequirement) getNameRequirement() *ProjectNameRequirement {
+func (p *ProjectStructureRequirement) getNameRequirement(initialValue string) *ProjectNameRequirement {
 	return &ProjectNameRequirement{
-		Prompter: p.Prompter,
-		Manager:  p.Manager,
-		Logger:   p.Logger,
-		Store:    p.Store,
+		Prompter:     p.Prompter,
+		Manager:      p.Manager,
+		Logger:       p.Logger,
+		Store:        p.Store,
+		InitialValue: initialValue,
 	}
 }
 
@@ -128,6 +128,7 @@ func (p *ProjectStructureRequirement) getProjectStructureTask(selectedPS *model.
 		Store:            p.Store,
 		LanguageChecker:  p.LanguageChecker,
 		Cloner:           p.Cloner,
+		VCSDetector:      p.VCSDetector,
 	}
 }
 
@@ -191,10 +192,10 @@ func (p *projectStructureTask) Complete(ctx context.Context) error {
 		return err
 	}
 
-	url := p.ProjectStructure.URL
+	url := strings.TrimSpace(p.ProjectStructure.URL)
 
-	if len(strings.TrimSpace(url)) != 0 {
-		vcs, err := p.VCSDetector.DetectVCS(ctx, p.Client, url)
+	if len(url) != 0 {
+		vcs, err := p.VCSDetector.DetectVCS(ctx, url)
 		if err != nil {
 			return err
 		}
