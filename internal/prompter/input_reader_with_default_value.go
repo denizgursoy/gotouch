@@ -1,6 +1,7 @@
 package prompter
 
 import (
+	"os"
 	"sync"
 	"syscall"
 )
@@ -16,11 +17,11 @@ func (d *defaultMessageReader) Read(p []byte) (n int, err error) {
 	defer d.mu.Unlock()
 
 	if !d.prepended {
-		return syscall.Read(int(d.Fd()), p)
+		return os.Stdin.Read(p)
 	}
 
 	// Read data from stdin
-	n, err = syscall.Read(int(d.Fd()), p)
+	n, err = os.Stdin.Read(p)
 	if err != nil {
 		return n, err
 	}
@@ -40,5 +41,5 @@ func (d *defaultMessageReader) Read(p []byte) (n int, err error) {
 }
 
 func (d *defaultMessageReader) Fd() uintptr {
-	return uintptr(syscall.Stdin)
+	return os.Stdin.Fd()
 }
