@@ -18,7 +18,7 @@ var (
 
 type (
 	Prompter interface {
-		AskForString(direction string, validator Validator) (string, error)
+		AskForString(direction, initialValue string, validator Validator) (string, error)
 		AskForSelectionFromList(direction string, list []fmt.Stringer) (any, error)
 		AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]any, error)
 		AskForYesOrNo(direction string) (bool, error)

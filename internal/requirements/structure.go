@@ -69,7 +69,7 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 		return nil, nil, setupError
 	}
 
-	nameRequirement := p.getNameRequirement()
+	nameRequirement := p.getNameRequirement(selectedPS.InitialModuleName)
 
 	nameTasks, nameRequirements, err := nameRequirement.AskForInput()
 	if err != nil {
@@ -101,12 +101,13 @@ func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requi
 	return tasks, requirements, nil
 }
 
-func (p *ProjectStructureRequirement) getNameRequirement() *ProjectNameRequirement {
+func (p *ProjectStructureRequirement) getNameRequirement(initialValue string) *ProjectNameRequirement {
 	return &ProjectNameRequirement{
-		Prompter: p.Prompter,
-		Manager:  p.Manager,
-		Logger:   p.Logger,
-		Store:    p.Store,
+		Prompter:     p.Prompter,
+		Manager:      p.Manager,
+		Logger:       p.Logger,
+		Store:        p.Store,
+		InitialValue: initialValue,
 	}
 }
 

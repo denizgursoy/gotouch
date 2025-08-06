@@ -156,18 +156,19 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		mockLogger := logger.NewLogger()
 		mockStore := store.GetInstance()
 
-		mockPrompter.
-			EXPECT().
-			AskForString(gomock.Any(), gomock.Any()).
-			Return(testProjectName, nil).
-			Times(1)
-
 		requirement := ProjectNameRequirement{
 			mockPrompter,
 			mockManager,
 			mockLogger,
 			mockStore,
+			"test-initial-value",
 		}
+
+		mockPrompter.
+			EXPECT().
+			AskForString(gomock.Any(), requirement.InitialValue, gomock.Any()).
+			Return(testProjectName, nil).
+			Times(1)
 
 		tasks, requirements, err := requirement.AskForInput()
 		if err != nil {
@@ -194,18 +195,18 @@ func TestProjectNameRequirement_AskForInput(t *testing.T) {
 		mockStore := store.GetInstance()
 
 		inputErr := errors.New("input error")
-		mockPrompter.
-			EXPECT().
-			AskForString(gomock.Any(), gomock.Any()).
-			Return("", inputErr).
-			Times(1)
-
 		requirement := ProjectNameRequirement{
 			mockPrompter,
 			mockManager,
 			mockLogger,
 			mockStore,
+			"test-initial-value",
 		}
+		mockPrompter.
+			EXPECT().
+			AskForString(gomock.Any(), requirement.InitialValue, gomock.Any()).
+			Return("", inputErr).
+			Times(1)
 
 		tasks, requirements, err := requirement.AskForInput()
 

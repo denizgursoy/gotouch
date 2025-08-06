@@ -158,18 +158,18 @@ func (c *MockPrompterAskForSelectionFromListCall) DoAndReturn(f func(string, []f
 }
 
 // AskForString mocks base method.
-func (m *MockPrompter) AskForString(direction string, validator Validator) (string, error) {
+func (m *MockPrompter) AskForString(direction, initialValue string, validator Validator) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AskForString", direction, validator)
+	ret := m.ctrl.Call(m, "AskForString", direction, initialValue, validator)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AskForString indicates an expected call of AskForString.
-func (mr *MockPrompterMockRecorder) AskForString(direction, validator any) *MockPrompterAskForStringCall {
+func (mr *MockPrompterMockRecorder) AskForString(direction, initialValue, validator any) *MockPrompterAskForStringCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForString", reflect.TypeOf((*MockPrompter)(nil).AskForString), direction, validator)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AskForString", reflect.TypeOf((*MockPrompter)(nil).AskForString), direction, initialValue, validator)
 	return &MockPrompterAskForStringCall{Call: call}
 }
 
@@ -185,13 +185,13 @@ func (c *MockPrompterAskForStringCall) Return(arg0 string, arg1 error) *MockProm
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockPrompterAskForStringCall) Do(f func(string, Validator) (string, error)) *MockPrompterAskForStringCall {
+func (c *MockPrompterAskForStringCall) Do(f func(string, string, Validator) (string, error)) *MockPrompterAskForStringCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockPrompterAskForStringCall) DoAndReturn(f func(string, Validator) (string, error)) *MockPrompterAskForStringCall {
+func (c *MockPrompterAskForStringCall) DoAndReturn(f func(string, string, Validator) (string, error)) *MockPrompterAskForStringCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

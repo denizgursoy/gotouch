@@ -4,20 +4,26 @@ package prompter
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/AlecAivazis/survey/v2"
 )
 
 var pageSize = survey.WithPageSize(20)
 
-func (s srv) AskForString(direction string, validator Validator) (string, error) {
+func (s srv) AskForString(direction, initialValue string, validator Validator) (string, error) {
 	result := ""
 
 	input := survey.Input{
-		Message: direction,
+		Renderer: survey.Renderer{},
+		Message:  direction,
 	}
 
-	err := survey.AskOne(&input, &result, survey.WithValidator(survey.Validator(validator)))
+	err := survey.AskOne(
+		&input,
+		&result,
+		survey.WithStdio(&defaultMessageReader{prepended: true, initialValue: initialValue}, os.Stdout, os.Stderr),
+		survey.WithValidator(survey.Validator(validator)))
 	return result, err
 }
 

@@ -22,14 +22,15 @@ const (
 
 type (
 	ProjectStructureData struct {
-		Resources  `yaml:",inline"`
-		Name       string      `yaml:"name"`
-		Reference  string      `yaml:"reference"`
-		URL        string      `yaml:"url"`
-		Branch     string      `yaml:"branch"`
-		Questions  []*Question `yaml:"questions"`
-		Language   string      `yaml:"language"`
-		Delimiters string      `yaml:"delimiters"`
+		Resources         `yaml:",inline"`
+		Name              string      `yaml:"name"`
+		InitialModuleName string      `yaml:"initialModuleName"`
+		Reference         string      `yaml:"reference"`
+		URL               string      `yaml:"url"`
+		Branch            string      `yaml:"branch"`
+		Questions         []*Question `yaml:"questions"`
+		Language          string      `yaml:"language"`
+		Delimiters        string      `yaml:"delimiters"`
 	}
 
 	Question struct {

@@ -37,10 +37,11 @@ var (
 		},
 	}
 	projectStructure1 = model.ProjectStructureData{
-		Name:      "Project -1",
-		Reference: "go.dev",
-		URL:       "https://project1.com",
-		Questions: questions,
+		Name:              "Project -1",
+		Reference:         "go.dev",
+		URL:               "https://project1.com",
+		InitialModuleName: "test-initial-module-name-1",
+		Questions:         questions,
 		Resources: model.Resources{
 			Values: map[string]any{
 				"1": "23",
@@ -53,11 +54,12 @@ var (
 		},
 	}
 	projectStructureWithGitRepository = model.ProjectStructureData{
-		Name:      "Project -1",
-		Reference: "go.dev",
-		URL:       "a.git",
-		Branch:    "test",
-		Questions: questions,
+		Name:              "Project -1",
+		Reference:         "go.dev",
+		URL:               "a.git",
+		Branch:            "test",
+		InitialModuleName: "test-initial-module-name-2",
+		Questions:         questions,
 		Resources: model.Resources{
 			Values: map[string]any{
 				"1": "23",
@@ -100,7 +102,7 @@ func TestStructure_AskForInput(t *testing.T) {
 
 		requirement.Prompter.(*prompter.MockPrompter).
 			EXPECT().
-			AskForString(gomock.Eq(ModuleNameDirection), gomock.Any()).
+			AskForString(gomock.Eq(ModuleNameDirection), selectedProjectStructure.InitialModuleName, gomock.Any()).
 			Return("", nil).
 			Times(1)
 
