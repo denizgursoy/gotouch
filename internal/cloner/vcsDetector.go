@@ -4,10 +4,15 @@ package cloner
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/denizgursoy/gotouch/internal/auth"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 )
 
 type VCS string
@@ -44,6 +49,11 @@ type defaultVCSDetector struct {
 
 // DetectVCS implements VCSDetector.
 func (d defaultVCSDetector) DetectVCS(ctx context.Context, rawURL string) (VCS, error) {
+	// Using the default remote options
+	if IsSSH(rawURL) {
+		return checkByListingRemotes(rawURL)
+	}
+
 	isGit, err := d.isGit(ctx, rawURL)
 	if err != nil {
 		return VCSNone, err
@@ -54,6 +64,30 @@ func (d defaultVCSDetector) DetectVCS(ctx context.Context, rawURL string) (VCS, 
 	}
 
 	return VCSNone, nil
+}
+
+func checkByListingRemotes(rawURL string) (VCS, error) {
+	remoteName := "origin"
+	if changedRemote := strings.TrimSpace(os.Getenv("REMOTE_NAME")); len(changedRemote) > 0 {
+		remoteName = changedRemote
+	}
+	remotes := git.NewRemote(nil, &config.RemoteConfig{
+		Name: remoteName,
+		URLs: []string{rawURL},
+	})
+	refs, err := remotes.List(&git.ListOptions{
+		Auth: getAuth(rawURL), // Uncomment if needed
+	})
+	if err != nil {
+		return VCSNone, err
+	}
+
+	// If references are returned, repository exists
+	if len(refs) > 0 {
+		return VCSGit, nil
+	}
+
+	return VCSNone, errors.New("could not find any git repository")
 }
 
 func (d defaultVCSDetector) isGit(ctx context.Context, rawURL string) (bool, error) {

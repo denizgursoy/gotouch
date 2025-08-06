@@ -191,9 +191,9 @@ func (p *projectStructureTask) Complete(ctx context.Context) error {
 		return err
 	}
 
-	url := p.ProjectStructure.URL
+	url := strings.TrimSpace(p.ProjectStructure.URL)
 
-	if len(strings.TrimSpace(url)) != 0 {
+	if len(url) != 0 {
 		vcs, err := p.VCSDetector.DetectVCS(ctx, url)
 		if err != nil {
 			return err
