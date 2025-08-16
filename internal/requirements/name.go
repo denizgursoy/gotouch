@@ -110,19 +110,19 @@ func (p *ProjectNameRequirement) validateModuleName(name any) error {
 		}
 	}
 
-	inline, parseBoolError := strconv.ParseBool(p.Store.GetValue(store.Inline))
-	if parseBoolError != nil {
-		return parseBoolError
+	inline, err := strconv.ParseBool(p.Store.GetValue(store.Inline))
+	if err != nil {
+		return err
 	}
 
 	if inline {
 		return nil
 	}
 
-	projectName := filepath.Base(moduleName)
+	projectName := sanitizeProjectName(filepath.Base(moduleName))
 	workingDirectory := p.Manager.GetExtractLocation()
 	projectFullPath := filepath.Join(workingDirectory, projectName)
-	if _, err := os.Stat(projectFullPath); !os.IsNotExist(err) {
+	if _, err = os.Stat(projectFullPath); !os.IsNotExist(err) {
 		return fmt.Errorf("directory %s exists, select another name", projectName)
 	}
 
