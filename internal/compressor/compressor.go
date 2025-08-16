@@ -9,7 +9,10 @@ import (
 
 type (
 	Compressor interface {
-		UncompressFromUrl(ctx context.Context, url string) error
+		UncompressFromUrl(ctx context.Context, url string, directoryToCreateProject string) error
+		UncompressFromLocalPath(ctx context.Context, path string, directoryToCreateProject string) error
+		CopyDirectory(path string, directoryToCreateProject string) error
+		CheckIfFileExtensionIsSupported(path string) error
 		CompressDirectory(source, target string) error
 	}
 

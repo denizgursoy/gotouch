@@ -8,7 +8,7 @@ import (
 )
 
 type Cloner interface {
-	CloneFromUrl(ctx context.Context, url, branchName string) error
+	CloneFromUrl(ctx context.Context, url, branchName, projectFullPath string) error
 }
 
 var (

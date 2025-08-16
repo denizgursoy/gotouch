@@ -2,6 +2,7 @@ package requirements
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"testing"
 
@@ -66,6 +67,31 @@ var (
 			},
 		},
 	}
+
+	projectStructureWithLocalDirectory = model.ProjectStructureData{
+		Name:              "Project -1",
+		Reference:         "go.dev",
+		InitialModuleName: "test-initial-module-name-3",
+		LocalPath:         "/my-project",
+		Questions:         questions,
+		Resources: model.Resources{
+			Values: map[string]any{
+				"1": "23",
+			},
+		},
+	}
+	projectStructureWithLocalZipFile = model.ProjectStructureData{
+		Name:              "Project -1",
+		Reference:         "go.dev",
+		InitialModuleName: "test-initial-module-name-3",
+		LocalPath:         "my-project.tar.gz",
+		Questions:         questions,
+		Resources: model.Resources{
+			Values: map[string]any{
+				"1": "23",
+			},
+		},
+	}
 	projectStructure2 = model.ProjectStructureData{
 		Name:      "Project -2",
 		Reference: "go2.dev",
@@ -82,6 +108,8 @@ var (
 		&projectStructure2,
 	}
 )
+
+const ProjectFullPath = "/local/tmp"
 
 func TestStructure_AskForInput(t *testing.T) {
 	t.Run("should ask for selection for project", func(t *testing.T) {
@@ -181,6 +209,7 @@ func TestStructure_Complete(t *testing.T) {
 	t.Run("should call uncompress with the URL", func(t *testing.T) {
 		task := getTestProjectTask(t)
 
+		task.Store.(*store.MockStore).EXPECT().GetValue(store.ProjectFullPath).Return(ProjectFullPath).Times(1)
 		task.VCSDetector.(*cloner.MockVCSDetector).
 			EXPECT().
 			DetectVCS(gomock.Any(), gomock.Eq(projectStructure1.URL)).
@@ -188,7 +217,7 @@ func TestStructure_Complete(t *testing.T) {
 
 		task.Compressor.(*compressor.MockCompressor).
 			EXPECT().
-			UncompressFromUrl(gomock.Any(), gomock.Eq(projectStructure1.URL)).
+			UncompressFromUrl(gomock.Any(), gomock.Eq(projectStructure1.URL), ProjectFullPath).
 			Return(nil)
 
 		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
@@ -201,19 +230,61 @@ func TestStructure_Complete(t *testing.T) {
 		task := getTestProjectTask(t)
 
 		task.ProjectStructure = &projectStructureWithGitRepository
+		task.Store.(*store.MockStore).EXPECT().GetValue(store.ProjectFullPath).Return(ProjectFullPath).Times(1)
 		task.VCSDetector.(*cloner.MockVCSDetector).
 			EXPECT().
-			DetectVCS(gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL)).
+			DetectVCS(gomock.Any(), projectStructureWithGitRepository.URL).
 			Return(cloner.VCSGit, nil)
 		task.Cloner.(*cloner.MockCloner).
 			EXPECT().
-			CloneFromUrl(gomock.Any(), gomock.Eq(projectStructureWithGitRepository.URL), gomock.Eq(projectStructureWithGitRepository.Branch)).
+			CloneFromUrl(gomock.Any(), projectStructureWithGitRepository.URL,
+				projectStructureWithGitRepository.Branch, ProjectFullPath).
 			Return(nil)
 
 		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
 
 		err := task.Complete(context.Background())
-		require.Nil(t, err)
+		require.NoError(t, err)
+	})
+	t.Run("should copy local directory", func(t *testing.T) {
+		task := getTestProjectTask(t)
+		task.ProjectStructure = &projectStructureWithLocalDirectory
+
+		task.Store.(*store.MockStore).EXPECT().GetValue(store.ProjectFullPath).Return(ProjectFullPath).Times(1)
+		task.Compressor.(*compressor.MockCompressor).
+			EXPECT().
+			CheckIfFileExtensionIsSupported(task.ProjectStructure.LocalPath).
+			Return(errors.New("not a zip file")).
+			Times(1)
+		task.Compressor.(*compressor.MockCompressor).
+			EXPECT().
+			CopyDirectory(task.ProjectStructure.LocalPath, ProjectFullPath).
+			Return(nil).
+			Times(1)
+		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
+
+		err := task.Complete(context.Background())
+		require.NoError(t, err)
+	})
+	t.Run("should extract local compressed file", func(t *testing.T) {
+		task := getTestProjectTask(t)
+		task.ProjectStructure = &projectStructureWithLocalZipFile
+
+		task.Store.(*store.MockStore).EXPECT().GetValue(store.ProjectFullPath).Return(ProjectFullPath).Times(1)
+		task.Compressor.(*compressor.MockCompressor).
+			EXPECT().
+			CheckIfFileExtensionIsSupported(task.ProjectStructure.LocalPath).
+			Return(nil).
+			Times(1)
+		task.Compressor.(*compressor.MockCompressor).
+			EXPECT().
+			UncompressFromLocalPath(gomock.Any(), task.ProjectStructure.LocalPath, ProjectFullPath).
+			Return(nil).
+			Times(1)
+		task.LanguageChecker.(*langs.MockChecker).EXPECT().Setup().Times(1)
+
+		err := task.Complete(context.Background())
+		require.NoError(t, err)
 	})
 }
 

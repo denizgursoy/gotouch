@@ -41,57 +41,65 @@ func newCompressor() Compressor {
 	}
 }
 
-func (z *compressor) UncompressFromUrl(ctx context.Context, url string) error {
+func (z *compressor) UncompressFromUrl(ctx context.Context, url string, directoryToCreateProject string) error {
 	if err := validator.New().StructCtx(ctx, z); err != nil {
 		return err
 	}
 
 	z.Logger.LogInfo("Extracting files...")
 
-	response, httpErr := ctxhttp.Get(ctx, z.Client, url)
-	if httpErr != nil {
-		return httpErr
-	}
-	pattern := fmt.Sprintf("*%s", z.Strategy.GetExtension())
-	temp, tempFileErr := os.CreateTemp("", pattern)
-	if tempFileErr != nil {
-		return tempFileErr
+	response, err := ctxhttp.Get(ctx, z.Client, url)
+	if err != nil {
+		return err
 	}
 
-	defer func() {
-		os.Remove(temp.Name())
-	}()
-
-	if _, copyErr := io.Copy(temp, response.Body); copyErr != nil {
-		return copyErr
+	if err = z.extract(response.Body, directoryToCreateProject); err != nil {
+		return err
 	}
 
-	projectName := z.Store.GetValue(store.ProjectName)
-	target := fmt.Sprintf("%s/%s", z.Manager.GetExtractLocation(), projectName)
+	return nil
+}
 
-	if unCompressError := z.Strategy.UnCompressDirectory(temp.Name(), target); unCompressError != nil {
-		return unCompressError
+func (z *compressor) CheckIfFileExtensionIsSupported(source string) error {
+	source, err := filepath.Abs(strings.TrimSpace(source))
+	if err != nil {
+		return err
 	}
-	z.Logger.LogInfo("Zip is extracted successfully")
+
+	if !strings.HasSuffix(source, z.Strategy.GetExtension()) {
+		return fmt.Errorf("unexpexted file format, expexted format is (%s)", z.Strategy.GetExtension())
+	}
+
+	return nil
+}
+
+func (z *compressor) CopyDirectory(path string, directoryToCreateProject string) error {
+	if err := os.CopyFS(directoryToCreateProject, os.DirFS(path)); err != nil {
+		logger.NewLogger().LogErrorIfExists(err)
+		return fmt.Errorf("could not copy the directory")
+	}
+
+	return nil
+}
+
+func (z *compressor) UncompressFromLocalPath(_ context.Context, source string, directoryToCreateProject string) error {
+	localZipFile, err := os.Open(source)
+	if err = z.extractWithoutCopyingToTemp(localZipFile, directoryToCreateProject); err != nil {
+		return err
+	}
 
 	return nil
 }
 
 func (z *compressor) CompressDirectory(source, target string) error {
-	if !filepath.IsAbs(source) {
-		absoluteSource, err := filepath.Abs(source)
-		if err != nil {
-			return err
-		}
-		source = absoluteSource
+	source, err := filepath.Abs(strings.TrimSpace(source))
+	if err != nil {
+		return err
 	}
 
-	if !filepath.IsAbs(target) {
-		absoluteTarget, err := filepath.Abs(target)
-		if err != nil {
-			return err
-		}
-		target = absoluteTarget
+	target, err = filepath.Abs(strings.TrimSpace(target))
+	if err != nil {
+		return err
 	}
 
 	if !checkIsDirectory(source) {
@@ -130,4 +138,40 @@ func shouldSkip(fileName string) bool {
 		}
 	}
 	return false
+}
+
+func (z *compressor) extract(fileReader io.Reader, directoryToCreateProject string) error {
+	pattern := fmt.Sprintf("*%s", z.Strategy.GetExtension())
+	temp, err := os.CreateTemp("", pattern)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		err := os.Remove(temp.Name())
+		z.Logger.LogErrorIfExists(err)
+	}()
+
+	if _, err = io.Copy(temp, fileReader); err != nil {
+		z.Logger.LogErrorIfExists(err)
+
+		return err
+	}
+
+	if err = z.extractWithoutCopyingToTemp(temp, directoryToCreateProject); err != nil {
+		z.Logger.LogErrorIfExists(err)
+
+		return err
+	}
+
+	return nil
+}
+
+func (z *compressor) extractWithoutCopyingToTemp(compressedFile *os.File, directoryToCreateProject string) error {
+	if err := z.Strategy.UnCompressDirectory(compressedFile.Name(), directoryToCreateProject); err != nil {
+		return err
+	}
+	z.Logger.LogInfo("Zip is extracted successfully")
+
+	return nil
 }

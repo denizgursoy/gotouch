@@ -191,8 +191,9 @@ func (p *projectStructureTask) Complete(ctx context.Context) error {
 	if err := validator.New().StructCtx(ctx, p); err != nil {
 		return err
 	}
-
+	projectFullPath := p.Store.GetValue(store.ProjectFullPath)
 	url := strings.TrimSpace(p.ProjectStructure.URL)
+	localPath := strings.TrimSpace(p.ProjectStructure.LocalPath)
 
 	if len(url) != 0 {
 		vcs, err := p.VCSDetector.DetectVCS(ctx, url)
@@ -202,11 +203,22 @@ func (p *projectStructureTask) Complete(ctx context.Context) error {
 
 		switch vcs {
 		case cloner.VCSGit:
-			if err := p.Cloner.CloneFromUrl(ctx, url, p.ProjectStructure.Branch); err != nil {
+			if err := p.Cloner.CloneFromUrl(ctx, url, p.ProjectStructure.Branch, projectFullPath); err != nil {
 				return err
 			}
 		default:
-			if err := p.Compressor.UncompressFromUrl(ctx, url); err != nil {
+			if err := p.Compressor.UncompressFromUrl(ctx, url, projectFullPath); err != nil {
+				return err
+			}
+		}
+	} else if len(localPath) > 0 {
+		err := p.Compressor.CheckIfFileExtensionIsSupported(localPath)
+		if err == nil { // TODO improve here
+			if err := p.Compressor.UncompressFromLocalPath(ctx, localPath, projectFullPath); err != nil {
+				return err
+			}
+		} else {
+			if err := p.Compressor.CopyDirectory(localPath, projectFullPath); err != nil {
 				return err
 			}
 		}

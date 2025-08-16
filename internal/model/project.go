@@ -22,15 +22,27 @@ const (
 
 type (
 	ProjectStructureData struct {
-		Resources         `yaml:",inline"`
-		Name              string      `yaml:"name"`
-		InitialModuleName string      `yaml:"initialModuleName"`
-		Reference         string      `yaml:"reference"`
-		URL               string      `yaml:"url"`
-		Branch            string      `yaml:"branch"`
-		Questions         []*Question `yaml:"questions"`
-		Language          string      `yaml:"language"`
-		Delimiters        string      `yaml:"delimiters"`
+		Resources `yaml:",inline"`
+		Name      string `yaml:"name"`
+		// InitialModuleName is the default value of the module name. It can be populated to suggest path to creator.
+		// It can be something like github.com/my-company/project-x and user only changes the project-x part and does not,
+		// have to remember full path.
+		InitialModuleName string `yaml:"initialModuleName"`
+		// Reference is displayed on the screen for reference during the project selection.
+		Reference string `yaml:"reference"`
+		// URL is either the address of the git repository or the zip file in the HTTP.
+		// if the URL starts with @git, then it checkouts with SSH connection.
+		URL string `yaml:"url"`
+		// LocalPath stores the relative or absolute path of either compressed file or the directory,
+		// that stores the template project
+		LocalPath string `yaml:"localPath"`
+		// Branch is the git branch to be checkout.
+		Branch    string      `yaml:"branch"`
+		Questions []*Question `yaml:"questions"`
+		Language  string      `yaml:"language"`
+		// Delimiters are the values that will be used instead of default go template delimiters. It should be written,
+		// like [[ ]], left delimiter and right delimiter separated by a space
+		Delimiters string `yaml:"delimiters"`
 	}
 
 	Question struct {
@@ -97,6 +109,10 @@ func (p *ProjectStructureData) IsValid() error {
 				return ErrProjectURLIsNotValid
 			}
 		}
+	}
+	localFilePath := strings.TrimSpace(p.LocalPath)
+	if len(localFilePath) > 0 {
+		// TODO
 	}
 
 	delimiters := strings.Fields(p.Delimiters)
