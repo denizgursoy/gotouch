@@ -14,8 +14,8 @@ lint:
 	golangci-lint run
 
 build-test:
-	$(LINUX_BUILD) -v -o gotouch-linux -tags=integration ./cmd/gotouch/
-	$(MAC_BUILD)   -v -o gotouch-darwin -tags=integration ./cmd/gotouch/
+	$(LINUX_BUILD) -v -o gotouch-linux ./cmd/gotouch/
+	$(MAC_BUILD)   -v -o gotouch-darwin ./cmd/gotouch/
 
 unit:
 	go test -v -coverprofile coverage.out ./...

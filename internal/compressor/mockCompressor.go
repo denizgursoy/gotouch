@@ -40,6 +40,44 @@ func (m *MockCompressor) EXPECT() *MockCompressorMockRecorder {
 	return m.recorder
 }
 
+// CheckIfFileExtensionIsSupported mocks base method.
+func (m *MockCompressor) CheckIfFileExtensionIsSupported(path string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckIfFileExtensionIsSupported", path)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CheckIfFileExtensionIsSupported indicates an expected call of CheckIfFileExtensionIsSupported.
+func (mr *MockCompressorMockRecorder) CheckIfFileExtensionIsSupported(path any) *MockCompressorCheckIfFileExtensionIsSupportedCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckIfFileExtensionIsSupported", reflect.TypeOf((*MockCompressor)(nil).CheckIfFileExtensionIsSupported), path)
+	return &MockCompressorCheckIfFileExtensionIsSupportedCall{Call: call}
+}
+
+// MockCompressorCheckIfFileExtensionIsSupportedCall wrap *gomock.Call
+type MockCompressorCheckIfFileExtensionIsSupportedCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockCompressorCheckIfFileExtensionIsSupportedCall) Return(arg0 error) *MockCompressorCheckIfFileExtensionIsSupportedCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockCompressorCheckIfFileExtensionIsSupportedCall) Do(f func(string) error) *MockCompressorCheckIfFileExtensionIsSupportedCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockCompressorCheckIfFileExtensionIsSupportedCall) DoAndReturn(f func(string) error) *MockCompressorCheckIfFileExtensionIsSupportedCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // CompressDirectory mocks base method.
 func (m *MockCompressor) CompressDirectory(source, target string) error {
 	m.ctrl.T.Helper()
@@ -78,18 +116,94 @@ func (c *MockCompressorCompressDirectoryCall) DoAndReturn(f func(string, string)
 	return c
 }
 
-// UncompressFromUrl mocks base method.
-func (m *MockCompressor) UncompressFromUrl(ctx context.Context, url string) error {
+// CopyDirectory mocks base method.
+func (m *MockCompressor) CopyDirectory(path, directoryToCreateProject string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UncompressFromUrl", ctx, url)
+	ret := m.ctrl.Call(m, "CopyDirectory", path, directoryToCreateProject)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CopyDirectory indicates an expected call of CopyDirectory.
+func (mr *MockCompressorMockRecorder) CopyDirectory(path, directoryToCreateProject any) *MockCompressorCopyDirectoryCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CopyDirectory", reflect.TypeOf((*MockCompressor)(nil).CopyDirectory), path, directoryToCreateProject)
+	return &MockCompressorCopyDirectoryCall{Call: call}
+}
+
+// MockCompressorCopyDirectoryCall wrap *gomock.Call
+type MockCompressorCopyDirectoryCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockCompressorCopyDirectoryCall) Return(arg0 error) *MockCompressorCopyDirectoryCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockCompressorCopyDirectoryCall) Do(f func(string, string) error) *MockCompressorCopyDirectoryCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockCompressorCopyDirectoryCall) DoAndReturn(f func(string, string) error) *MockCompressorCopyDirectoryCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// UncompressFromLocalPath mocks base method.
+func (m *MockCompressor) UncompressFromLocalPath(ctx context.Context, path, directoryToCreateProject string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UncompressFromLocalPath", ctx, path, directoryToCreateProject)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UncompressFromLocalPath indicates an expected call of UncompressFromLocalPath.
+func (mr *MockCompressorMockRecorder) UncompressFromLocalPath(ctx, path, directoryToCreateProject any) *MockCompressorUncompressFromLocalPathCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromLocalPath", reflect.TypeOf((*MockCompressor)(nil).UncompressFromLocalPath), ctx, path, directoryToCreateProject)
+	return &MockCompressorUncompressFromLocalPathCall{Call: call}
+}
+
+// MockCompressorUncompressFromLocalPathCall wrap *gomock.Call
+type MockCompressorUncompressFromLocalPathCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockCompressorUncompressFromLocalPathCall) Return(arg0 error) *MockCompressorUncompressFromLocalPathCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockCompressorUncompressFromLocalPathCall) Do(f func(context.Context, string, string) error) *MockCompressorUncompressFromLocalPathCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockCompressorUncompressFromLocalPathCall) DoAndReturn(f func(context.Context, string, string) error) *MockCompressorUncompressFromLocalPathCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// UncompressFromUrl mocks base method.
+func (m *MockCompressor) UncompressFromUrl(ctx context.Context, url, directoryToCreateProject string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UncompressFromUrl", ctx, url, directoryToCreateProject)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UncompressFromUrl indicates an expected call of UncompressFromUrl.
-func (mr *MockCompressorMockRecorder) UncompressFromUrl(ctx, url any) *MockCompressorUncompressFromUrlCall {
+func (mr *MockCompressorMockRecorder) UncompressFromUrl(ctx, url, directoryToCreateProject any) *MockCompressorUncompressFromUrlCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromUrl", reflect.TypeOf((*MockCompressor)(nil).UncompressFromUrl), ctx, url)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UncompressFromUrl", reflect.TypeOf((*MockCompressor)(nil).UncompressFromUrl), ctx, url, directoryToCreateProject)
 	return &MockCompressorUncompressFromUrlCall{Call: call}
 }
 
@@ -105,13 +219,13 @@ func (c *MockCompressorUncompressFromUrlCall) Return(arg0 error) *MockCompressor
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockCompressorUncompressFromUrlCall) Do(f func(context.Context, string) error) *MockCompressorUncompressFromUrlCall {
+func (c *MockCompressorUncompressFromUrlCall) Do(f func(context.Context, string, string) error) *MockCompressorUncompressFromUrlCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockCompressorUncompressFromUrlCall) DoAndReturn(f func(context.Context, string) error) *MockCompressorUncompressFromUrlCall {
+func (c *MockCompressorUncompressFromUrlCall) DoAndReturn(f func(context.Context, string, string) error) *MockCompressorUncompressFromUrlCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -1,3 +1,0 @@
-7
-g.c/dg/testapp
-0

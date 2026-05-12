@@ -23,6 +23,7 @@ type (
 		AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]any, error)
 		AskForYesOrNo(direction string) (bool, error)
 		AskForMultilineString(direction, defaultValue, pattern string) (string, error)
+		Close()
 	}
 
 	ListOption struct {

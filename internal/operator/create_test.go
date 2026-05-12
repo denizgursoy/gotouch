@@ -51,8 +51,8 @@ func TestCreateNewProject(t *testing.T) {
 
 		options.Executor.(*executor.MockExecutor).
 			EXPECT().
-			Execute(gomock.Any(), gomock.Any()).
-			Do(func(ctx context.Context, execRequirements executor.Requirements) error {
+			ExecuteWithHook(gomock.Any(), gomock.Any(), gomock.Any()).
+			Do(func(ctx context.Context, execRequirements executor.Requirements, onPromptsDone func()) error {
 				require.Len(t, execRequirements, 1)
 				structure := execRequirements[0].(*requirements.ProjectStructureRequirement)
 

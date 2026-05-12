@@ -41,17 +41,17 @@ func (m *MockCloner) EXPECT() *MockClonerMockRecorder {
 }
 
 // CloneFromUrl mocks base method.
-func (m *MockCloner) CloneFromUrl(ctx context.Context, url, branchName string) error {
+func (m *MockCloner) CloneFromUrl(ctx context.Context, url, branchName, projectFullPath string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CloneFromUrl", ctx, url, branchName)
+	ret := m.ctrl.Call(m, "CloneFromUrl", ctx, url, branchName, projectFullPath)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CloneFromUrl indicates an expected call of CloneFromUrl.
-func (mr *MockClonerMockRecorder) CloneFromUrl(ctx, url, branchName any) *MockClonerCloneFromUrlCall {
+func (mr *MockClonerMockRecorder) CloneFromUrl(ctx, url, branchName, projectFullPath any) *MockClonerCloneFromUrlCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloneFromUrl", reflect.TypeOf((*MockCloner)(nil).CloneFromUrl), ctx, url, branchName)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloneFromUrl", reflect.TypeOf((*MockCloner)(nil).CloneFromUrl), ctx, url, branchName, projectFullPath)
 	return &MockClonerCloneFromUrlCall{Call: call}
 }
 
@@ -67,13 +67,13 @@ func (c *MockClonerCloneFromUrlCall) Return(arg0 error) *MockClonerCloneFromUrlC
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockClonerCloneFromUrlCall) Do(f func(context.Context, string, string) error) *MockClonerCloneFromUrlCall {
+func (c *MockClonerCloneFromUrlCall) Do(f func(context.Context, string, string, string) error) *MockClonerCloneFromUrlCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockClonerCloneFromUrlCall) DoAndReturn(f func(context.Context, string, string) error) *MockClonerCloneFromUrlCall {
+func (c *MockClonerCloneFromUrlCall) DoAndReturn(f func(context.Context, string, string, string) error) *MockClonerCloneFromUrlCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

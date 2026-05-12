@@ -34,9 +34,7 @@ func newCloner() Cloner {
 	}
 }
 
-func (g *gitCloner) CloneFromUrl(ctx context.Context, rawUrl, branchName string) error {
-	projectFullPath := g.Store.GetValue(store.ProjectFullPath)
-
+func (g *gitCloner) CloneFromUrl(ctx context.Context, rawUrl, branchName, projectFullPath string) error {
 	cloneOptions := &git.CloneOptions{
 		Depth:    1,
 		URL:      rawUrl,
