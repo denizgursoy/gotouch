@@ -298,3 +298,55 @@ func (z *ZippingTestSuite) setInputFile(fileName string) {
 func (z *ZippingTestSuite) setInline() {
 	z.inline = true
 }
+
+func (z *ZippingTestSuite) TestLocalDirectory() {
+	z.setInputFile("local-directory.txt")
+
+	packageYaml := z.generateLocalPackageYaml("local-template", false)
+	z.executeGotouchWithFile(packageYaml)
+
+	z.checkFileExists("main.go", true)
+	z.checkFileExists("README.md", true)
+	z.checkFileExists("config.yaml", true)
+}
+
+func (z *ZippingTestSuite) TestLocalCompressedFile() {
+	z.setInputFile("local-zip.txt")
+
+	packageYaml := z.generateLocalPackageYaml("local-template.tar.gz", true)
+	z.executeGotouchWithFile(packageYaml)
+
+	z.checkFileExists("main.go", true)
+	z.checkFileExists("README.md", true)
+	z.checkFileExists("config.yaml", true)
+}
+
+// generateLocalPackageYaml creates a temporary package.yaml with an absolute localPath
+// pointing to the test template in the source tree.
+func (z *ZippingTestSuite) generateLocalPackageYaml(templateName string, isCompressed bool) string {
+	localPath := filepath.Join(z.binaryDir, "internal", "testdata", templateName)
+
+	yamlContent := fmt.Sprintf(`- name: Local Template Project
+  localPath: "%s"
+`, localPath)
+
+	tmpFile, err := os.CreateTemp(z.workingDir, "package-*.yaml")
+	z.Require().NoError(err)
+
+	_, err = tmpFile.WriteString(yamlContent)
+	z.Require().NoError(err)
+
+	err = tmpFile.Close()
+	z.Require().NoError(err)
+
+	return tmpFile.Name()
+}
+
+func (z *ZippingTestSuite) executeGotouchWithFile(packageFile string) {
+	args := make([]string, 0)
+	args = append(args, z.binaryPath, "-f", packageFile)
+	if z.inline {
+		args = append(args, "-i")
+	}
+	z.CmdExec(args...)
+}

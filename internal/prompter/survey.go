@@ -4,26 +4,42 @@ package prompter
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/AlecAivazis/survey/v2"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
 )
 
-var pageSize = survey.WithPageSize(20)
+func newTheme() *huh.Theme {
+	theme := huh.ThemeCharm()
+	theme.Focused.SelectedPrefix = lipgloss.NewStyle().SetString("[✓] ")
+	theme.Focused.UnselectedPrefix = lipgloss.NewStyle().SetString("[ ] ")
+	theme.Blurred.SelectedPrefix = lipgloss.NewStyle().SetString("[✓] ")
+	theme.Blurred.UnselectedPrefix = lipgloss.NewStyle().SetString("[ ] ")
+	return theme
+}
+
+func runInline(fields ...huh.Field) error {
+	return huh.NewForm(huh.NewGroup(fields...)).
+		WithProgramOptions(tea.WithAltScreen()).
+		WithTheme(newTheme()).
+		Run()
+}
 
 func (s srv) AskForString(direction, initialValue string, validator Validator) (string, error) {
-	result := ""
+	result := initialValue
 
-	input := survey.Input{
-		Renderer: survey.Renderer{},
-		Message:  direction,
+	input := huh.NewInput().
+		Title(direction).
+		Value(&result)
+
+	if validator != nil {
+		input.Validate(func(val string) error {
+			return validator(val)
+		})
 	}
 
-	err := survey.AskOne(
-		&input,
-		&result,
-		survey.WithStdio(&defaultMessageReader{prepended: true, initialValue: initialValue}, os.Stdout, os.Stderr),
-		survey.WithValidator(survey.Validator(validator)))
+	err := runInline(input)
 	return result, err
 }
 
@@ -34,21 +50,23 @@ func (s srv) AskForSelectionFromList(direction string, list []fmt.Stringer) (any
 		return nil, EmptyList
 	}
 
-	options := make(map[string]fmt.Stringer)
-	keys := make([]string, 0)
+	options := make([]huh.Option[string], 0, count)
+	lookup := make(map[string]fmt.Stringer)
 	for _, item := range list {
 		choice := item.String()
-		options[choice] = item
-		keys = append(keys, choice)
+		options = append(options, huh.NewOption(choice, choice))
+		lookup[choice] = item
 	}
 
-	selectedChoice := ""
-	err := survey.AskOne(&survey.Select{
-		Message: direction,
-		Options: keys,
-	}, &selectedChoice, pageSize)
+	var selected string
+	err := runInline(
+		huh.NewSelect[string]().
+			Title(direction + " (select one)").
+			Options(options...).
+			Value(&selected),
+	)
 
-	return options[selectedChoice], err
+	return lookup[selected], err
 }
 
 func (s srv) AskForMultipleSelectionFromList(direction string, list []fmt.Stringer) ([]any, error) {
@@ -58,47 +76,46 @@ func (s srv) AskForMultipleSelectionFromList(direction string, list []fmt.String
 		return nil, EmptyList
 	}
 
-	options := make(map[string]fmt.Stringer)
-	keys := make([]string, 0)
+	options := make([]huh.Option[string], 0, count)
+	lookup := make(map[string]fmt.Stringer)
 	for _, item := range list {
 		choice := item.String()
-		options[choice] = item
-		keys = append(keys, choice)
+		options = append(options, huh.NewOption(choice, choice))
+		lookup[choice] = item
 	}
 
-	selectedChoices := make([]string, 0)
-	err := survey.AskOne(&survey.MultiSelect{
-		Message: direction,
-		Options: keys,
-	}, &selectedChoices, pageSize)
+	var selected []string
+	err := runInline(
+		huh.NewMultiSelect[string]().
+			Title(direction + " (select multiple)").
+			Options(options...).
+			Value(&selected),
+	)
 
-	results := make([]any, 0)
-	for i := range selectedChoices {
-		results = append(results, options[selectedChoices[i]])
+	results := make([]any, 0, len(selected))
+	for _, s := range selected {
+		results = append(results, lookup[s])
 	}
 
 	return results, err
 }
 
 func (s srv) AskForYesOrNo(direction string) (bool, error) {
-	name := false
-	prompt := &survey.Confirm{
-		Message: direction,
-	}
-	err := survey.AskOne(prompt, &name)
-	return name, err
+	var result bool
+	err := runInline(
+		huh.NewConfirm().
+			Title(direction).
+			Value(&result),
+	)
+	return result, err
 }
 
 func (s srv) AskForMultilineString(direction, defaultValue, pattern string) (string, error) {
-	prompt := &survey.Editor{
-		Message:       direction,
-		Default:       defaultValue,
-		HideDefault:   true,
-		AppendDefault: true,
-		FileName:      pattern,
-	}
-
-	result := ""
-	err := survey.AskOne(prompt, &result)
+	result := defaultValue
+	err := runInline(
+		huh.NewText().
+			Title(direction).
+			Value(&result),
+	)
 	return result, err
 }
