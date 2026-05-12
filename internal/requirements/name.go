@@ -36,7 +36,7 @@ type (
 )
 
 const (
-	ModuleNameDirection = "Enter Module Name   :"
+	ModuleNameDirection = "Enter Module Name:"
 )
 
 func (p *ProjectNameRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {

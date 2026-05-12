@@ -16,6 +16,7 @@ type (
 
 	Executor interface {
 		Execute(ctx context.Context, requirements Requirements) error
+		ExecuteWithHook(ctx context.Context, requirements Requirements, onPromptsDone func()) error
 	}
 )
 

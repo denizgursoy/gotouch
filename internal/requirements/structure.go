@@ -50,7 +50,7 @@ type (
 )
 
 const (
-	SelectProjectTypeDirection = "Select Project Type :"
+	SelectProjectTypeDirection = "Select Project Type:"
 )
 
 func (p *ProjectStructureRequirement) AskForInput() ([]model.Task, []model.Requirement, error) {

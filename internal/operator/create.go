@@ -78,7 +78,9 @@ func (o *operator) CreateNewProject(ctx context.Context, opts *CreateNewProjectO
 	}
 	newProjectRequirements = append(newProjectRequirements, &requirement)
 
-	return opts.Executor.Execute(ctx, newProjectRequirements)
+	return opts.Executor.ExecuteWithHook(ctx, newProjectRequirements, func() {
+		opts.Prompter.Close()
+	})
 }
 
 func isValid(ctx context.Context, opts *CreateNewProjectOptions) error {

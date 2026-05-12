@@ -77,3 +77,41 @@ func (c *MockExecutorExecuteCall) DoAndReturn(f func(context.Context, Requiremen
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
+
+// ExecuteWithHook mocks base method.
+func (m *MockExecutor) ExecuteWithHook(ctx context.Context, requirements Requirements, onPromptsDone func()) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExecuteWithHook", ctx, requirements, onPromptsDone)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ExecuteWithHook indicates an expected call of ExecuteWithHook.
+func (mr *MockExecutorMockRecorder) ExecuteWithHook(ctx, requirements, onPromptsDone any) *MockExecutorExecuteWithHookCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExecuteWithHook", reflect.TypeOf((*MockExecutor)(nil).ExecuteWithHook), ctx, requirements, onPromptsDone)
+	return &MockExecutorExecuteWithHookCall{Call: call}
+}
+
+// MockExecutorExecuteWithHookCall wrap *gomock.Call
+type MockExecutorExecuteWithHookCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockExecutorExecuteWithHookCall) Return(arg0 error) *MockExecutorExecuteWithHookCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockExecutorExecuteWithHookCall) Do(f func(context.Context, Requirements, func()) error) *MockExecutorExecuteWithHookCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockExecutorExecuteWithHookCall) DoAndReturn(f func(context.Context, Requirements, func()) error) *MockExecutorExecuteWithHookCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
