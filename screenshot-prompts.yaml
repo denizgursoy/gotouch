@@ -1,0 +1,82 @@
+# 1) Yes/No Question screenshot
+#    Select this project, then screenshot the "Do you want Dockerfile?" yes/no prompt
+- name: Yes/No Question Demo
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
+  language: go
+  questions:
+    - direction: Do you want Dockerfile?
+      canSkip: true
+      choices:
+        - choice: Yes
+          files:
+            - url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile
+              pathFromRoot: Dockerfile
+
+# 2) Multiple Choice Question screenshot
+#    Select this project, then screenshot the "Which HTTP framework?" select prompt
+- name: Multiple Choice Question Demo
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
+  language: go
+  questions:
+    - direction: Which HTTP framework do you want to use?
+      choices:
+        - choice: Echo
+          dependencies:
+            - github.com/labstack/echo/v4
+        - choice: Gorilla Mux
+          dependencies:
+            - github.com/gorilla/mux
+        - choice: Gin
+          dependencies:
+            - github.com/gin-gonic/gin
+
+# 3) None of Above Question screenshot
+#    Select this project, then screenshot the prompt with "None of above" option
+- name: None of Above Question Demo
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
+  language: go
+  questions:
+    - direction: Which HTTP framework do you want to use?
+      canSkip: true
+      choices:
+        - choice: Echo
+          dependencies:
+            - github.com/labstack/echo/v4
+        - choice: Gorilla Mux
+          dependencies:
+            - github.com/gorilla/mux
+        - choice: Gin
+          dependencies:
+            - github.com/gin-gonic/gin
+
+# 4) Multiple Select Question screenshot
+#    Select this project, then screenshot the multi-select prompt
+- name: Multiple Select Question Demo
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
+  language: go
+  questions:
+    - direction: Select features you want
+      canSelectMultiple: true
+      choices:
+        - choice: Elastic APM
+          values:
+            isElastic: true
+        - choice: Swagger
+          values:
+            isSwagger: true
+        - choice: Keycloak
+          values:
+            isKeycloak: true
+
+# 5) Edit Values screenshot
+#    Select this project, then screenshot the "Do you want to edit values?" prompt
+- name: Edit Values Demo
+  url: https://github.com/denizgursoy/go-touch-projects.git
+  branch: empty
+  language: go
+  customValues:
+    Port: 8080
