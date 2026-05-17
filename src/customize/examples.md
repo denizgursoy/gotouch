@@ -81,3 +81,9 @@
               - arrayValue1
               - arrayValue2
 ```
+
+### Docker + LocalPath
+
+See [Distributing Templates with Docker](./local-path-docker-example) for a complete working example of the suggested
+way to use Gotouch — building a self-contained Docker image that bundles your templates, configuration, and the tool
+into a single versioned image your team can pull and run.

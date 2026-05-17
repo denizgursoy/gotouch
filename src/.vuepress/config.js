@@ -63,6 +63,7 @@ module.exports = {
                     '/customize/values.md',
                     '/customize/init.md',
                     '/customize/examples.md',
+                    '/customize/local-path-docker-example.md',
                 ],
             },
             {
