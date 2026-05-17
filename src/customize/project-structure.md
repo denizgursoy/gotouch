@@ -45,10 +45,6 @@ or relative path. If the path points to a supported compressed file (`.tar.gz`),
 project directory. If the path points to a directory, Gotouch will copy its contents. This field is optional and serves
 as an alternative to `url` for using templates that are stored locally.
 
-::: warning
-`localPath` is not supported when running Gotouch inside a Docker container.
-:::
-
 **`branch`**: Gotouch allows you clone custom branch other than main on git. This allows you to host
 all template projects in one git repository. This value is taken into consideration only if url is a git repository URL.
 
