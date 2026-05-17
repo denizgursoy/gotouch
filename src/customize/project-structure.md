@@ -4,7 +4,7 @@
 - name: Empty Project Layout #mandatory 
   reference: https://go.dev/ #optional  
   url: https://github.com/denizgursoy/go-touch-projects.git # optional
-  localPath: /path/to/template # optional, alternative to url
+  localPath: /path/to/template # optional
   branch: empty # branch name of git repository to be cloned
   language: go # go, golang 
   delimiters: "<< >>" # optional to replace default templating values
@@ -37,12 +37,13 @@
 
 **`url`**: URL of template project. It can be a git repository `https://github.com/bff-project/bff.git`
 or address of `.tar.gz` file like `https://github.com/denizgursoy/go-touch-projects/raw/main/compressed/empty.zip`. It
-is optional if `localPath` is provided. If both `url` and `localPath` are set, `url` takes precedence.
+is optional. If both `url` and `localPath` are set, `url` takes precedence. If neither is provided, Gotouch creates
+an empty project directory.
 
 **`localPath`**: Path to a local template directory or `.tar.gz` file on the filesystem. It can be an absolute
 or relative path. If the path points to a supported compressed file (`.tar.gz`), Gotouch will uncompress it into the
-project directory. If the path points to a directory, Gotouch will copy its contents. This field is an alternative
-to `url` for using templates that are stored locally.
+project directory. If the path points to a directory, Gotouch will copy its contents. This field is optional and serves
+as an alternative to `url` for using templates that are stored locally.
 
 ::: warning
 `localPath` is not supported when running Gotouch inside a Docker container.
