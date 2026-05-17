@@ -10,7 +10,8 @@
    if any
 6. Add default to [values](../customize/values)
 7. Creates a new directory with module name's last part after last `/`
-8. Uncompress/checkout the template project of the selected project structure into the created directory
+8. Uncompress/checkout the template project of the selected project structure into the created directory, or copy from
+   a [local path](../customize/project-structure) if `localPath` is specified
 9. If the selected project's language is go,updates the module's name in the go.mod with the value user entered, if
    there is no go.mod file, it creates the
    go.mod file

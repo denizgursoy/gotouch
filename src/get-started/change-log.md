@@ -1,5 +1,10 @@
 # Change Log
 
+### v1.15.0
+
+Added [`localPath`](../customize/project-structure) to project structure for using local template directories or
+compressed files. New terminal UI with a progress view showing spinner and task execution logs.
+
 ### v1.14.0
 
 Added `customValues` to [project structure](../customize/project-structure).

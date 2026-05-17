@@ -27,5 +27,5 @@ docker run -it -v $(pwd):/out --rm ghcr.io/denizgursoy/gotouch:latest -f url-of-
 ```
 
 ::: warning
-When you use docker container, `-f` flag can only be URL. Local path is not **supported**.
+When you use docker container, `-f` flag can only be URL. Local path is not **supported**. The [`localPath`](../customize/project-structure) field in project structure is also not available inside Docker containers.
 :::
