@@ -2,3 +2,5 @@
 .idea
 node_modules
 src/.vuepress/dist
+src/.vitepress/dist
+src/.vitepress/cache

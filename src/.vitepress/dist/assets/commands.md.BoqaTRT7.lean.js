@@ -1,1 +1,0 @@
-import{_ as o,H as a,f as t,i as r}from"./chunks/framework.DSMXSEqa.js";const p=JSON.parse('{"title":"Commands","description":"","frontmatter":{},"headers":[],"relativePath":"commands.md","filePath":"commands.md"}'),c={name:"commands.md"};function n(i,e,s,d,l,g){return a(),t("div",null,[...e[0]||(e[0]=[r("",19)])])}const h=o(c,[["render",n]]);export{p as __pageData,h as default};

@@ -2,7 +2,7 @@ name: Deploy VitePress site to Pages
 
 on:
   push:
-    branches: [vue-press]
+    branches: [vue-press, vue-press-localpath-docs]
 
 permissions:
   contents: read
