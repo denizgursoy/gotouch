@@ -24,7 +24,7 @@ Gotouch will ask whether user wants to change the **`custom values`** under the 
 
 The values are displayed in an inline text editor where you can modify them directly in the terminal.
 
-![Vim editor](@images/vim-editor.png)
+![Editor](@images/editor.png)
 
 When you confirm, Gotouch will save the values and continue creating the project. Values under the selected
 project structure will be merged with all selected choices' values.
