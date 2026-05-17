@@ -33,7 +33,7 @@ type persistentModel struct {
 }
 
 func newTheme() *huh.Theme {
-	theme := huh.ThemeCharm()
+	theme := huh.ThemeDracula()
 	theme.Focused.SelectedPrefix = lipgloss.NewStyle().SetString("[✓] ")
 	theme.Focused.UnselectedPrefix = lipgloss.NewStyle().SetString("[ ] ")
 	theme.Blurred.SelectedPrefix = lipgloss.NewStyle().SetString("[✓] ")
@@ -298,6 +298,8 @@ func (s srv) AskForYesOrNo(direction string) (bool, error) {
 	err := runPrompt(
 		huh.NewConfirm().
 			Title(direction).
+			Inline(false).
+			WithButtonAlignment(lipgloss.Left).
 			Value(&result),
 	)
 	return result, err
