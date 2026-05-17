@@ -1,24 +1,20 @@
+<div v-pre>
+
 # Template project
 
 Template project contains all the directories and files that you think you must have in every project. Files inside a
 template can have [actions](https://pkg.go.dev/text/template#hdr-Actions) which will
 be [templated](https://pkg.go.dev/text/template) with the [values](./values). For example, if you have an action
-like <code v-pre>{{ .Port }}</code> and `Port` key in your [values](./values), it will be replaced with the
+like `{{ .Port }}` and `Port` key in your [values](./values), it will be replaced with the
 corresponding value.
 
 
-<code-group>
-<code-block title="Values">
-
-```yaml
+::: code-group
+```yaml [Values]
 Port: 9090
 ```
 
-</code-block>
-
-<code-block title="Source File">
-
-```go
+```go [Source File]
 package main
 
 import (
@@ -37,11 +33,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-</code-block>
-
-<code-block title="Result">
-
-```go
+```go [Result]
 package main
 
 import (
@@ -59,9 +51,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Server got the request\n")
 }
 ```
-
-</code-block>
-</code-group>
+:::
 
 
 Template project address will be used in properties YAML. Template project can be in a git repository and the URL
@@ -91,20 +81,14 @@ You can use [default values](./values#default-values) in your templates. Let's a
 `github.com/denigursoy/foo` and you create new packages in your template project. In order to import from other package,
 you need to know module name user entered. You can access it with `.ModuleName` value. See the following example:
 
-<code-group>
-<code-block title="Target package">
-
-```go
+::: code-group
+```go [Target package]
 package color
 
 var Red = "red"
 ```
 
-</code-block>
-
-<code-block title="Source File">
-
-```go
+```go [Source File]
 package product
 
 import (
@@ -117,11 +101,7 @@ func printProductColor() {
 }
 ```
 
-</code-block>
-
-<code-block title="Result">
-
-```go
+```go [Result]
 package product
 
 import (
@@ -133,26 +113,21 @@ func printProductColor() {
 	fmt.Println(color.Red)
 }
 ```
-
-</code-block>
-</code-group>
+:::
 
 ### Templating directory and file names
 
 You can use values in directory or file names in your template project. For example, you can use `ProjectName` default
 value in your files/directories of template project. If user enters module name as `github.com/denigursoy/foo` and
-then `ProjectName` default value will be `foo`. During the templating file with the name <code v-pre>{{ .ProjectName
-}}.txt</code> will be `foo.txt`.
+then `ProjectName` default value will be `foo`. During the templating file with the name `{{ .ProjectName }}.txt` will be `foo.txt`.
 
 ### Using sprig functions
 
 During templating, you can use [sprig functions](http://masterminds.github.io/sprig/). For example, You can use `uuidv4`
 function of spring to generate unique IDs.
 
-<code-group>
-<code-block title="Source File">
-
-```go
+::: code-group
+```go [Source File]
 package main
 
 import "fmt"
@@ -162,11 +137,7 @@ func main() {
 }
 ```
 
-</code-block>
-
-<code-block title="Result">
-
-```go
+```go [Result]
 package main
 
 import "fmt"
@@ -175,9 +146,7 @@ func main() {
 	fmt.Println("dab4f91f-056c-49f3-abea-7ec3d6a74e8a")
 }
 ```
-
-</code-block>
-</code-group>
+:::
 
 ### Templating with go template library
 
@@ -185,3 +154,5 @@ You can also use other go template library's capabilities such as conditions, it
 information see [go template library](https://pkg.go.dev/text/template).
 
 See [simple examples](./learn-go-template.md) to learn templating.
+
+</div>

@@ -1,0 +1,14 @@
+:root {
+  --vp-c-brand-1: #3eaf7c;
+  --vp-c-brand-2: #359d6e;
+  --vp-c-brand-3: #2c8c60;
+  --vp-home-hero-name-color: #3eaf7c;
+}
+
+.VPHero .image-bg {
+  display: none;
+}
+
+.VPHero img {
+  max-width: 450px !important;
+}

@@ -16,14 +16,13 @@ in one question. Question will be displayed as [multiple select question](#multi
 ### Yes/No question
 If a question has only one choice and `canSkip` is true, it is evaluated as Yes/No question
 
-<code-group>
-<code-block title="Terminal">
+<Tabs :tabs="['Terminal', 'YAML']">
+<template #tab-0>
 
-![Yes/No Question](@images/yes-no-question.png)
+![Yes/No Question](/yes-no-question.png)
 
-</code-block>
-
-<code-block title="YAML">
+</template>
+<template #tab-1>
 
 ```yaml
 - name: Api Gateway
@@ -40,21 +39,20 @@ If a question has only one choice and `canSkip` is true, it is evaluated as Yes/
               pathFromRoot: Dockerfile # mandatory
 ```
 
-</code-block>
-</code-group>
+</template>
+</Tabs>
 
 ### Multiple choice question
 
 If a question has more than one choice it is evaluated as Multiple choice question
 
-<code-group>
-<code-block title="Terminal">
+<Tabs :tabs="['Terminal', 'YAML']">
+<template #tab-0>
 
-![Multiple Choice Question](@images/multiple-choice.png)
+![Multiple Choice Question](/multiple-choice.png)
 
-</code-block>
-
-<code-block title="YAML">
+</template>
+<template #tab-1>
 
 ```yaml
 - name: Api Gateway
@@ -75,8 +73,8 @@ If a question has more than one choice it is evaluated as Multiple choice questi
             - github.com/gin-gonic/gin
 ```
 
-</code-block>
-</code-group>
+</template>
+</Tabs>
 
 
 ### None of above question
@@ -84,14 +82,13 @@ If a question has more than one choice it is evaluated as Multiple choice questi
 If a question has more than one choice and `canSkip` is true, `None of above` option will be also added 
 as a choice. 
 
-<code-group>
-<code-block title="Terminal">
+<Tabs :tabs="['Terminal', 'YAML']">
+<template #tab-0>
 
-![None of Above Question](@images/none-of-above.png)
+![None of Above Question](/none-of-above.png)
 
-</code-block>
-
-<code-block title="YAML">
+</template>
+<template #tab-1>
 
 ```yaml
 - name: Api Gateway
@@ -100,6 +97,7 @@ as a choice.
   language: go
   questions:
     - direction: Which HTTP framework do you want to use?
+      canSkip: true
       choices:
         - choice: Echo
           dependencies:
@@ -112,22 +110,21 @@ as a choice.
             - github.com/gin-gonic/gin
 ```
 
-</code-block>
-</code-group>
+</template>
+</Tabs>
 
 
 ### Multiple Select Question
 
 If a question's `canSelectMultiple` is set to true, user can select more than one choice.
 
-<code-group>
-<code-block title="Terminal">
+<Tabs :tabs="['Terminal', 'YAML']">
+<template #tab-0>
 
-![Multiple Select Question](@images/multiple-select.png)
+![Multiple Select Question](/multiple-select.png)
 
-</code-block>
-
-<code-block title="YAML">
+</template>
+<template #tab-1>
 
 ```yaml
 - name: Api Gateway
@@ -149,5 +146,5 @@ If a question's `canSelectMultiple` is set to true, user can select more than on
             isKeycloak: true
 ```
 
-</code-block>
-</code-group>
+</template>
+</Tabs>

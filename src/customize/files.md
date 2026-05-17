@@ -4,10 +4,8 @@ Selected choice can create list of files. A file content can be fetched from int
 must have `pathFromRoot` field to which Gotouch will create the file.
 
 
-<code-group>
-<code-block title="File from Internet">
-
-```yaml
+::: code-group
+```yaml [File from Internet]
 questions: #optional
   - direction: Do you want Dockerfile? #mandatory
     canSkip: true #if true, there must be at least one choice. 
@@ -18,11 +16,7 @@ questions: #optional
             url: https://raw.githubusercontent.com/denizgursoy/go-touch-projects/main/Dockerfile # mandatory
 ```
 
-</code-block>
-
-<code-block title="File from Content">
-
-```yaml
+```yaml [File from Content]
 questions: #optional
   - direction: Do you want Dockerfile? #mandatory
     canSkip: true #if true, there must be at least one choice. 
@@ -38,6 +32,4 @@ questions: #optional
               RUN go build -o main .
               CMD ["/app/main"]
 ```
-
-</code-block>
-</code-group>
+:::

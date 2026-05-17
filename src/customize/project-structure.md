@@ -1,3 +1,5 @@
+<div v-pre>
+
 # Project Structure
 
 ```yaml
@@ -69,4 +71,6 @@ See [values](./values) for more information.
 
 **`questions`**: List of questions to customize project in case that this project structure is selected.
 See [question](./question) for more information.
+
+</div>
 

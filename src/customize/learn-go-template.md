@@ -1,3 +1,12 @@
+---
+outline: deep
+---
+
+<script setup>
+</script>
+
+<div v-pre>
+
 # Learn Go template
 
 [Go template](https://pkg.go.dev/text/template) library is a powerful library. Some examples can be found
@@ -8,9 +17,7 @@ redirect you to the [repeatit.io](https://repeatit.io/).
 
 If you have a value, for example `Port`, and want to write its value as text, you should write it between
 delimiters `{{` `}}` with a leading `.` as
-:::v-pre
 `{{.Port}}`
-:::
 See the examples:
 
 [Port Example](https://repeatit.io/#/share/eyJ0ZW1wbGF0ZSI6InBhY2thZ2UgbWFpblxuXG5pbXBvcnQgKFxuICAgXCJpb1wiXG4gICBcImxvZ1wiXG4gICBcIm5ldC9odHRwXCJcbilcblxuZnVuYyBtYWluKCkge1xuICAgaHR0cC5IYW5kbGVGdW5jKFwiL1wiLCBnZXRSb290KVxuICAgbG9nLkZhdGFsbG4oaHR0cC5MaXN0ZW5BbmRTZXJ2ZShcIjp7eyAuUG9ydCB9fVwiLCBuaWwpKVxufVxuXG5mdW5jIGdldFJvb3QodyBodHRwLlJlc3BvbnNlV3JpdGVyLCByICpodHRwLlJlcXVlc3QpIHtcbiAgIGlvLldyaXRlU3RyaW5nKHcsIFwiU2VydmVyIGdvdCB0aGUgcmVxdWVzdFxcblwiKVxufSIsImlucHV0IjoiUG9ydDogODA4MCIsImNvbmZpZyI6eyJ0ZW1wbGF0ZSI6InRleHQiLCJmdWxsU2NyZWVuSFRNTCI6ZmFsc2UsImZ1bmN0aW9ucyI6WyJzcHJpZyJdLCJvcHRpb25zIjpbImxpdmUiXSwiaW5wdXRUeXBlIjoieWFtbCJ9fQ==)
@@ -54,3 +61,5 @@ See examples:
 [Iterate a map](https://repeatit.io/#/share/eyJ0ZW1wbGF0ZSI6ImZ1bmMgbWFpbigpe1xuZSA6PSBlY2hvLk5ldygpXG5cbnt7IHJhbmdlICRrZXksICR2YWx1ZSA6PSAuZW5kcG9pbnRzIH19XG5lLkdFVChcInt7ICRrZXkgfX1cIiwgZnVuYyAoYyBlY2hvLkNvbnRleHQpIGVycm9yIHtcblx0cmV0dXJuIGMuU3RyaW5nKGh0dHAuU3RhdHVzT0ssIFwie3sgJHZhbHVlIH19XCIpXG59KVxue3sgZW5kIH19XG5cbmUuTG9nZ2VyLkZhdGFsKGUuU3RhcnQoXCI6ODA4MFwiKSlcbn0iLCJpbnB1dCI6ImVuZHBvaW50czogXG4gIFwiL1wiOiBcIkhlbGxvLCBXb3JsZCFcIlxuICBcIi9wYXltZW50XCI6IFwiUGF5bWVudCBpcyBjcmVhdGVkXCIiLCJjb25maWciOnsidGVtcGxhdGUiOiJ0ZXh0IiwiZnVsbFNjcmVlbkhUTUwiOmZhbHNlLCJmdW5jdGlvbnMiOlsic3ByaWciXSwib3B0aW9ucyI6WyJsaXZlIl0sImlucHV0VHlwZSI6InlhbWwifX0=)
 
 
+
+</div>

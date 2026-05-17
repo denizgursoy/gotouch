@@ -55,6 +55,10 @@ my-project-creator/
 │       ├── main.go
 │       └── cmd/
 │           └── root.go
+│
+│   # Web Application template is not stored locally —
+│   # it is cloned from a git repository at runtime
+│   # (see Project 3 in properties.yaml)
 ```
 
 ### Template Files
@@ -64,10 +68,8 @@ my-project-creator/
 This template uses custom [delimiters](./project-structure) `<< >>` instead of the default `{{ }}`.
 It includes an [init.sh](./init) script that runs after project creation.
 
-<code-group>
-<code-block title="main.go">
-
-```go
+::: code-group
+```go [main.go]
 package main
 
 import (
@@ -87,12 +89,7 @@ func main() {
 	log.Fatal(router.Start(addr))
 }
 ```
-
-</code-block>
-
-<code-block title="config/config.go">
-
-```go
+```go [config/config.go]
 package config
 
 // Config holds the application configuration.
@@ -111,12 +108,7 @@ func Load() *Config {
 	}
 }
 ```
-
-</code-block>
-
-<code-block title="handler/handler.go">
-
-```go
+```go [handler/handler.go]
 package handler
 
 import (
@@ -146,12 +138,7 @@ func (r *Router) health(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("OK"))
 }
 ```
-
-</code-block>
-
-<code-block title="init.sh">
-
-```sh
+```sh [init.sh]
 #!/bin/bash
 echo "Setting up << .ServiceName >>..."
 
@@ -167,9 +154,7 @@ swag init
 
 echo "Setup complete!"
 ```
-
-</code-block>
-</code-group>
+:::
 
 ::: tip
 The `init.sh` file is [templated](./init) with values before execution — you can use conditions and values inside it.
@@ -180,10 +165,8 @@ After execution, Gotouch deletes both `init.sh` and `init.bat` from the root fol
 
 This template uses the default delimiters `{{ }}`.
 
-<code-group>
-<code-block title="main.go">
-
-```go
+::: code-group
+```go [main.go]
 package main
 
 import (
@@ -202,12 +185,7 @@ func main() {
 	}
 }
 ```
-
-</code-block>
-
-<code-block title="cmd/root.go">
-
-```go
+```go [cmd/root.go]
 package cmd
 
 import (
@@ -226,9 +204,7 @@ func Execute(version string) error {
 	return nil
 }
 ```
-
-</code-block>
-</code-group>
+:::
 
 ### Properties YAML
 

@@ -1,19 +1,19 @@
 {
-  "name": "Gotouch",
+  "name": "gotouch-docs",
   "version": "0.0.1",
   "description": "Customizable Project Creator",
-  "main": "index.js",
   "authors": {
     "name": "Deniz Gursoy",
     "email": "denizgursoy.443@gmail.com"
   },
   "repository": "https://github.com/denizgursoy/gotouch",
   "scripts": {
-    "dev": "vuepress dev src",
-    "build": "vuepress build src"
+    "dev": "vitepress dev src",
+    "build": "vitepress build src",
+    "preview": "vitepress preview src"
   },
   "license": "MIT",
   "devDependencies": {
-    "vuepress": "^1.9.10"
+    "vitepress": "^1.6.3"
   }
 }

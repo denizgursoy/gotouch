@@ -28,10 +28,8 @@ them however you want. If the language you use is not in the examples, in this c
 
 In a Maven project, you can define your dependencies as object as seen below.
 
-<code-group>
-<code-block title="Values">
-
-```yaml
+::: code-group
+```yaml [Values]
 questions:
   - direction: Which DB do you want to use?
     choices:
@@ -51,11 +49,8 @@ questions:
             artifactId: ojdbc8
             version: 12.2.0.1
 ```
-</code-block>
 
-<code-block title="pom.xml">
-
-```xml
+```xml [pom.xml]
 <dependencies>
     {{- range .Dependencies}}
     <dependency>
@@ -67,11 +62,8 @@ questions:
     {{- end }}
 </dependencies>
 ```
-</code-block>
 
-<code-block title="Result">
-
-```xml
+```xml [Result]
 <dependencies>
     <dependency>
         <groupId>org.postgresql</groupId>
@@ -80,15 +72,12 @@ questions:
     </dependency>
 </dependencies>
 ```
-</code-block>
-</code-group>
+:::
 
 #### JS/Node.js
 
-<code-group>
-<code-block title="Values">
-
-```yaml
+::: code-group
+```yaml [Values]
 questions:
   - direction: Which Test framework do you want to use?
     choices:
@@ -108,11 +97,8 @@ questions:
             version: 4.5.0
             devDependency: true
 ```
-</code-block>
 
-<code-block title="package.json">
-
-```json
+```json [package.json]
 {
   "dependencies": {
     {{ range .Dependencies }}
@@ -128,11 +114,8 @@ questions:
 }
 }
 ```
-</code-block>
 
-<code-block title="Result">
-
-```json
+```json [Result]
 {
   "dependencies": {
   },
@@ -141,5 +124,4 @@ questions:
   }
 }
 ```
-</code-block>
-</code-group>
+:::

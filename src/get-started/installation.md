@@ -1,26 +1,17 @@
 # Installation
 
-<code-group>
-<code-block title="Go install">
+::: code-group
 
-```bash
+```bash [Go install]
 go install github.com/denizgursoy/gotouch/cmd/gotouch@latest
 ```
 
-</code-block>
-
-<code-block title="Curl">
-
-```bash
+```bash [Curl]
 # On Unix/MacOS system, the following will install gotouch into `/usr/local/bin/`:
 sudo /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/denizgursoy/gotouch/main/scripts/install.sh)"
 ```
 
-</code-block>
-
-<code-block title="Homebrew">
-
-```bash
+```bash [Homebrew]
 # Add repository
 brew tap brew-tools/tap
 
@@ -31,8 +22,7 @@ brew install gotouch
 brew upgrade gotouch
 ```
 
-</code-block>
-</code-group>
+:::
 
 ## Download binary
 
